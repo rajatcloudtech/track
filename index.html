@@ -126,6 +126,11 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
 .psl{display:flex;align-items:center;gap:12px;margin-bottom:10px}
 .psl-l{font-size:13px;font-weight:500;flex:1;min-width:0}
 .ppct{font-size:12px;font-family:var(--mono);color:var(--txt2);width:34px;text-align:right}
+.cat-wrap{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 8px;}
+.cat-btn{background:var(--bg3);border:1px solid var(--b1);color:var(--txt2);border-radius:20px;padding:6px 11px;font-size:11px;font-family:var(--mono);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.cat-btn:active{opacity:.7}.cat-on{background:var(--teal)!important;border-color:var(--teal)!important;color:#000!important;font-weight:600;}
+.cat-cnt{background:rgba(255,255,255,.15);border-radius:10px;padding:1px 5px;font-size:10px;}
+.cat-on .cat-cnt{background:rgba(0,0,0,.2);}
 </style>
 </head>
 <body>
@@ -248,7 +253,20 @@ function toast(m){document.querySelectorAll('.toast').forEach(t=>t.remove());con
 function cp(txt){navigator.clipboard?.writeText(txt).then(()=>toast('Copied!')).catch(()=>toast('Long-press to copy'))}
 function tp(id){const p=document.getElementById(id);p.style.display=p.style.display==='none'?'block':'none'}
 
-let curPg='dash',curTab='flashcards',curCard=0,SD=null;
+const SHEET_CSV='https://docs.google.com/spreadsheets/d/e/2PACX-1vRAvDhXN7q0xaRS4ScRQNrpTktkB6neyDzAI5cWaVeMLmwXW94N_AyUmd0fzoLUgKf0iT-21suPjJsd/pub?gid=0&single=true&output=csv';
+let curPg='dash',curTab='flashcards',curCard=0,SD=null,activeCat='All';
+
+function parseCSV(text){
+  const lines=text.trim().split('\n');
+  const headers=lines[0].split(',').map(h=>h.trim().replace(/"/g,'').toLowerCase());
+  return lines.slice(1).map(line=>{
+    const cols=[];let cur='',inQ=false;
+    for(let ch of line){if(ch==='"')inQ=!inQ;else if(ch===','&&!inQ){cols.push(cur.trim());cur='';}else cur+=ch;}
+    cols.push(cur.trim());
+    const obj={};headers.forEach((h,i)=>obj[h]=(cols[i]||'').replace(/^"|"$/g,''));
+    return obj;
+  }).filter(r=>(r.status||'active').toLowerCase()==='active'&&r.question);
+}
 function go(id){
   document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
@@ -304,15 +322,29 @@ function rIns(){
 async function rStudy(){
   if(!SD){
     try{
-      const [cards,tips,tables,mvt]=await Promise.all([
-        fetch('data/study-cards.json').then(r=>{if(!r.ok)throw 0;return r.json()}),
+      const res=await fetch(SHEET_CSV);
+      if(!res.ok)throw 0;
+      const text=await res.text();
+      const sheetCards=parseCSV(text);
+      const [tips,tables,mvt]=await Promise.all([
         fetch('data/sql-tips.json').then(r=>{if(!r.ok)throw 0;return r.json()}),
         fetch('data/sap-tables.json').then(r=>{if(!r.ok)throw 0;return r.json()}),
         fetch('data/movement-types.json').then(r=>{if(!r.ok)throw 0;return r.json()})
       ]);
-      SD={cards,tips,tables,mvt};
-      document.getElementById('sstatus').textContent=cards.length+' cards';
-    }catch{SD=FB;document.getElementById('sstatus').textContent='offline'}
+      SD={cards:sheetCards,tips,tables,mvt};
+      document.getElementById('sstatus').textContent=sheetCards.length+' cards · live';
+    }catch{
+      try{
+        const [cards,tips,tables,mvt]=await Promise.all([
+          fetch('data/study-cards.json').then(r=>{if(!r.ok)throw 0;return r.json()}),
+          fetch('data/sql-tips.json').then(r=>{if(!r.ok)throw 0;return r.json()}),
+          fetch('data/sap-tables.json').then(r=>{if(!r.ok)throw 0;return r.json()}),
+          fetch('data/movement-types.json').then(r=>{if(!r.ok)throw 0;return r.json()})
+        ]);
+        SD={cards,tips,tables,mvt};
+        document.getElementById('sstatus').textContent=cards.length+' cards';
+      }catch{SD=FB;document.getElementById('sstatus').textContent='offline'}
+    }
   }
   const tabs=[{id:'flashcards',l:'Flashcards'},{id:'sql',l:'SQL Tips'},{id:'tables',l:'SAP Tables'},{id:'mvt',l:'Mvt Types'},{id:'flows',l:'Flows'}];
   document.getElementById('stabs').innerHTML=tabs.map(t=>`<div class="tab ${t.id===curTab?'on':''}" onclick="sTab('${t.id}',this)">${t.l}</div>`).join('');
@@ -329,16 +361,39 @@ function rTab(tab){
   else rFlows(b);
 }
 
+function getCatCards(){
+  const all=SD?.cards||[];
+  return activeCat==='All'?all:all.filter(c=>c.category===activeCat);
+}
+function rCatPicker(b){
+  const all=SD?.cards||[];
+  const cats=['All',...new Set(all.map(c=>c.category).filter(Boolean))];
+  const picker=`<div class="cat-wrap">${cats.map(c=>{
+    const cnt=c==='All'?all.length:all.filter(x=>x.category===c).length;
+    return`<button class="cat-btn${c===activeCat?' cat-on':''}" onclick="selCat('${c.replace(/'/g,"\'")}')">${esc(c)}<span class="cat-cnt">${cnt}</span></button>`;
+  }).join('')}</div>`;
+  return picker;
+}
+function selCat(cat){activeCat=cat;curCard=0;rTab('flashcards')}
 function rCards(cards,b){
-  if(!cards?.length){b.innerHTML='<div class="empty"><div class="eico">📚</div><div class="etxt">No flashcards yet.</div></div>';return}
-  if(curCard>=cards.length)curCard=0;
-  const c=cards[curCard];
-  b.innerHTML=`<div class="fc" id="fc" onclick="this.classList.toggle('flip')"><div class="fci">
-    <div class="ff"><div class="fcat">${c.category||'SAP MM'}</div><div class="fq">${esc(c.question)}</div><div class="fhint">Tap to reveal answer</div></div>
+  const picker=rCatPicker(b);
+  const filtered=getCatCards();
+  if(!filtered.length){b.innerHTML=picker+'<div class="empty"><div class="eico">📚</div><div class="etxt">No cards in this category.</div></div>';return}
+  if(curCard>=filtered.length)curCard=0;
+  const c=filtered[curCard];
+  b.innerHTML=picker+`<div class="fc" id="fc" onclick="this.classList.toggle('flip')"><div class="fci">
+    <div class="ff"><div class="fcat">${esc(c.category||'SAP MM')}</div><div class="fq">${esc(c.question)}</div><div class="fhint">Tap to reveal answer</div></div>
     <div class="fb"><div class="fcat">Answer</div><div class="fans">${esc(c.answer)}</div>${c.table?'<div style="margin-top:10px">'+c.table.split(',').map(t=>`<span class="ftag">${t.trim()}</span>`).join('')+'</div>':''}</div>
   </div></div>
-  <div class="cnav"><div class="cnum">${curCard+1}/${cards.length}</div><div style="display:flex;gap:8px"><button class="btn btn-g btn-s" onclick="curCard=(curCard-1+${cards.length})%${cards.length};rTab('flashcards')">←</button><button class="btn btn-g btn-s" onclick="curCard=(curCard+1)%${cards.length};rTab('flashcards')">→</button><button class="btn btn-g btn-s" onclick="SD.cards.sort(()=>Math.random()-.5);curCard=0;rTab('flashcards');toast('Shuffled!')">⇌</button></div></div>
-  <div style="text-align:center;font-size:11px;color:var(--txt3);padding:0 16px 16px">${cards.length} cards · tap to flip</div>`;
+  <div class="cnav"><div class="cnum">${curCard+1}/${filtered.length}</div><div style="display:flex;gap:8px"><button class="btn btn-g btn-s" onclick="curCard=(curCard-1+${filtered.length})%${filtered.length};rTab('flashcards')">←</button><button class="btn btn-g btn-s" onclick="curCard=(curCard+1)%${filtered.length};rTab('flashcards')">→</button><button class="btn btn-g btn-s" onclick="shuffleCards()">⇌</button></div></div>
+  <div style="text-align:center;font-size:11px;color:var(--txt3);padding:0 16px 16px">${filtered.length} cards · tap to flip</div>`;
+}
+function shuffleCards(){
+  const filtered=getCatCards();
+  filtered.sort(()=>Math.random()-.5);
+  if(activeCat==='All')SD.cards=filtered;
+  else{const others=SD.cards.filter(c=>c.category!==activeCat);SD.cards=[...others,...filtered];}
+  curCard=0;rTab('flashcards');toast('Shuffled!');
 }
 
 function rSQL(tips,b){
