@@ -322,7 +322,7 @@ function rIns(){
 async function rStudy(){
   if(!SD){
     try{
-      const res=await fetch(SHEET_CSV);
+      const res=await fetch(SHEET_CSV,{mode:'cors',cache:'no-cache'});
       if(!res.ok)throw 0;
       const text=await res.text();
       const sheetCards=parseCSV(text);
@@ -333,6 +333,7 @@ async function rStudy(){
       ]);
       SD={cards:sheetCards,tips,tables,mvt};
       document.getElementById('sstatus').textContent=sheetCards.length+' cards · live';
+toast('Sheet loaded: '+sheetCards.length+' cards ✓');
     }catch{
       try{
         const [cards,tips,tables,mvt]=await Promise.all([
