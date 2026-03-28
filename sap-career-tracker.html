@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAP Career Tracker — Rajat</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #0e0f11;
+    --bg2: #141618;
+    --bg3: #1a1d21;
+    --bg4: #21252b;
+    --border: #2a2e35;
+    --border2: #353a42;
+    --text: #e8e9ea;
+    --text2: #8c9099;
+    --text3: #555c67;
+    --teal: #00c9a7;
+    --teal-dim: #00c9a720;
+    --teal-mid: #00c9a740;
+    --purple: #9b72f5;
+    --purple-dim: #9b72f520;
+    --amber: #f5a623;
+    --amber-dim: #f5a62320;
+    --red: #f05252;
+    --red-dim: #f0525220;
+    --green: #34d399;
+    --green-dim: #34d39920;
+    --font-serif: 'DM Serif Display', serif;
+    --font-body: 'Outfit', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* Grain overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0; opacity: 0.4;
+  }
+
+  /* Layout */
+  .app { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+
+  /* Sidebar */
+  .sidebar {
+    width: 220px; flex-shrink: 0;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    padding: 24px 0;
+    display: flex; flex-direction: column;
+    position: sticky; top: 0; height: 100vh;
+    overflow-y: auto;
+  }
+
+  .sidebar-brand {
+    padding: 0 20px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .brand-name {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    color: var(--teal);
+    letter-spacing: 0.01em;
+  }
+
+  .brand-sub {
+    font-size: 11px;
+    color: var(--text3);
+    font-family: var(--font-mono);
+    margin-top: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .sidebar-nav { padding: 16px 0; flex: 1; }
+
+  .nav-section-label {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    color: var(--text3);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 8px 20px 4px;
+  }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 20px;
+    cursor: pointer;
+    color: var(--text2);
+    font-size: 13px;
+    font-weight: 400;
+    border-left: 2px solid transparent;
+    transition: all 0.15s;
+  }
+
+  .nav-item:hover { color: var(--text); background: var(--bg3); }
+
+  .nav-item.active {
+    color: var(--teal);
+    border-left-color: var(--teal);
+    background: var(--teal-dim);
+    font-weight: 500;
+  }
+
+  .nav-icon { font-size: 15px; width: 20px; text-align: center; }
+
+  .sidebar-footer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .phase-badge {
+    background: var(--teal-dim);
+    border: 1px solid var(--teal-mid);
+    border-radius: 6px;
+    padding: 8px 12px;
+  }
+
+  .phase-badge-label { font-size: 10px; color: var(--teal); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.1em; }
+  .phase-badge-value { font-size: 13px; color: var(--text); margin-top: 2px; font-weight: 500; }
+
+  /* Main */
+  .main { flex: 1; padding: 32px; overflow-x: hidden; }
+
+  /* Pages */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* Page header */
+  .page-header { margin-bottom: 28px; }
+
+  .page-title {
+    font-family: var(--font-serif);
+    font-size: 26px;
+    color: var(--text);
+    font-weight: normal;
+  }
+
+  .page-subtitle { font-size: 13px; color: var(--text2); margin-top: 4px; }
+
+  /* Date strip */
+  .date-strip {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* Grid layouts */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+  /* Cards */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+
+  .card-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .card-title {
+    font-size: 12px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text3);
+  }
+
+  /* Stat cards */
+  .stat-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+  }
+
+  .stat-label { font-size: 11px; color: var(--text3); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.1em; }
+  .stat-value { font-size: 28px; font-family: var(--font-serif); margin-top: 4px; }
+  .stat-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
+
+  .stat-teal .stat-value { color: var(--teal); }
+  .stat-purple .stat-value { color: var(--purple); }
+  .stat-amber .stat-value { color: var(--amber); }
+  .stat-green .stat-value { color: var(--green); }
+
+  /* Progress bar */
+  .progress-wrap { margin-top: 8px; }
+  .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text2); margin-bottom: 6px; }
+  .progress-bar {
+    height: 5px; background: var(--border); border-radius: 3px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; border-radius: 3px;
+    transition: width 0.6s ease;
+  }
+  .fill-teal { background: var(--teal); }
+  .fill-purple { background: var(--purple); }
+  .fill-amber { background: var(--amber); }
+  .fill-green { background: var(--green); }
+  .fill-red { background: var(--red); }
+
+  /* Skill bars */
+  .skill-row { margin-bottom: 16px; }
+  .skill-name { font-size: 13px; color: var(--text); margin-bottom: 6px; font-weight: 500; }
+  .skill-meta { font-size: 11px; color: var(--text3); float: right; font-family: var(--font-mono); }
+
+  /* Daily Goals */
+  .goal-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .goal-item {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+
+  .goal-item:hover { border-color: var(--border2); }
+
+  .goal-item.completed {
+    opacity: 0.55;
+    background: var(--bg2);
+  }
+
+  .goal-item.completed .goal-text { text-decoration: line-through; color: var(--text3); }
+
+  .goal-check {
+    width: 18px; height: 18px; flex-shrink: 0;
+    border: 1.5px solid var(--border2);
+    border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    font-size: 11px;
+  }
+
+  .goal-item.completed .goal-check {
+    background: var(--teal);
+    border-color: var(--teal);
+    color: #000;
+  }
+
+  .goal-text { font-size: 13px; flex: 1; }
+  .goal-category {
+    font-size: 10px; font-family: var(--font-mono);
+    padding: 2px 7px; border-radius: 4px;
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+
+  .cat-data { background: var(--teal-dim); color: var(--teal); }
+  .cat-sql { background: var(--purple-dim); color: var(--purple); }
+  .cat-debug { background: var(--amber-dim); color: var(--amber); }
+  .cat-write { background: var(--green-dim); color: var(--green); }
+  .cat-abap { background: var(--red-dim); color: var(--red); }
+
+  /* Add goal input */
+  .add-goal-row {
+    display: flex; gap: 8px; margin-top: 12px;
+  }
+
+  .input-field {
+    flex: 1;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 9px 12px;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .input-field:focus { border-color: var(--teal); }
+  .input-field::placeholder { color: var(--text3); }
+
+  .select-field {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 9px 10px;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 12px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .btn {
+    padding: 9px 16px;
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.15s;
+  }
+
+  .btn-primary { background: var(--teal); color: #000; }
+  .btn-primary:hover { background: #00e0bb; }
+  .btn-ghost {
+    background: var(--bg3); border: 1px solid var(--border);
+    color: var(--text2);
+  }
+  .btn-ghost:hover { border-color: var(--border2); color: var(--text); }
+  .btn-danger { background: var(--red-dim); color: var(--red); border: 1px solid var(--red-dim); }
+  .btn-danger:hover { background: var(--red); color: #fff; }
+
+  /* Heatmap */
+  .heatmap { display: flex; gap: 3px; flex-wrap: wrap; }
+  .hm-cell {
+    width: 14px; height: 14px; border-radius: 3px;
+    background: var(--border);
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+  }
+  .hm-cell:hover::after {
+    content: attr(data-tip);
+    position: absolute; bottom: 18px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg4);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    font-size: 11px;
+    padding: 3px 7px;
+    border-radius: 4px;
+    white-space: nowrap;
+    z-index: 10;
+    font-family: var(--font-mono);
+  }
+  .hm-0 { background: var(--border); }
+  .hm-1 { background: #00c9a730; }
+  .hm-2 { background: #00c9a760; }
+  .hm-3 { background: #00c9a7aa; }
+  .hm-4 { background: var(--teal); }
+
+  /* Log entries */
+  .log-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .log-entry {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    border-left: 3px solid var(--teal);
+    position: relative;
+  }
+
+  .log-entry.purple { border-left-color: var(--purple); }
+  .log-entry.amber { border-left-color: var(--amber); }
+  .log-entry.green { border-left-color: var(--green); }
+
+  .log-entry-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 6px;
+  }
+
+  .log-entry-title { font-size: 13px; font-weight: 500; }
+  .log-entry-date { font-size: 11px; color: var(--text3); font-family: var(--font-mono); }
+  .log-entry-body { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+  .log-entry-tags { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .tag {
+    font-size: 10px; padding: 2px 8px; border-radius: 4px;
+    font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.07em;
+  }
+
+  /* Delete btn */
+  .delete-btn {
+    background: none; border: none; color: var(--text3);
+    cursor: pointer; font-size: 14px; padding: 2px;
+    transition: color 0.15s;
+  }
+  .delete-btn:hover { color: var(--red); }
+
+  /* Textarea */
+  textarea.input-field {
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.6;
+  }
+
+  /* Skill rating */
+  .skill-rating-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .skill-rating-row:last-child { border-bottom: none; }
+
+  .skill-rating-name { flex: 1; font-size: 13px; font-weight: 500; }
+  .skill-rating-desc { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+  .rating-dots { display: flex; gap: 5px; }
+  .rating-dot {
+    width: 24px; height: 24px; border-radius: 50%;
+    border: 1.5px solid var(--border2);
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-family: var(--font-mono);
+    color: transparent;
+  }
+  .rating-dot:hover { border-color: var(--teal); color: var(--teal); }
+  .rating-dot.active { background: var(--teal); border-color: var(--teal); color: #000; font-weight: bold; }
+  .rating-dot.active-purple { background: var(--purple); border-color: var(--purple); color: #fff; }
+  .rating-dot.active-amber { background: var(--amber); border-color: var(--amber); color: #000; }
+
+  /* Weekly review */
+  .review-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .review-box {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+  }
+  .review-box-label { font-size: 11px; color: var(--text3); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+
+  /* Phase timeline */
+  .timeline { display: flex; flex-direction: column; gap: 0; }
+  .timeline-item { display: flex; gap: 16px; }
+  .timeline-spine { display: flex; flex-direction: column; align-items: center; }
+  .timeline-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+  .timeline-line { width: 1px; background: var(--border); flex: 1; min-height: 40px; margin: 4px 0; }
+  .timeline-content { padding-bottom: 24px; flex: 1; }
+  .timeline-phase { font-size: 11px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
+  .timeline-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+  .timeline-desc { font-size: 12px; color: var(--text2); line-height: 1.6; }
+
+  /* Insight cards */
+  .insight-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+  .insight-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+  .insight-title { font-size: 13px; font-weight: 500; margin-bottom: 3px; }
+  .insight-body { font-size: 12px; color: var(--text2); line-height: 1.6; }
+
+  /* Chart canvas */
+  .chart-container { position: relative; }
+
+  /* Section divider */
+  .section-gap { margin-top: 24px; }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+  /* Streak banner */
+  .streak-banner {
+    background: linear-gradient(135deg, #00c9a710 0%, #9b72f510 100%);
+    border: 1px solid var(--teal-mid);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 20px;
+  }
+  .streak-emoji { font-size: 28px; }
+  .streak-text { flex: 1; }
+  .streak-main { font-size: 15px; font-weight: 600; color: var(--text); }
+  .streak-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .streak-count { font-family: var(--font-serif); font-size: 36px; color: var(--teal); }
+
+  /* SAP Table quick ref */
+  .table-ref { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .table-ref th {
+    text-align: left; padding: 8px 12px;
+    background: var(--bg4); color: var(--text3);
+    font-family: var(--font-mono); font-weight: 400;
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
+    border-bottom: 1px solid var(--border);
+  }
+  .table-ref td {
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .table-ref tr:last-child td { border-bottom: none; }
+  .table-ref tr:hover td { background: var(--bg3); }
+  .table-name { font-family: var(--font-mono); color: var(--teal); font-size: 12px; }
+  .table-desc { color: var(--text2); }
+  .table-usecase { color: var(--text3); font-size: 11px; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .grid-4 { grid-template-columns: 1fr 1fr; }
+    .grid-3 { grid-template-columns: 1fr 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .sidebar { display: none; }
+    .main { padding: 16px; }
+    .grid-4, .grid-3 { grid-template-columns: 1fr; }
+  }
+
+  /* Animations */
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .page.active { animation: fadeIn 0.2s ease; }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--bg4); border: 1px solid var(--border2);
+    color: var(--text); padding: 10px 16px; border-radius: var(--radius-sm);
+    font-size: 13px; z-index: 1000;
+    animation: fadeIn 0.2s ease;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+
+  /* Weekly progress circles */
+  .week-circle-row { display: flex; gap: 6px; margin-top: 8px; }
+  .week-circle {
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 1.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-family: var(--font-mono);
+    color: var(--text3);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .week-circle.done { background: var(--teal); border-color: var(--teal); color: #000; font-weight: 600; }
+  .week-circle.today { border-color: var(--teal); color: var(--teal); }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center; padding: 40px 20px;
+    color: var(--text3); font-size: 13px;
+  }
+  .empty-state-icon { font-size: 32px; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-name">SAP Tracker</div>
+      <div class="brand-sub">Career Growth OS</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Daily</div>
+      <div class="nav-item active" onclick="showPage('dashboard')">
+        <span class="nav-icon">⬡</span> Dashboard
+      </div>
+      <div class="nav-item" onclick="showPage('goals')">
+        <span class="nav-icon">◎</span> Daily Goals
+      </div>
+      <div class="nav-item" onclick="showPage('log')">
+        <span class="nav-icon">▤</span> Learning Log
+      </div>
+
+      <div class="nav-section-label" style="margin-top:8px">Progress</div>
+      <div class="nav-item" onclick="showPage('skills')">
+        <span class="nav-icon">◈</span> Skills
+      </div>
+      <div class="nav-item" onclick="showPage('heatmap')">
+        <span class="nav-icon">▦</span> Activity
+      </div>
+      <div class="nav-item" onclick="showPage('weekly')">
+        <span class="nav-icon">◷</span> Weekly Review
+      </div>
+
+      <div class="nav-section-label" style="margin-top:8px">Reference</div>
+      <div class="nav-item" onclick="showPage('roadmap')">
+        <span class="nav-icon">↗</span> Roadmap
+      </div>
+      <div class="nav-item" onclick="showPage('reference')">
+        <span class="nav-icon">⊡</span> SAP Tables
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="phase-badge">
+        <div class="phase-badge-label">Current Phase</div>
+        <div class="phase-badge-value" id="sidebar-phase">Phase 1 — Data Mastery</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main">
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-header">
+        <div class="page-title">Good morning, Rajat ✦</div>
+        <div class="page-subtitle">Track your daily SAP MM growth. Small steps, consistent wins.</div>
+        <div class="date-strip" id="today-date"></div>
+      </div>
+
+      <div id="streak-area"></div>
+
+      <div class="grid-4" style="margin-bottom:16px">
+        <div class="stat-card stat-teal">
+          <div class="stat-label">Day Streak</div>
+          <div class="stat-value" id="dash-streak">0</div>
+          <div class="stat-sub">consecutive days</div>
+        </div>
+        <div class="stat-card stat-purple">
+          <div class="stat-label">Goals Today</div>
+          <div class="stat-value" id="dash-goals-done">0/0</div>
+          <div class="stat-sub">completed</div>
+        </div>
+        <div class="stat-card stat-amber">
+          <div class="stat-label">Log Entries</div>
+          <div class="stat-value" id="dash-logs">0</div>
+          <div class="stat-sub">total learnings</div>
+        </div>
+        <div class="stat-card stat-green">
+          <div class="stat-label">Avg Skill</div>
+          <div class="stat-value" id="dash-skill-avg">0%</div>
+          <div class="stat-sub">across all areas</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Today's Goals</div>
+            <span style="font-size:12px;color:var(--text3)" id="dash-goals-pct">0%</span>
+          </div>
+          <div id="dash-goals-list" class="goal-list"></div>
+          <div style="margin-top:12px">
+            <div class="progress-bar">
+              <div class="progress-fill fill-teal" id="dash-goal-bar" style="width:0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Skill Snapshot</div>
+          </div>
+          <div id="dash-skills-snap"></div>
+        </div>
+      </div>
+
+      <div class="section-gap"></div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Daily Insights</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px" id="insights-list"></div>
+      </div>
+    </div>
+
+    <!-- DAILY GOALS -->
+    <div class="page" id="page-goals">
+      <div class="page-header">
+        <div class="page-title">Daily Goals</div>
+        <div class="page-subtitle">Your 45-minute daily habit — the core of your growth.</div>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title" style="margin-bottom:14px">ADD GOAL FOR TODAY</div>
+        <div class="add-goal-row">
+          <input type="text" class="input-field" id="goal-input" placeholder="e.g. Trace EKBE table for PO 4500012345..." />
+          <select class="select-field" id="goal-cat">
+            <option value="data">Data</option>
+            <option value="sql">SQL</option>
+            <option value="debug">Debug</option>
+            <option value="abap">ABAP</option>
+            <option value="write">Write</option>
+          </select>
+          <button class="btn btn-primary" onclick="addGoal()">Add</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">TODAY'S GOALS</div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-ghost" style="font-size:11px;padding:5px 10px" onclick="clearCompleted()">Clear done</button>
+            <button class="btn btn-ghost" style="font-size:11px;padding:5px 10px" onclick="resetGoals()">Reset all</button>
+          </div>
+        </div>
+        <div id="goals-list" class="goal-list">
+          <div class="empty-state">
+            <div class="empty-state-icon">◎</div>
+            Add your first goal above
+          </div>
+        </div>
+      </div>
+
+      <div class="section-gap"></div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">SUGGESTED DAILY GOALS (by phase)</div></div>
+        <div style="display:flex;flex-direction:column;gap:8px" id="suggested-goals"></div>
+      </div>
+    </div>
+
+    <!-- LEARNING LOG -->
+    <div class="page" id="page-log">
+      <div class="page-header">
+        <div class="page-title">Learning Log</div>
+        <div class="page-subtitle">Document what you learn. Writing cements knowledge.</div>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title" style="margin-bottom:14px">NEW ENTRY</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <input type="text" class="input-field" id="log-title" placeholder="Title — e.g. Why EKBE had duplicate entries..." />
+          <textarea class="input-field" id="log-body" placeholder="What did you learn? What was the issue? How did you solve it?"></textarea>
+          <div style="display:flex;gap:8px;align-items:center">
+            <select class="select-field" id="log-type">
+              <option value="teal">SAP Data</option>
+              <option value="purple">SQL / HANA</option>
+              <option value="amber">ABAP / Debug</option>
+              <option value="green">Process / Config</option>
+            </select>
+            <input type="text" class="input-field" id="log-tags" placeholder="Tags: EKBE, GR, movement type..." style="flex:1" />
+            <button class="btn btn-primary" onclick="addLog()">Save</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="log-list" class="log-list">
+        <div class="empty-state">
+          <div class="empty-state-icon">▤</div>
+          Your learnings will appear here
+        </div>
+      </div>
+    </div>
+
+    <!-- SKILLS -->
+    <div class="page" id="page-skills">
+      <div class="page-header">
+        <div class="page-title">Skills Tracker</div>
+        <div class="page-subtitle">Rate yourself honestly every week. Watch the graph move.</div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-title">SAP MM CORE</div></div>
+          <div id="skills-sap"></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">TECHNICAL</div></div>
+          <div id="skills-tech"></div>
+        </div>
+      </div>
+
+      <div class="section-gap"></div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">OVERALL PROGRESS</div></div>
+        <div id="skills-overall"></div>
+      </div>
+    </div>
+
+    <!-- HEATMAP -->
+    <div class="page" id="page-heatmap">
+      <div class="page-header">
+        <div class="page-title">Activity Heatmap</div>
+        <div class="page-subtitle">Click a day to mark it. Green = you showed up.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">LAST 90 DAYS</div>
+          <div style="display:flex;gap:6px;align-items:center;font-size:11px;color:var(--text3)">
+            Less
+            <div class="hm-cell hm-0" style="cursor:default"></div>
+            <div class="hm-cell hm-1" style="cursor:default"></div>
+            <div class="hm-cell hm-2" style="cursor:default"></div>
+            <div class="hm-cell hm-3" style="cursor:default"></div>
+            <div class="hm-cell hm-4" style="cursor:default"></div>
+            More
+          </div>
+        </div>
+        <div class="heatmap" id="heatmap-grid"></div>
+        <div style="margin-top:16px;font-size:12px;color:var(--text3)">
+          0 = no activity · 1 = read/study · 2 = practiced · 3 = solved a problem · 4 = deep work / documented
+        </div>
+      </div>
+
+      <div class="section-gap"></div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-title">THIS WEEK</div></div>
+          <div class="week-circle-row" id="week-circles"></div>
+          <div style="margin-top:12px;font-size:12px;color:var(--text2)" id="week-summary"></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">STATS</div></div>
+          <div id="heatmap-stats" style="display:flex;flex-direction:column;gap:10px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEEKLY REVIEW -->
+    <div class="page" id="page-weekly">
+      <div class="page-header">
+        <div class="page-title">Weekly Review</div>
+        <div class="page-subtitle">One honest review per week. This is how you stay on track.</div>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title" style="margin-bottom:14px">THIS WEEK'S REVIEW</div>
+        <div class="review-grid">
+          <div class="review-box">
+            <div class="review-box-label">✦ What went well</div>
+            <textarea class="input-field" id="review-good" placeholder="What did you do that moved you forward?" style="width:100%;min-height:90px;background:transparent;border:none;padding:0;font-size:13px;resize:none;outline:none;color:var(--text)"></textarea>
+          </div>
+          <div class="review-box">
+            <div class="review-box-label">⚠ What slowed you down</div>
+            <textarea class="input-field" id="review-bad" placeholder="What blocked you? Be honest." style="width:100%;min-height:90px;background:transparent;border:none;padding:0;font-size:13px;resize:none;outline:none;color:var(--text)"></textarea>
+          </div>
+          <div class="review-box">
+            <div class="review-box-label">→ Focus for next week</div>
+            <textarea class="input-field" id="review-next" placeholder="What ONE thing will you focus on next week?" style="width:100%;min-height:90px;background:transparent;border:none;padding:0;font-size:13px;resize:none;outline:none;color:var(--text)"></textarea>
+          </div>
+          <div class="review-box">
+            <div class="review-box-label">⊡ Real problem I solved</div>
+            <textarea class="input-field" id="review-win" placeholder="Describe one real SAP issue you cracked this week." style="width:100%;min-height:90px;background:transparent;border:none;padding:0;font-size:13px;resize:none;outline:none;color:var(--text)"></textarea>
+          </div>
+        </div>
+        <button class="btn btn-primary" style="margin-top:14px" onclick="saveReview()">Save Review</button>
+      </div>
+
+      <div id="past-reviews" style="display:flex;flex-direction:column;gap:12px"></div>
+    </div>
+
+    <!-- ROADMAP -->
+    <div class="page" id="page-roadmap">
+      <div class="page-header">
+        <div class="page-title">6-Month Roadmap</div>
+        <div class="page-subtitle">Your journey from intermediate → high-value techno-functional consultant.</div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-title">PHASES</div></div>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-spine">
+                <div class="timeline-dot" style="background:var(--teal)"></div>
+                <div class="timeline-line"></div>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-phase" style="color:var(--teal)">Phase 1 · Months 1–2</div>
+                <div class="timeline-title">Data Mastery</div>
+                <div class="timeline-desc">Deep-dive into SAP tables. Trace every PO end-to-end. Write SQL that detects real issues in EKBE, MSEG, MKPF. Goal: no developer dependency for data investigation.</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-spine">
+                <div class="timeline-dot" style="background:var(--purple)"></div>
+                <div class="timeline-line"></div>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-phase" style="color:var(--purple)">Phase 2 · Months 3–4</div>
+                <div class="timeline-title">Techno-Functional Shift</div>
+                <div class="timeline-desc">Learn to read ABAP. Set breakpoints. Understand BADIs, user exits, Z-tables. Build one Z-report from a real use case. Goal: solve 2 real issues without calling a developer.</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-spine">
+                <div class="timeline-dot" style="background:var(--amber)"></div>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-phase" style="color:var(--amber)">Phase 3 · Months 5–6</div>
+                <div class="timeline-title">Visible Expertise</div>
+                <div class="timeline-desc">Own one problem area (GR/IR, pricing, STO). Write one knowledge doc per month. Mentor a junior. Become the named go-to person on your project.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div class="card-title">WEEKLY TARGETS</div></div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div class="insight-card">
+              <div class="insight-icon">◷</div>
+              <div>
+                <div class="insight-title">Daily (45 min minimum)</div>
+                <div class="insight-body">15 min: one SAP concept or table · 15 min: write one SQL query · 15 min: document what you learned</div>
+              </div>
+            </div>
+            <div class="insight-card">
+              <div class="insight-icon">◈</div>
+              <div>
+                <div class="insight-title">Weekly (1 real problem)</div>
+                <div class="insight-body">Pick one issue from your live project. Trace it fully. Write a 3-line summary: issue, root cause, fix.</div>
+              </div>
+            </div>
+            <div class="insight-card">
+              <div class="insight-icon">▤</div>
+              <div>
+                <div class="insight-title">Monthly (1 knowledge doc)</div>
+                <div class="insight-body">Document a scenario you mastered. Include: symptom → tables checked → SQL used → resolution. This becomes your portfolio.</div>
+              </div>
+            </div>
+            <div class="insight-card">
+              <div class="insight-icon">↗</div>
+              <div>
+                <div class="insight-title">The brutal reality</div>
+                <div class="insight-body">6 months of this → strong consultant. 1 year → high-value. Ignore it → 2–3 years of slow growth and frustration.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-gap"></div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">PHASE PROGRESS TRACKING</div></div>
+        <div id="phase-progress"></div>
+      </div>
+    </div>
+
+    <!-- SAP REFERENCE -->
+    <div class="page" id="page-reference">
+      <div class="page-header">
+        <div class="page-title">SAP MM Quick Reference</div>
+        <div class="page-subtitle">Key tables, movement types, and flows — always available offline.</div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div class="card-title">KEY MM TABLES</div></div>
+          <table class="table-ref">
+            <thead><tr><th>Table</th><th>Description</th><th>When to use</th></tr></thead>
+            <tbody>
+              <tr><td class="table-name">EKKO</td><td class="table-desc">PO Header</td><td class="table-usecase">First stop for any PO issue</td></tr>
+              <tr><td class="table-name">EKPO</td><td class="table-desc">PO Line Item</td><td class="table-usecase">Item qty, price, material</td></tr>
+              <tr><td class="table-name">EKBE</td><td class="table-desc">PO History</td><td class="table-usecase">GR/IR entries per PO item</td></tr>
+              <tr><td class="table-name">MSEG</td><td class="table-desc">Material Doc Segment</td><td class="table-usecase">Every goods movement detail</td></tr>
+              <tr><td class="table-name">MKPF</td><td class="table-desc">Material Doc Header</td><td class="table-usecase">Header of goods movement</td></tr>
+              <tr><td class="table-name">EBAN</td><td class="table-desc">Purchase Requisition</td><td class="table-usecase">PR items, source of supply</td></tr>
+              <tr><td class="table-name">RBKP</td><td class="table-desc">Invoice Header (MIRO)</td><td class="table-usecase">Vendor invoice details</td></tr>
+              <tr><td class="table-name">RSEG</td><td class="table-desc">Invoice Line Items</td><td class="table-usecase">IR qty, amount per item</td></tr>
+              <tr><td class="table-name">MARA</td><td class="table-desc">Material Master General</td><td class="table-usecase">Material type, base unit</td></tr>
+              <tr><td class="table-name">MARC</td><td class="table-desc">Material Master Plant</td><td class="table-usecase">Plant-level material data</td></tr>
+              <tr><td class="table-name">MARD</td><td class="table-desc">Storage Location Stock</td><td class="table-usecase">Current stock by SLoc</td></tr>
+              <tr><td class="table-name">LFA1</td><td class="table-desc">Vendor Master</td><td class="table-usecase">Vendor details, payment terms</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div class="card-title">MOVEMENT TYPES</div></div>
+          <table class="table-ref">
+            <thead><tr><th>Mvt</th><th>Description</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td class="table-name">101</td><td class="table-desc">GR against PO</td><td class="table-usecase">Most common. Creates accounting doc.</td></tr>
+              <tr><td class="table-name">102</td><td class="table-desc">GR reversal (101)</td><td class="table-usecase">Cancels 101 GR</td></tr>
+              <tr><td class="table-name">103</td><td class="table-desc">GR to blocked stock</td><td class="table-usecase">Quality hold; no value posting</td></tr>
+              <tr><td class="table-name">105</td><td class="table-desc">Blocked → unrestricted</td><td class="table-usecase">Release from quality hold</td></tr>
+              <tr><td class="table-name">122</td><td class="table-desc">Return to vendor</td><td class="table-usecase">Sends goods back after GR</td></tr>
+              <tr><td class="table-name">123</td><td class="table-desc">Reversal of 122</td><td class="table-usecase">Cancels return to vendor</td></tr>
+              <tr><td class="table-name">261</td><td class="table-desc">GI for production order</td><td class="table-usecase">PP-MM integration point</td></tr>
+              <tr><td class="table-name">301</td><td class="table-desc">Plant-to-plant transfer</td><td class="table-usecase">Stock transfer 1-step</td></tr>
+              <tr><td class="table-name">311</td><td class="table-desc">Transfer posting SLoc</td><td class="table-usecase">Within same plant</td></tr>
+              <tr><td class="table-name">543</td><td class="table-desc">GI for subcontracting</td><td class="table-usecase">Components to vendor</td></tr>
+              <tr><td class="table-name">551</td><td class="table-desc">Scrapping</td><td class="table-usecase">Goods issue to scrapping</td></tr>
+              <tr><td class="table-name">601</td><td class="table-desc">GI for delivery (SD)</td><td class="table-usecase">SD-MM integration</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section-gap"></div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">STANDARD PROCESS FLOWS</div></div>
+        <div class="grid-3">
+          <div class="review-box">
+            <div class="review-box-label" style="color:var(--teal)">Procurement Flow</div>
+            <div style="font-size:12px;color:var(--text2);line-height:2;margin-top:4px;font-family:var(--font-mono)">
+              PR (EBAN)<br>↓<br>RFQ / Quotation<br>↓<br>PO (EKKO/EKPO)<br>↓<br>GR (MKPF/MSEG)<br>↓<br>IR (RBKP/RSEG)<br>↓<br>Payment
+            </div>
+          </div>
+          <div class="review-box">
+            <div class="review-box-label" style="color:var(--purple)">GR/IR Reconciliation</div>
+            <div style="font-size:12px;color:var(--text2);line-height:1.8;margin-top:4px">
+              Check EKBE for all 101/122 entries.<br>
+              EKBE.BEWTP = 'E' → GR<br>
+              EKBE.BEWTP = 'Q' → IR<br>
+              Mismatch in qty → partial GR or missing IR.<br>
+              Check MSEG with EBELN+EBELP for movement detail.
+            </div>
+          </div>
+          <div class="review-box">
+            <div class="review-box-label" style="color:var(--amber)">Debug Checklist</div>
+            <div style="font-size:12px;color:var(--text2);line-height:1.8;margin-top:4px">
+              1. Confirm issue type (data / config / process)<br>
+              2. Check header table first (EKKO)<br>
+              3. Check item table (EKPO)<br>
+              4. Check history (EKBE)<br>
+              5. Check movement (MSEG with MBLNR)<br>
+              6. Check FI doc (BKPF/BSEG if accounting)
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+// ── DATA LAYER ──────────────────────────────────────────────────
+const DB_KEY = 'sap_tracker_v2';
+
+function load() {
+  try { return JSON.parse(localStorage.getItem(DB_KEY)) || defaultData(); }
+  catch { return defaultData(); }
+}
+
+function save(data) {
+  localStorage.setItem(DB_KEY, JSON.stringify(data));
+}
+
+function defaultData() {
+  return {
+    goals: [],
+    logs: [],
+    heatmap: {},
+    skills: {
+      sap: {
+        'MM End-to-End Flow': 2,
+        'PO / GR / IR Process': 2,
+        'Movement Types': 2,
+        'Table Navigation (SE16N)': 2,
+        'Pricing Procedures': 1,
+        'Output / Messages': 1,
+        'STO / Subcontracting': 1
+      },
+      tech: {
+        'SQL / HANA Queries': 1,
+        'ABAP Reading': 0,
+        'Debugging (Breakpoints)': 0,
+        'Z-Table / Z-Report': 1,
+        'BADI / User Exits': 0,
+        'HANA Studio': 0
+      }
+    },
+    reviews: [],
+    phaseProgress: { p1: 0, p2: 0, p3: 0 },
+    streak: { lastDate: null, count: 0 }
+  };
+}
+
+let db = load();
+
+// ── NAVIGATION ──────────────────────────────────────────────────
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + id + "'")) {
+      n.classList.add('active');
+    }
+  });
+  renderPage(id);
+}
+
+function renderPage(id) {
+  if (id === 'dashboard') renderDashboard();
+  if (id === 'goals') renderGoals();
+  if (id === 'log') renderLog();
+  if (id === 'skills') renderSkills();
+  if (id === 'heatmap') renderHeatmap();
+  if (id === 'weekly') renderWeekly();
+  if (id === 'roadmap') renderRoadmap();
+}
+
+// ── DATE UTILS ──────────────────────────────────────────────────
+function today() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function formatDate(d) {
+  return new Date(d + 'T00:00:00').toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function dayOfWeek(d) {
+  return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][new Date(d + 'T00:00:00').getDay()];
+}
+
+// ── STREAK ──────────────────────────────────────────────────────
+function updateStreak() {
+  const t = today();
+  const s = db.streak;
+  if (s.lastDate === t) return;
+  const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+  const yStr = yesterday.toISOString().slice(0, 10);
+  if (s.lastDate === yStr) { s.count += 1; }
+  else if (s.lastDate !== t) { s.count = 1; }
+  s.lastDate = t;
+  save(db);
+}
+
+// ── DASHBOARD ───────────────────────────────────────────────────
+function renderDashboard() {
+  const t = today();
+  const opts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  document.getElementById('today-date').textContent = new Date().toLocaleDateString('en-IN', opts);
+
+  updateStreak();
+  const streak = db.streak.count;
+  document.getElementById('dash-streak').textContent = streak;
+
+  // Streak banner
+  const sb = document.getElementById('streak-area');
+  if (streak >= 3) {
+    sb.innerHTML = `<div class="streak-banner">
+      <div class="streak-emoji">${streak >= 7 ? '🔥' : '⚡'}</div>
+      <div class="streak-text">
+        <div class="streak-main">${streak >= 7 ? 'On fire! ' : 'Building momentum — '}${streak} day streak</div>
+        <div class="streak-sub">${streak >= 7 ? 'Consistency is your superpower. Keep it alive.' : 'Every day counts. Don\'t break the chain.'}</div>
+      </div>
+      <div class="streak-count">${streak}</div>
+    </div>`;
+  } else { sb.innerHTML = ''; }
+
+  // Goals today
+  const todayGoals = db.goals.filter(g => g.date === t);
+  const done = todayGoals.filter(g => g.done).length;
+  document.getElementById('dash-goals-done').textContent = done + '/' + todayGoals.length;
+  const pct = todayGoals.length ? Math.round(done / todayGoals.length * 100) : 0;
+  document.getElementById('dash-goals-pct').textContent = pct + '%';
+  document.getElementById('dash-goal-bar').style.width = pct + '%';
+
+  const gl = document.getElementById('dash-goals-list');
+  if (!todayGoals.length) {
+    gl.innerHTML = '<div style="font-size:12px;color:var(--text3);padding:8px 0">No goals set today. <span style="color:var(--teal);cursor:pointer" onclick="showPage(\'goals\')">Add some →</span></div>';
+  } else {
+    gl.innerHTML = todayGoals.slice(0, 5).map(g => `
+      <div class="goal-item ${g.done ? 'completed' : ''}" onclick="toggleGoal('${g.id}')">
+        <div class="goal-check">${g.done ? '✓' : ''}</div>
+        <div class="goal-text">${g.text}</div>
+        <div class="goal-category cat-${g.cat}">${g.cat}</div>
+      </div>`).join('');
+  }
+
+  // Logs count
+  document.getElementById('dash-logs').textContent = db.logs.length;
+
+  // Skill average
+  const allSkills = [...Object.values(db.skills.sap), ...Object.values(db.skills.tech)];
+  const avg = allSkills.length ? Math.round(allSkills.reduce((a, b) => a + b, 0) / allSkills.length / 5 * 100) : 0;
+  document.getElementById('dash-skill-avg').textContent = avg + '%';
+
+  // Skill snapshot
+  const snap = document.getElementById('dash-skills-snap');
+  const topSkills = [
+    ...Object.entries(db.skills.sap).slice(0, 4),
+    ...Object.entries(db.skills.tech).slice(0, 3)
+  ];
+  snap.innerHTML = topSkills.map(([name, val]) => {
+    const pct = Math.round(val / 5 * 100);
+    const color = val >= 4 ? 'fill-teal' : val >= 3 ? 'fill-purple' : val >= 2 ? 'fill-amber' : 'fill-red';
+    return `<div class="skill-row">
+      <div class="skill-name">${name} <span class="skill-meta">${pct}%</span></div>
+      <div class="progress-bar"><div class="progress-fill ${color}" style="width:${pct}%"></div></div>
+    </div>`;
+  }).join('');
+
+  // Insights
+  renderInsights();
+}
+
+function renderInsights() {
+  const insights = [];
+  const t = today();
+  const todayGoals = db.goals.filter(g => g.date === t);
+  const done = todayGoals.filter(g => g.done).length;
+
+  if (!todayGoals.length) {
+    insights.push({ icon: '◎', title: 'Set today\'s goals', body: 'Start with your 45-minute habit: 15 min SAP concept · 15 min SQL · 15 min write it down.', color: 'var(--teal)' });
+  } else if (done === todayGoals.length && todayGoals.length > 0) {
+    insights.push({ icon: '✦', title: 'All goals done today!', body: 'Excellent discipline. Log what you learned so you can refer to it later.', color: 'var(--green)' });
+  } else {
+    insights.push({ icon: '→', title: todayGoals.length - done + ' goals remaining today', body: 'Even 20 minutes of focused SAP work beats 2 hours of scattered reading.', color: 'var(--amber)' });
+  }
+
+  const sqlSkill = db.skills.tech['SQL / HANA Queries'];
+  if (sqlSkill < 3) {
+    insights.push({ icon: '⊡', title: 'SQL is your fastest win', body: 'Practice: SELECT EBELN, EBELP, MENGE, WEMNG FROM EKBE WHERE EBELN = \'4500012345\'. Run it, understand each column.', color: 'var(--purple)' });
+  }
+
+  if (db.logs.length < 3) {
+    insights.push({ icon: '▤', title: 'Start your learning log', body: 'Every issue you solve without documenting is a missed compounding opportunity. Write it down — even 2 lines.', color: 'var(--teal)' });
+  }
+
+  const abapSkill = db.skills.tech['ABAP Reading'];
+  if (abapSkill === 0) {
+    insights.push({ icon: '◈', title: 'ABAP reading is closer than you think', body: 'You don\'t need to code ABAP. Just read it. Start with SE38, open any MM program, and try to follow the logic.', color: 'var(--amber)' });
+  }
+
+  document.getElementById('insights-list').innerHTML = insights.map(i => `
+    <div class="insight-card">
+      <div class="insight-icon" style="color:${i.color}">${i.icon}</div>
+      <div>
+        <div class="insight-title">${i.title}</div>
+        <div class="insight-body">${i.body}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ── GOALS ───────────────────────────────────────────────────────
+const SUGGESTED = [
+  { text: 'Open SE16N, explore EKBE table for any active PO', cat: 'data', phase: 1 },
+  { text: 'Write SQL: find GR qty vs IR qty mismatch in EKBE', cat: 'sql', phase: 1 },
+  { text: 'Understand movement type 101 vs 103 — when does each create an accounting doc?', cat: 'data', phase: 1 },
+  { text: 'Trace one full PR → PO → GR → IR flow by document number', cat: 'data', phase: 1 },
+  { text: 'Find a price discrepancy in EKPO vs RBKP for one invoice', cat: 'debug', phase: 1 },
+  { text: 'Write a 3-line summary of one issue you solved this week', cat: 'write', phase: 1 },
+  { text: 'Open SE38, read any MM standard program — try to follow the SELECT statements', cat: 'abap', phase: 2 },
+  { text: 'Set a breakpoint in debug mode for a GR posting', cat: 'abap', phase: 2 },
+  { text: 'Find a BADI relevant to PO creation — check where it exits', cat: 'abap', phase: 2 },
+  { text: 'Build a Z-table for tracking known GR/IR issues in your project', cat: 'abap', phase: 2 },
+  { text: 'Write a one-page document: "How to debug a GR posting issue"', cat: 'write', phase: 3 },
+  { text: 'Review a junior\'s work and give structured feedback', cat: 'write', phase: 3 }
+];
+
+function addGoal() {
+  const text = document.getElementById('goal-input').value.trim();
+  const cat = document.getElementById('goal-cat').value;
+  if (!text) return;
+  db.goals.push({ id: Date.now().toString(), text, cat, date: today(), done: false });
+  save(db);
+  document.getElementById('goal-input').value = '';
+  renderGoals();
+  showToast('Goal added ✓');
+}
+
+function toggleGoal(id) {
+  const g = db.goals.find(g => g.id === id);
+  if (g) { g.done = !g.done; save(db); }
+  renderGoals();
+  renderDashboard();
+}
+
+function clearCompleted() {
+  db.goals = db.goals.filter(g => !(g.done && g.date === today()));
+  save(db); renderGoals();
+}
+
+function resetGoals() {
+  db.goals.filter(g => g.date === today()).forEach(g => g.done = false);
+  save(db); renderGoals();
+}
+
+function renderGoals() {
+  const todayGoals = db.goals.filter(g => g.date === today());
+  const gl = document.getElementById('goals-list');
+  if (!todayGoals.length) {
+    gl.innerHTML = '<div class="empty-state"><div class="empty-state-icon">◎</div>No goals yet today</div>';
+  } else {
+    gl.innerHTML = todayGoals.map(g => `
+      <div class="goal-item ${g.done ? 'completed' : ''}" onclick="toggleGoal('${g.id}')">
+        <div class="goal-check">${g.done ? '✓' : ''}</div>
+        <div class="goal-text">${g.text}</div>
+        <div class="goal-category cat-${g.cat}">${g.cat}</div>
+        <button class="delete-btn" onclick="event.stopPropagation();deleteGoal('${g.id}')">✕</button>
+      </div>`).join('');
+  }
+
+  // Suggested goals
+  const sg = document.getElementById('suggested-goals');
+  sg.innerHTML = SUGGESTED.map(s => `
+    <div class="goal-item" style="cursor:default">
+      <div class="goal-category cat-${s.cat}" style="flex-shrink:0">${s.cat}</div>
+      <div class="goal-text">${s.text}</div>
+      <button class="btn btn-ghost" style="font-size:11px;padding:4px 10px;flex-shrink:0"
+        onclick="addSuggested('${s.text}','${s.cat}')">+ Add</button>
+    </div>`).join('');
+}
+
+function addSuggested(text, cat) {
+  db.goals.push({ id: Date.now().toString(), text, cat, date: today(), done: false });
+  save(db); renderGoals(); showToast('Goal added ✓');
+}
+
+function deleteGoal(id) {
+  db.goals = db.goals.filter(g => g.id !== id);
+  save(db); renderGoals();
+}
+
+// ── LEARNING LOG ────────────────────────────────────────────────
+function addLog() {
+  const title = document.getElementById('log-title').value.trim();
+  const body = document.getElementById('log-body').value.trim();
+  const type = document.getElementById('log-type').value;
+  const tags = document.getElementById('log-tags').value.trim();
+  if (!title || !body) { showToast('Add a title and notes'); return; }
+  db.logs.unshift({
+    id: Date.now().toString(),
+    title, body, type, tags,
+    date: today()
+  });
+  save(db);
+  document.getElementById('log-title').value = '';
+  document.getElementById('log-body').value = '';
+  document.getElementById('log-tags').value = '';
+  renderLog();
+  showToast('Entry saved ✓');
+}
+
+function deleteLog(id) {
+  db.logs = db.logs.filter(l => l.id !== id);
+  save(db); renderLog();
+}
+
+function renderLog() {
+  const ll = document.getElementById('log-list');
+  if (!db.logs.length) {
+    ll.innerHTML = '<div class="empty-state"><div class="empty-state-icon">▤</div>Your learning journal is empty. Start writing.</div>';
+    return;
+  }
+  ll.innerHTML = db.logs.map(l => {
+    const tagList = l.tags ? l.tags.split(',').map(t => t.trim()).filter(Boolean) : [];
+    const colorMap = { teal: 'cat-data', purple: 'cat-sql', amber: 'cat-debug', green: 'cat-write' };
+    return `<div class="log-entry ${l.type}">
+      <div class="log-entry-header">
+        <div class="log-entry-title">${l.title}</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="log-entry-date">${formatDate(l.date)}</div>
+          <button class="delete-btn" onclick="deleteLog('${l.id}')">✕</button>
+        </div>
+      </div>
+      <div class="log-entry-body">${l.body}</div>
+      ${tagList.length ? `<div class="log-entry-tags">${tagList.map(t => `<span class="tag ${colorMap[l.type] || 'cat-data'}" style="opacity:0.7">${t}</span>`).join('')}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+// ── SKILLS ──────────────────────────────────────────────────────
+const SKILL_LABELS = ['0', '1', '2', '3', '4', '5'];
+
+function renderSkillGroup(containerId, group, colorClass) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = Object.entries(group).map(([name, val]) => `
+    <div class="skill-rating-row">
+      <div style="flex:1">
+        <div class="skill-rating-name">${name}</div>
+      </div>
+      <div class="rating-dots">
+        ${[1,2,3,4,5].map(n => `
+          <div class="rating-dot ${val >= n ? colorClass : ''}"
+            onclick="setSkill('${containerId}','${name}',${n})"
+            title="${n}/5">${n}</div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function setSkill(groupId, name, val) {
+  const groupKey = groupId === 'skills-sap' ? 'sap' : 'tech';
+  const colorClass = groupKey === 'sap' ? 'active' : 'active-purple';
+  db.skills[groupKey][name] = val;
+  save(db);
+  renderSkills();
+  showToast('Skill updated ✓');
+}
+
+function renderSkills() {
+  renderSkillGroup('skills-sap', db.skills.sap, 'active');
+  renderSkillGroup('skills-tech', db.skills.tech, 'active-purple');
+
+  const overall = document.getElementById('skills-overall');
+  const all = [
+    ...Object.entries(db.skills.sap).map(([k,v]) => ({ name: k, val: v, color: 'fill-teal' })),
+    ...Object.entries(db.skills.tech).map(([k,v]) => ({ name: k, val: v, color: 'fill-purple' }))
+  ];
+  overall.innerHTML = all.map(s => {
+    const pct = Math.round(s.val / 5 * 100);
+    return `<div class="skill-row">
+      <div class="skill-name">${s.name} <span class="skill-meta">${pct}%</span></div>
+      <div class="progress-bar"><div class="progress-fill ${s.color}" style="width:${pct}%"></div></div>
+    </div>`;
+  }).join('');
+}
+
+// ── HEATMAP ─────────────────────────────────────────────────────
+function renderHeatmap() {
+  const grid = document.getElementById('heatmap-grid');
+  const days = 90;
+  const cells = [];
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    const val = db.heatmap[key] || 0;
+    const label = formatDate(key) + ' · level ' + val;
+    cells.push(`<div class="hm-cell hm-${val}" data-date="${key}" data-tip="${label}"
+      onclick="cycleHeatmap('${key}')"></div>`);
+  }
+  grid.innerHTML = cells.join('');
+
+  // Week circles
+  const wc = document.getElementById('week-circles');
+  const days7 = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const weekCells = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    const val = db.heatmap[key] || 0;
+    const isToday = key === today();
+    weekCells.push(`<div class="week-circle ${val > 0 ? 'done' : ''} ${isToday && val === 0 ? 'today' : ''}"
+      onclick="cycleHeatmap('${key}')" title="${key}">${days7[d.getDay() === 0 ? 6 : d.getDay() - 1]}</div>`);
+  }
+  wc.innerHTML = weekCells.join('');
+
+  const activeDays = Object.values(db.heatmap).filter(v => v > 0).length;
+  const weekActive = weekCells.filter(c => c.includes('done')).length;
+  document.getElementById('week-summary').textContent = weekActive + '/7 days active this week';
+
+  // Stats
+  const totalLvl = Object.values(db.heatmap).reduce((a, b) => a + b, 0);
+  document.getElementById('heatmap-stats').innerHTML = `
+    <div><div class="stat-label">Active days (total)</div><div style="font-size:20px;color:var(--teal);font-family:var(--font-serif);margin-top:2px">${activeDays}</div></div>
+    <div><div class="stat-label">This week</div><div style="font-size:20px;color:var(--purple);font-family:var(--font-serif);margin-top:2px">${weekActive} / 7</div></div>
+    <div><div class="stat-label">Total effort pts</div><div style="font-size:20px;color:var(--amber);font-family:var(--font-serif);margin-top:2px">${totalLvl}</div></div>`;
+}
+
+function cycleHeatmap(date) {
+  const cur = db.heatmap[date] || 0;
+  db.heatmap[date] = (cur + 1) % 5;
+  save(db);
+  renderHeatmap();
+}
+
+// ── WEEKLY REVIEW ───────────────────────────────────────────────
+function saveReview() {
+  const good = document.getElementById('review-good').value.trim();
+  const bad = document.getElementById('review-bad').value.trim();
+  const next = document.getElementById('review-next').value.trim();
+  const win = document.getElementById('review-win').value.trim();
+  if (!good && !bad && !next && !win) { showToast('Add at least one field'); return; }
+  db.reviews.unshift({ id: Date.now().toString(), date: today(), good, bad, next, win });
+  save(db);
+  document.getElementById('review-good').value = '';
+  document.getElementById('review-bad').value = '';
+  document.getElementById('review-next').value = '';
+  document.getElementById('review-win').value = '';
+  renderWeekly();
+  showToast('Review saved ✓');
+}
+
+function deleteReview(id) {
+  db.reviews = db.reviews.filter(r => r.id !== id);
+  save(db); renderWeekly();
+}
+
+function renderWeekly() {
+  const pr = document.getElementById('past-reviews');
+  if (!db.reviews.length) {
+    pr.innerHTML = '<div class="empty-state"><div class="empty-state-icon">◷</div>No reviews yet. Save your first one above.</div>';
+    return;
+  }
+  pr.innerHTML = db.reviews.map(r => `
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Week of ${formatDate(r.date)}</div>
+        <button class="delete-btn" onclick="deleteReview('${r.id}')">✕</button>
+      </div>
+      <div class="review-grid">
+        ${r.good ? `<div class="review-box"><div class="review-box-label">✦ Went well</div><div style="font-size:13px;color:var(--text2)">${r.good}</div></div>` : ''}
+        ${r.bad ? `<div class="review-box"><div class="review-box-label">⚠ Slowed me down</div><div style="font-size:13px;color:var(--text2)">${r.bad}</div></div>` : ''}
+        ${r.next ? `<div class="review-box"><div class="review-box-label">→ Next week focus</div><div style="font-size:13px;color:var(--text2)">${r.next}</div></div>` : ''}
+        ${r.win ? `<div class="review-box"><div class="review-box-label">⊡ Problem solved</div><div style="font-size:13px;color:var(--text2)">${r.win}</div></div>` : ''}
+      </div>
+    </div>`).join('');
+}
+
+// ── ROADMAP ─────────────────────────────────────────────────────
+function renderRoadmap() {
+  const pp = document.getElementById('phase-progress');
+  const phases = [
+    { key: 'p1', label: 'Phase 1 — Data Mastery', color: 'fill-teal' },
+    { key: 'p2', label: 'Phase 2 — Techno-Functional', color: 'fill-purple' },
+    { key: 'p3', label: 'Phase 3 — Visible Expertise', color: 'fill-amber' }
+  ];
+  pp.innerHTML = phases.map(p => {
+    const val = db.phaseProgress[p.key] || 0;
+    return `<div class="skill-row">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+        <div class="skill-name" style="margin-bottom:0">${p.label}</div>
+        <input type="range" min="0" max="100" value="${val}" style="flex:1"
+          oninput="setPhaseProgress('${p.key}', this.value)">
+        <span style="font-size:12px;color:var(--text2);font-family:var(--font-mono);min-width:36px;text-align:right">${val}%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill ${p.color}" style="width:${val}%"></div></div>
+    </div>`;
+  }).join('');
+}
+
+function setPhaseProgress(key, val) {
+  db.phaseProgress[key] = parseInt(val);
+  save(db);
+  renderRoadmap();
+}
+
+// ── TOAST ────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2000);
+}
+
+// ── INIT ─────────────────────────────────────────────────────────
+renderDashboard();
+</script>
+</body>
+</html>
