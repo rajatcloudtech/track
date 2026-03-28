@@ -1,0 +1,122 @@
+[
+  {
+    "name": "EKKO",
+    "description": "Purchase Order Header",
+    "useCase": "First stop for any PO issue. Key fields: LIFNR (vendor), BSTYP (doc category: F=PO, K=Contract, L=Sched.Agmt), BEDAT (PO date), BUKRS (company code), EKORG (purch.org), ERNAM (created by user)."
+  },
+  {
+    "name": "EKPO",
+    "description": "Purchase Order Line Item",
+    "useCase": "Item-level data: MATNR (material), MENGE (ordered qty), NETPR (net price), WERKS (plant), ELIKZ (delivery complete flag), LOEKZ (deletion flag), WEBRE (GR-based IV flag), BANFN/BNFPO (source PR number/item)."
+  },
+  {
+    "name": "EKBE",
+    "description": "PO History — All GR and IR Entries",
+    "useCase": "GR/IR reconciliation. BEWTP='E'=GR, 'Q'=IR, 'R'=returns. MENGE=quantity, WRBTR=value. Always SUM — multiple entries per item are normal. This is your forensic table for quantity and value mismatches."
+  },
+  {
+    "name": "MSEG",
+    "description": "Material Document Line Item",
+    "useCase": "Movement detail: BWART (movement type), MENGE (quantity), MEINS (unit), LGORT (storage location), WERKS (plant), EBELN/EBELP (PO reference). Join with MKPF on MBLNR+MJAHR. Never join on MBLNR alone."
+  },
+  {
+    "name": "MKPF",
+    "description": "Material Document Header",
+    "useCase": "Header for goods movements: MBLNR (doc number), MJAHR (fiscal year), BUDAT (posting date), USNAM (user who posted), CPUDT (entry date). Always join to MSEG on both MBLNR and MJAHR."
+  },
+  {
+    "name": "EBAN",
+    "description": "Purchase Requisition Items",
+    "useCase": "PR data: BANFN (PR number), BNFPO (PR item), MATNR, MENGE, AFNAM (requester), EBAKZ ('X' if converted to PO). Trace PR→PO by joining EBAN.BANFN+BNFPO to EKPO.BANFN+BNFPO."
+  },
+  {
+    "name": "RBKP",
+    "description": "Invoice Verification Document Header (MIRO)",
+    "useCase": "Invoice header: LIFNR (vendor), BLDAT (invoice date), BUDAT (posting date), XBLNR (vendor invoice reference), RMWWR (gross amount), BSTAT (A=parked, B=posted, V=parked complete), ZLSPR (payment block)."
+  },
+  {
+    "name": "RSEG",
+    "description": "Invoice Verification Line Items",
+    "useCase": "Invoice line detail: EBELN/EBELP (PO reference), MENGE (invoiced qty), DMBTR (amount in local currency). Join RSEG.BELNR+GJAHR to RBKP.BELNR+GJAHR. Key for GR/IR value reconciliation."
+  },
+  {
+    "name": "MARA",
+    "description": "Material Master — General / Client Data",
+    "useCase": "Material type (MTART: ROH=raw, FERT=finished, HALB=semi), base unit (MEINS), material group (MATKL), old material number (BISMT). Client-level — same data across all plants. First stop for material master issues."
+  },
+  {
+    "name": "MARC",
+    "description": "Material Master — Plant Data",
+    "useCase": "Plant-specific: MRP type (DISMM), procurement type (BESKZ: E=in-house, F=external, X=both), planned delivery time (PLIFZ), special procurement key (SOBSL). One row per material+plant combination."
+  },
+  {
+    "name": "MARD",
+    "description": "Material Master — Storage Location Stock",
+    "useCase": "Current stock by SLoc: LABST (unrestricted), INSME (quality inspection), EINME (in-transit/STO), SPEME (blocked), UMLME (in transfer posting). Definitive stock table. One row per material+plant+storage location."
+  },
+  {
+    "name": "MBEW",
+    "description": "Material Valuation",
+    "useCase": "Material price and value: VERPR (moving average price), STPRS (standard price), LBKUM (total stock value), SALK3 (standard price total value), VPRSV (price control: V=MAP, S=standard). Critical for price-related investigations."
+  },
+  {
+    "name": "LFA1",
+    "description": "Vendor Master — General / Client Data",
+    "useCase": "Vendor name (NAME1), country (LAND1), city (ORT01), payment terms (ZTERM), tax number (STCD1). Client-level master. Join to LFB1 for company-code data or LFM1 for purchasing-org data."
+  },
+  {
+    "name": "LFB1",
+    "description": "Vendor Master — Company Code Data",
+    "useCase": "Company-code specific: reconciliation account (AKONT), payment method (ZWELS), dunning procedure (MAHNA), bank details. One row per vendor+company code. Key for payment and accounting investigations."
+  },
+  {
+    "name": "LFM1",
+    "description": "Vendor Master — Purchasing Organisation Data",
+    "useCase": "Purchasing-org specific: purchasing group (EKGRP), incoterms (INCO1/INCO2), order currency (WAERS), minimum order value (MINBW). One row per vendor+purchasing org."
+  },
+  {
+    "name": "BKPF",
+    "description": "Accounting Document Header",
+    "useCase": "FI document: BELNR (doc number), BUKRS (company code), GJAHR (fiscal year), BLDAT (doc date), BUDAT (posting date), AWTYP (reference type), AWKEY (reference key — links to MBLNR+MJAHR for goods movements)."
+  },
+  {
+    "name": "BSEG",
+    "description": "Accounting Document Line Items",
+    "useCase": "FI line items: HKONT (GL account), SHKZG (D=debit, H=credit), DMBTR (amount), KOSTL (cost center), WERKS (plant). Use when investigating wrong GL postings from GR or IR. Join to BKPF on BELNR+BUKRS+GJAHR."
+  },
+  {
+    "name": "CDHDR",
+    "description": "Change Document Header",
+    "useCase": "Audit trail header: OBJECTCLAS (object type: 'EINKBELEG'=PO), OBJECTID (e.g. PO number), USERNAME (who changed), UDATE/UTIME (when). First stop for 'who changed this PO?' investigations. Join to CDPOS for field detail."
+  },
+  {
+    "name": "CDPOS",
+    "description": "Change Document Items — Field Changes",
+    "useCase": "What changed: TABNAME (table), FNAME (field name e.g. NETPR=price), VALUE_OLD, VALUE_NEW. Join CDHDR.CHANGENR to CDPOS.CHANGENR. Gives you exact before/after values for any field change in the system."
+  },
+  {
+    "name": "T156",
+    "description": "Movement Type Configuration",
+    "useCase": "Defines every movement type: whether it creates an FI document, which stock type it affects, whether it's a GR/GI/transfer. Use SE16N to look up an unfamiliar movement type. BWART field links to MSEG."
+  },
+  {
+    "name": "EKET",
+    "description": "Scheduling Agreement Delivery Schedule",
+    "useCase": "Delivery schedule lines for scheduling agreements: EBELN/EBELP (SA reference), EINDT (delivery date), MENGE (scheduled qty), WEMNG (GR quantity against this schedule line). Used for SA vs GR reconciliation."
+  },
+  {
+    "name": "LIPS",
+    "description": "Delivery Line Items (Outbound)",
+    "useCase": "Outbound delivery items: VBELN (delivery number), POSNR (item), MATNR, LFIMG (delivery qty), WERKS (plant). Used for STO delivery investigation. Join to LIKP (delivery header) on VBELN."
+  },
+  {
+    "name": "LIKP",
+    "description": "Delivery Header (Outbound)",
+    "useCase": "Outbound delivery header: VBELN (delivery number), KUNNR (ship-to customer/plant), WADAT (planned goods issue date), WBSTK (goods movement status). Join to LIPS for line items."
+  },
+  {
+    "name": "PRPS",
+    "description": "WBS Element Master Data",
+    "useCase": "Project structure elements used in project-based procurement (cost objects). PSPNR (WBS internal ID), POSID (WBS display key e.g. P-001-01), PRART (project type). Relevant when MM purchases are posted to project cost elements."
+  }
+]

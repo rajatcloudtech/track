@@ -2,1546 +2,519 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SAP Career Tracker — Rajat</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0d0f12">
+<title>SAP Tracker</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap');
-
-  :root {
-    --bg: #0e0f11;
-    --bg2: #141618;
-    --bg3: #1a1d21;
-    --bg4: #21252b;
-    --border: #2a2e35;
-    --border2: #353a42;
-    --text: #e8e9ea;
-    --text2: #8c9099;
-    --text3: #555c67;
-    --teal: #00c9a7;
-    --teal-dim: #00c9a720;
-    --teal-mid: #00c9a740;
-    --purple: #9b72f5;
-    --purple-dim: #9b72f520;
-    --amber: #f5a623;
-    --amber-dim: #f5a62320;
-    --red: #f05252;
-    --red-dim: #f0525220;
-    --green: #34d399;
-    --green-dim: #34d39920;
-    --font-serif: 'DM Serif Display', serif;
-    --font-body: 'Outfit', sans-serif;
-    --font-mono: 'DM Mono', monospace;
-    --radius: 12px;
-    --radius-sm: 8px;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-body);
-    font-size: 14px;
-    line-height: 1.6;
-    min-height: 100vh;
-  }
-
-  /* Grain overlay */
-  body::before {
-    content: '';
-    position: fixed; inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none; z-index: 0; opacity: 0.4;
-  }
-
-  /* Layout */
-  .app { display: flex; min-height: 100vh; position: relative; z-index: 1; }
-
-  /* Sidebar */
-  .sidebar {
-    width: 220px; flex-shrink: 0;
-    background: var(--bg2);
-    border-right: 1px solid var(--border);
-    padding: 24px 0;
-    display: flex; flex-direction: column;
-    position: sticky; top: 0; height: 100vh;
-    overflow-y: auto;
-  }
-
-  .sidebar-brand {
-    padding: 0 20px 24px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .brand-name {
-    font-family: var(--font-serif);
-    font-size: 18px;
-    color: var(--teal);
-    letter-spacing: 0.01em;
-  }
-
-  .brand-sub {
-    font-size: 11px;
-    color: var(--text3);
-    font-family: var(--font-mono);
-    margin-top: 2px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-
-  .sidebar-nav { padding: 16px 0; flex: 1; }
-
-  .nav-section-label {
-    font-size: 10px;
-    font-family: var(--font-mono);
-    color: var(--text3);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    padding: 8px 20px 4px;
-  }
-
-  .nav-item {
-    display: flex; align-items: center; gap: 10px;
-    padding: 9px 20px;
-    cursor: pointer;
-    color: var(--text2);
-    font-size: 13px;
-    font-weight: 400;
-    border-left: 2px solid transparent;
-    transition: all 0.15s;
-  }
-
-  .nav-item:hover { color: var(--text); background: var(--bg3); }
-
-  .nav-item.active {
-    color: var(--teal);
-    border-left-color: var(--teal);
-    background: var(--teal-dim);
-    font-weight: 500;
-  }
-
-  .nav-icon { font-size: 15px; width: 20px; text-align: center; }
-
-  .sidebar-footer {
-    padding: 16px 20px;
-    border-top: 1px solid var(--border);
-  }
-
-  .phase-badge {
-    background: var(--teal-dim);
-    border: 1px solid var(--teal-mid);
-    border-radius: 6px;
-    padding: 8px 12px;
-  }
-
-  .phase-badge-label { font-size: 10px; color: var(--teal); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.1em; }
-  .phase-badge-value { font-size: 13px; color: var(--text); margin-top: 2px; font-weight: 500; }
-
-  /* Main */
-  .main { flex: 1; padding: 32px; overflow-x: hidden; }
-
-  /* Pages */
-  .page { display: none; }
-  .page.active { display: block; }
-
-  /* Page header */
-  .page-header { margin-bottom: 28px; }
-
-  .page-title {
-    font-family: var(--font-serif);
-    font-size: 26px;
-    color: var(--text);
-    font-weight: normal;
-  }
-
-  .page-subtitle { font-size: 13px; color: var(--text2); margin-top: 4px; }
-
-  /* Date strip */
-  .date-strip {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--text3);
-    margin-top: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-
-  /* Grid layouts */
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
-  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-
-  /* Cards */
-  .card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-  }
-
-  .card-header {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 16px;
-  }
-
-  .card-title {
-    font-size: 12px;
-    font-family: var(--font-mono);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text3);
-  }
-
-  /* Stat cards */
-  .stat-card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 18px 20px;
-  }
-
-  .stat-label { font-size: 11px; color: var(--text3); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.1em; }
-  .stat-value { font-size: 28px; font-family: var(--font-serif); margin-top: 4px; }
-  .stat-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
-
-  .stat-teal .stat-value { color: var(--teal); }
-  .stat-purple .stat-value { color: var(--purple); }
-  .stat-amber .stat-value { color: var(--amber); }
-  .stat-green .stat-value { color: var(--green); }
-
-  /* Progress bar */
-  .progress-wrap { margin-top: 8px; }
-  .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text2); margin-bottom: 6px; }
-  .progress-bar {
-    height: 5px; background: var(--border); border-radius: 3px; overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%; border-radius: 3px;
-    transition: width 0.6s ease;
-  }
-  .fill-teal { background: var(--teal); }
-  .fill-purple { background: var(--purple); }
-  .fill-amber { background: var(--amber); }
-  .fill-green { background: var(--green); }
-  .fill-red { background: var(--red); }
-
-  /* Skill bars */
-  .skill-row { margin-bottom: 16px; }
-  .skill-name { font-size: 13px; color: var(--text); margin-bottom: 6px; font-weight: 500; }
-  .skill-meta { font-size: 11px; color: var(--text3); float: right; font-family: var(--font-mono); }
-
-  /* Daily Goals */
-  .goal-list { display: flex; flex-direction: column; gap: 8px; }
-
-  .goal-item {
-    display: flex; align-items: center; gap: 12px;
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 12px 14px;
-    cursor: pointer;
-    transition: all 0.15s;
-    user-select: none;
-  }
-
-  .goal-item:hover { border-color: var(--border2); }
-
-  .goal-item.completed {
-    opacity: 0.55;
-    background: var(--bg2);
-  }
-
-  .goal-item.completed .goal-text { text-decoration: line-through; color: var(--text3); }
-
-  .goal-check {
-    width: 18px; height: 18px; flex-shrink: 0;
-    border: 1.5px solid var(--border2);
-    border-radius: 5px;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.15s;
-    font-size: 11px;
-  }
-
-  .goal-item.completed .goal-check {
-    background: var(--teal);
-    border-color: var(--teal);
-    color: #000;
-  }
-
-  .goal-text { font-size: 13px; flex: 1; }
-  .goal-category {
-    font-size: 10px; font-family: var(--font-mono);
-    padding: 2px 7px; border-radius: 4px;
-    text-transform: uppercase; letter-spacing: 0.08em;
-  }
-
-  .cat-data { background: var(--teal-dim); color: var(--teal); }
-  .cat-sql { background: var(--purple-dim); color: var(--purple); }
-  .cat-debug { background: var(--amber-dim); color: var(--amber); }
-  .cat-write { background: var(--green-dim); color: var(--green); }
-  .cat-abap { background: var(--red-dim); color: var(--red); }
-
-  /* Add goal input */
-  .add-goal-row {
-    display: flex; gap: 8px; margin-top: 12px;
-  }
-
-  .input-field {
-    flex: 1;
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 9px 12px;
-    color: var(--text);
-    font-family: var(--font-body);
-    font-size: 13px;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-
-  .input-field:focus { border-color: var(--teal); }
-  .input-field::placeholder { color: var(--text3); }
-
-  .select-field {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 9px 10px;
-    color: var(--text);
-    font-family: var(--font-body);
-    font-size: 12px;
-    outline: none;
-    cursor: pointer;
-  }
-
-  .btn {
-    padding: 9px 16px;
-    border-radius: var(--radius-sm);
-    border: none;
-    cursor: pointer;
-    font-family: var(--font-body);
-    font-size: 13px;
-    font-weight: 500;
-    transition: all 0.15s;
-  }
-
-  .btn-primary { background: var(--teal); color: #000; }
-  .btn-primary:hover { background: #00e0bb; }
-  .btn-ghost {
-    background: var(--bg3); border: 1px solid var(--border);
-    color: var(--text2);
-  }
-  .btn-ghost:hover { border-color: var(--border2); color: var(--text); }
-  .btn-danger { background: var(--red-dim); color: var(--red); border: 1px solid var(--red-dim); }
-  .btn-danger:hover { background: var(--red); color: #fff; }
-
-  /* Heatmap */
-  .heatmap { display: flex; gap: 3px; flex-wrap: wrap; }
-  .hm-cell {
-    width: 14px; height: 14px; border-radius: 3px;
-    background: var(--border);
-    cursor: pointer;
-    transition: all 0.15s;
-    position: relative;
-  }
-  .hm-cell:hover::after {
-    content: attr(data-tip);
-    position: absolute; bottom: 18px; left: 50%;
-    transform: translateX(-50%);
-    background: var(--bg4);
-    border: 1px solid var(--border2);
-    color: var(--text);
-    font-size: 11px;
-    padding: 3px 7px;
-    border-radius: 4px;
-    white-space: nowrap;
-    z-index: 10;
-    font-family: var(--font-mono);
-  }
-  .hm-0 { background: var(--border); }
-  .hm-1 { background: #00c9a730; }
-  .hm-2 { background: #00c9a760; }
-  .hm-3 { background: #00c9a7aa; }
-  .hm-4 { background: var(--teal); }
-
-  /* Log entries */
-  .log-list { display: flex; flex-direction: column; gap: 10px; }
-
-  .log-entry {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 14px 16px;
-    border-left: 3px solid var(--teal);
-    position: relative;
-  }
-
-  .log-entry.purple { border-left-color: var(--purple); }
-  .log-entry.amber { border-left-color: var(--amber); }
-  .log-entry.green { border-left-color: var(--green); }
-
-  .log-entry-header {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 6px;
-  }
-
-  .log-entry-title { font-size: 13px; font-weight: 500; }
-  .log-entry-date { font-size: 11px; color: var(--text3); font-family: var(--font-mono); }
-  .log-entry-body { font-size: 13px; color: var(--text2); line-height: 1.6; }
-
-  .log-entry-tags { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
-  .tag {
-    font-size: 10px; padding: 2px 8px; border-radius: 4px;
-    font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.07em;
-  }
-
-  /* Delete btn */
-  .delete-btn {
-    background: none; border: none; color: var(--text3);
-    cursor: pointer; font-size: 14px; padding: 2px;
-    transition: color 0.15s;
-  }
-  .delete-btn:hover { color: var(--red); }
-
-  /* Textarea */
-  textarea.input-field {
-    resize: vertical;
-    min-height: 80px;
-    line-height: 1.6;
-  }
-
-  /* Skill rating */
-  .skill-rating-row {
-    display: flex; align-items: center; gap: 10px;
-    padding: 14px 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .skill-rating-row:last-child { border-bottom: none; }
-
-  .skill-rating-name { flex: 1; font-size: 13px; font-weight: 500; }
-  .skill-rating-desc { font-size: 11px; color: var(--text3); margin-top: 2px; }
-
-  .rating-dots { display: flex; gap: 5px; }
-  .rating-dot {
-    width: 24px; height: 24px; border-radius: 50%;
-    border: 1.5px solid var(--border2);
-    cursor: pointer;
-    transition: all 0.15s;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 10px; font-family: var(--font-mono);
-    color: transparent;
-  }
-  .rating-dot:hover { border-color: var(--teal); color: var(--teal); }
-  .rating-dot.active { background: var(--teal); border-color: var(--teal); color: #000; font-weight: bold; }
-  .rating-dot.active-purple { background: var(--purple); border-color: var(--purple); color: #fff; }
-  .rating-dot.active-amber { background: var(--amber); border-color: var(--amber); color: #000; }
-
-  /* Weekly review */
-  .review-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .review-box {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 14px;
-  }
-  .review-box-label { font-size: 11px; color: var(--text3); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
-
-  /* Phase timeline */
-  .timeline { display: flex; flex-direction: column; gap: 0; }
-  .timeline-item { display: flex; gap: 16px; }
-  .timeline-spine { display: flex; flex-direction: column; align-items: center; }
-  .timeline-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
-  .timeline-line { width: 1px; background: var(--border); flex: 1; min-height: 40px; margin: 4px 0; }
-  .timeline-content { padding-bottom: 24px; flex: 1; }
-  .timeline-phase { font-size: 11px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
-  .timeline-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
-  .timeline-desc { font-size: 12px; color: var(--text2); line-height: 1.6; }
-
-  /* Insight cards */
-  .insight-card {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 14px 16px;
-    display: flex; gap: 12px; align-items: flex-start;
-  }
-  .insight-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
-  .insight-title { font-size: 13px; font-weight: 500; margin-bottom: 3px; }
-  .insight-body { font-size: 12px; color: var(--text2); line-height: 1.6; }
-
-  /* Chart canvas */
-  .chart-container { position: relative; }
-
-  /* Section divider */
-  .section-gap { margin-top: 24px; }
-  .divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
-
-  /* Streak banner */
-  .streak-banner {
-    background: linear-gradient(135deg, #00c9a710 0%, #9b72f510 100%);
-    border: 1px solid var(--teal-mid);
-    border-radius: var(--radius);
-    padding: 16px 20px;
-    display: flex; align-items: center; gap: 16px;
-    margin-bottom: 20px;
-  }
-  .streak-emoji { font-size: 28px; }
-  .streak-text { flex: 1; }
-  .streak-main { font-size: 15px; font-weight: 600; color: var(--text); }
-  .streak-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
-  .streak-count { font-family: var(--font-serif); font-size: 36px; color: var(--teal); }
-
-  /* SAP Table quick ref */
-  .table-ref { width: 100%; border-collapse: collapse; font-size: 12px; }
-  .table-ref th {
-    text-align: left; padding: 8px 12px;
-    background: var(--bg4); color: var(--text3);
-    font-family: var(--font-mono); font-weight: 400;
-    font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
-    border-bottom: 1px solid var(--border);
-  }
-  .table-ref td {
-    padding: 9px 12px;
-    border-bottom: 1px solid var(--border);
-    vertical-align: top;
-  }
-  .table-ref tr:last-child td { border-bottom: none; }
-  .table-ref tr:hover td { background: var(--bg3); }
-  .table-name { font-family: var(--font-mono); color: var(--teal); font-size: 12px; }
-  .table-desc { color: var(--text2); }
-  .table-usecase { color: var(--text3); font-size: 11px; }
-
-  /* Responsive */
-  @media (max-width: 900px) {
-    .grid-4 { grid-template-columns: 1fr 1fr; }
-    .grid-3 { grid-template-columns: 1fr 1fr; }
-    .grid-2 { grid-template-columns: 1fr; }
-  }
-  @media (max-width: 640px) {
-    .sidebar { display: none; }
-    .main { padding: 16px; }
-    .grid-4, .grid-3 { grid-template-columns: 1fr; }
-  }
-
-  /* Animations */
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-  .page.active { animation: fadeIn 0.2s ease; }
-
-  /* Toast */
-  .toast {
-    position: fixed; bottom: 24px; right: 24px;
-    background: var(--bg4); border: 1px solid var(--border2);
-    color: var(--text); padding: 10px 16px; border-radius: var(--radius-sm);
-    font-size: 13px; z-index: 1000;
-    animation: fadeIn 0.2s ease;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-  }
-
-  /* Weekly progress circles */
-  .week-circle-row { display: flex; gap: 6px; margin-top: 8px; }
-  .week-circle {
-    width: 28px; height: 28px; border-radius: 50%;
-    border: 1.5px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 10px; font-family: var(--font-mono);
-    color: var(--text3);
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .week-circle.done { background: var(--teal); border-color: var(--teal); color: #000; font-weight: 600; }
-  .week-circle.today { border-color: var(--teal); color: var(--teal); }
-
-  /* Empty state */
-  .empty-state {
-    text-align: center; padding: 40px 20px;
-    color: var(--text3); font-size: 13px;
-  }
-  .empty-state-icon { font-size: 32px; margin-bottom: 8px; }
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap');
+:root{--bg:#0d0f12;--bg2:#141618;--bg3:#1b1e23;--bg4:#22262d;--b1:#272c34;--b2:#343b46;--txt:#e4e6e8;--txt2:#8a9099;--txt3:#52596a;--teal:#00c9a7;--tdim:rgba(0,201,167,.10);--tmid:rgba(0,201,167,.22);--pur:#9b72f5;--pdim:rgba(155,114,245,.12);--amb:#f5a623;--adim:rgba(245,166,35,.12);--red:#f05252;--rdim:rgba(240,82,82,.12);--grn:#34d399;--gdim:rgba(52,211,153,.12);--nav:60px;--safe:env(safe-area-inset-bottom,0px);--serif:'DM Serif Display',serif;--body:'Outfit',sans-serif;--mono:'DM Mono',monospace;--r:12px;--rs:8px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:var(--bg)}
+body{font-family:var(--body);font-size:15px;color:var(--txt);-webkit-font-smoothing:antialiased}
+.app{display:flex;flex-direction:column;height:100%;height:100dvh}
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:calc(var(--nav) + var(--safe) + 12px)}
+.scroll::-webkit-scrollbar{display:none}
+.nav{position:fixed;bottom:0;left:0;right:0;height:calc(var(--nav) + var(--safe));padding-bottom:var(--safe);background:rgba(20,22,24,.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--b1);display:flex;align-items:flex-start;padding-top:4px;z-index:100}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;background:none;border:none;color:var(--txt3);font-family:var(--body);cursor:pointer;transition:color .15s}
+.nb.on{color:var(--teal)}.nb svg{width:22px;height:22px}.nb span{font-size:10px;font-weight:500;letter-spacing:.02em}
+.pg{display:none}.pg.on{display:block;animation:fu .2s ease}
+@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.ph{padding:16px 16px 12px;border-bottom:1px solid var(--b1);position:sticky;top:0;background:rgba(13,15,18,.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:10;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ph-t{font-family:var(--serif);font-size:22px;line-height:1.1}
+.ph-s{font-size:11px;color:var(--txt3);font-family:var(--mono);margin-top:2px;letter-spacing:.04em}
+.sec{padding:12px 16px}
+.card{background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.ct{font-size:10px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--txt3);margin-bottom:12px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sbox{background:var(--bg3);border:1px solid var(--b1);border-radius:var(--rs);padding:14px}
+.sl{font-size:10px;color:var(--txt3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.1em}
+.sv{font-size:24px;font-family:var(--serif);margin-top:3px;line-height:1}.ss{font-size:11px;color:var(--txt2);margin-top:3px}
+.ct2{color:var(--teal)}.cp{color:var(--pur)}.ca{color:var(--amb)}.cg{color:var(--grn)}
+.pb{height:4px;background:var(--b1);border-radius:2px;overflow:hidden;margin:5px 0}
+.pf{height:100%;border-radius:2px;transition:width .5s ease}
+.ft{background:var(--teal)}.fp{background:var(--pur)}.fa{background:var(--amb)}.fg{background:var(--grn)}.fr{background:var(--red)}
+.prow{display:flex;justify-content:space-between;font-size:12px;color:var(--txt2);margin-bottom:4px}
+.streak{margin:10px 16px;background:linear-gradient(135deg,var(--tdim),var(--pdim));border:1px solid var(--tmid);border-radius:var(--r);padding:14px 16px;display:flex;align-items:center;gap:14px}
+.snum{font-family:var(--serif);font-size:44px;color:var(--teal);line-height:1;flex-shrink:0}
+.stxt strong{font-size:14px;font-weight:600;display:block}.stxt span{font-size:12px;color:var(--txt2)}
+.gi{display:flex;align-items:center;gap:11px;background:var(--bg3);border:1px solid var(--b1);border-radius:var(--rs);padding:12px 14px;margin-bottom:8px;cursor:pointer;-webkit-user-select:none;user-select:none;transition:border-color .15s}
+.gi.done{opacity:.42}.gi.done .gt{text-decoration:line-through;color:var(--txt3)}
+.gck{width:22px;height:22px;border:1.5px solid var(--b2);border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .15s}
+.gi.done .gck{background:var(--teal);border-color:var(--teal);color:#000}
+.gt{font-size:13px;flex:1;line-height:1.4}
+.pill{font-size:10px;font-family:var(--mono);padding:3px 8px;border-radius:5px;text-transform:uppercase;letter-spacing:.06em;flex-shrink:0}
+.pd{background:var(--tdim);color:var(--teal)}.ps{background:var(--pdim);color:var(--pur)}.pb2{background:var(--adim);color:var(--amb)}.pa{background:var(--rdim);color:var(--red)}.pw{background:var(--gdim);color:var(--grn)}
+.inp{width:100%;background:var(--bg3);border:1px solid var(--b1);border-radius:var(--rs);padding:11px 14px;color:var(--txt);font-family:var(--body);font-size:14px;outline:none;transition:border-color .15s;-webkit-appearance:none;appearance:none}
+.inp:focus{border-color:var(--teal)}.inp::placeholder{color:var(--txt3)}
+textarea.inp{resize:none;line-height:1.6;min-height:90px}select.inp{cursor:pointer}
+.row{display:flex;gap:8px}
+.btn{padding:11px 18px;border-radius:var(--rs);border:none;cursor:pointer;font-family:var(--body);font-size:14px;font-weight:600;transition:all .15s;white-space:nowrap}
+.btn-p{background:var(--teal);color:#000;width:100%;display:block}.btn-p:active{background:#00b093}
+.btn-g{background:var(--bg3);border:1px solid var(--b1);color:var(--txt2)}.btn-g:active{background:var(--bg4)}
+.btn-s{padding:7px 12px;font-size:12px}
+.del{background:none;border:none;color:var(--txt3);font-size:20px;cursor:pointer;padding:2px;line-height:1;flex-shrink:0}.del:active{color:var(--red)}
+.tabs{display:flex;gap:6px;padding:10px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:7px 14px;border-radius:20px;font-size:12px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;border:1px solid var(--b1);color:var(--txt2);cursor:pointer;white-space:nowrap;background:var(--bg3);flex-shrink:0;transition:all .15s}
+.tab.on{background:var(--teal);border-color:var(--teal);color:#000;font-weight:600}
+.fc{background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r);min-height:210px;cursor:pointer;perspective:1000px;margin:10px 16px}
+.fci{position:relative;min-height:210px;transform-style:preserve-3d;transition:transform .42s cubic-bezier(.4,0,.2,1)}
+.fc.flip .fci{transform:rotateY(180deg)}
+.ff,.fb{padding:20px;backface-visibility:hidden;-webkit-backface-visibility:hidden;position:absolute;inset:0;border-radius:var(--r);display:flex;flex-direction:column;min-height:210px}
+.fb{transform:rotateY(180deg);background:var(--bg3);border:1px solid var(--tmid)}
+.fcat{font-size:10px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.1em;color:var(--txt3);margin-bottom:10px}
+.fq{font-size:15px;font-weight:600;line-height:1.5;flex:1}
+.fans{font-size:13px;color:var(--txt2);line-height:1.7;flex:1}
+.fhint{font-size:11px;color:var(--txt3);margin-top:12px;font-family:var(--mono)}
+.ftag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:4px;background:var(--tdim);color:var(--teal);font-family:var(--mono);margin:2px 2px 0 0}
+.cnav{display:flex;align-items:center;justify-content:space-between;padding:0 16px 14px}
+.cnum{font-size:12px;color:var(--txt3);font-family:var(--mono)}
+.sqltip{background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r);margin:0 0 12px}
+.sth{padding:14px 16px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.sttl{font-size:14px;font-weight:600;line-height:1.4}
+.lv{font-size:10px;font-family:var(--mono);text-transform:uppercase;padding:3px 8px;border-radius:4px;flex-shrink:0}
+.lb{background:var(--gdim);color:var(--grn)}.lm{background:var(--adim);color:var(--amb)}.la{background:var(--rdim);color:var(--red)}
+.stdesc{font-size:13px;color:var(--txt2);padding:8px 16px 0;line-height:1.6}
+.code{background:var(--bg);border-top:1px solid var(--b1);padding:14px 16px;font-family:var(--mono);font-size:12px;color:#a0a8b8;overflow-x:auto;white-space:pre;-webkit-overflow-scrolling:touch;line-height:1.85;margin-top:10px;position:relative}
+.cpbtn{position:absolute;top:8px;right:8px;background:var(--bg3);border:1px solid var(--b2);color:var(--txt2);font-size:11px;font-family:var(--mono);padding:3px 8px;border-radius:4px;cursor:pointer}
+.cpbtn:active{background:var(--teal);color:#000;border-color:var(--teal)}
+.why{font-size:12px;color:var(--txt3);padding:10px 16px 14px;border-top:1px solid var(--b1);font-style:italic}
+.k{color:#9b72f5}.fn{color:#f5a623}.tn{color:#00c9a7}.cn{color:#60a5fa}.str{color:#f09b5a}.cm{color:#52596a;font-style:italic}
+.rtable{width:100%;border-collapse:collapse;font-size:13px}
+.rtable th{text-align:left;padding:8px 12px;background:var(--bg4);color:var(--txt3);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid var(--b1);white-space:nowrap}
+.rtable td{padding:11px 12px;border-bottom:1px solid var(--b1);vertical-align:top;line-height:1.4}
+.rtable tr:last-child td{border-bottom:none}.rtable tr:active td{background:var(--bg3)}
+.tn2{font-family:var(--mono);color:var(--teal);font-size:13px}.tu{font-size:11px;color:var(--txt3);margin-top:2px}
+.le{background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r);padding:14px 16px;margin-bottom:10px;border-left:3px solid var(--teal)}
+.le.sql{border-left-color:var(--pur)}.le.abap{border-left-color:var(--amb)}.le.proc{border-left-color:var(--grn)}
+.lh{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px}
+.lt{font-size:14px;font-weight:600;line-height:1.3}
+.ld{font-size:11px;color:var(--txt3);font-family:var(--mono);flex-shrink:0}
+.lb2{font-size:13px;color:var(--txt2);line-height:1.7}
+.ltags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.ltag{font-size:10px;padding:2px 8px;border-radius:4px;font-family:var(--mono);background:var(--bg4);color:var(--txt3)}
+.ski{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--b1)}.ski:last-child{border-bottom:none}
+.skn{font-size:13px;font-weight:500;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dots{display:flex;gap:4px;flex-shrink:0}
+.dot{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:11px;font-family:var(--mono);cursor:pointer;transition:all .12s;color:var(--txt3)}
+.dot:active{transform:scale(.88)}.dT{background:var(--teal);border-color:var(--teal);color:#000;font-weight:700}.dP{background:var(--pur);border-color:var(--pur);color:#fff;font-weight:700}
+.hmg{display:flex;flex-wrap:wrap;gap:3px}
+.hmc{width:15px;height:15px;border-radius:3px;cursor:pointer}
+.hm0{background:var(--b1)}.hm1{background:rgba(0,201,167,.25)}.hm2{background:rgba(0,201,167,.50)}.hm3{background:rgba(0,201,167,.75)}.hm4{background:var(--teal)}
+.wrow{display:flex;gap:6px}
+.wd{flex:1;padding:10px 4px;border-radius:var(--rs);background:var(--bg3);border:1px solid var(--b1);display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10px;color:var(--txt3);font-family:var(--mono);cursor:pointer;transition:all .15s}
+.wd.on{border-color:var(--teal);background:var(--tdim);color:var(--teal)}.wd.now{border-color:var(--tmid)}
+.wdot{width:7px;height:7px;border-radius:50%;background:var(--b1)}.wd.on .wdot{background:var(--teal)}
+.tli{display:flex;gap:14px;padding-bottom:20px}
+.tls{display:flex;flex-direction:column;align-items:center}
+.tld{width:12px;height:12px;border-radius:50%;flex-shrink:0;margin-top:3px}.tll{width:1px;background:var(--b1);flex:1;min-height:28px;margin:4px 0}
+.tlc{flex:1}.tlp{font-size:10px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px}.tlt{font-size:15px;font-weight:600;margin-bottom:4px}.tld2{font-size:13px;color:var(--txt2);line-height:1.6}
+.flow{display:flex;align-items:center;overflow-x:auto;gap:0;padding:4px 0 8px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.flow::-webkit-scrollbar{display:none}
+.fstep{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
+.fbox{background:var(--bg3);border:1px solid var(--b1);border-radius:var(--rs);padding:8px 12px;font-size:11px;font-family:var(--mono);text-align:center;white-space:nowrap}
+.farr{font-size:18px;color:var(--txt3);padding:0 3px;align-self:center;flex-shrink:0}
+.ftbl{font-size:10px;color:var(--teal);margin-top:3px;font-family:var(--mono);text-align:center}
+.rvf{margin-bottom:12px}.rvl{font-size:10px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--txt3);margin-bottom:5px}
+.empty{text-align:center;padding:40px 20px;color:var(--txt3)}.eico{font-size:36px;margin-bottom:10px}.etxt{font-size:13px;line-height:1.6}
+.loader{text-align:center;padding:40px;color:var(--txt3);font-family:var(--mono);font-size:12px}
+.toast{position:fixed;bottom:calc(var(--nav) + var(--safe) + 12px);left:50%;transform:translateX(-50%) translateY(16px);background:var(--bg4);border:1px solid var(--b2);color:var(--txt);padding:9px 18px;border-radius:20px;font-size:13px;z-index:999;white-space:nowrap;animation:tin .22s ease forwards;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+@keyframes tin{to{transform:translateX(-50%) translateY(0)}}
+input[type=range]{width:80px;-webkit-appearance:none;appearance:none;height:4px;background:var(--b1);border-radius:2px;outline:none;flex-shrink:0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--teal);cursor:pointer}
+.psl{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.psl-l{font-size:13px;font-weight:500;flex:1;min-width:0}
+.ppct{font-size:12px;font-family:var(--mono);color:var(--txt2);width:34px;text-align:right}
 </style>
 </head>
 <body>
-
 <div class="app">
-
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <div class="sidebar-brand">
-      <div class="brand-name">SAP Tracker</div>
-      <div class="brand-sub">Career Growth OS</div>
-    </div>
-
-    <nav class="sidebar-nav">
-      <div class="nav-section-label">Daily</div>
-      <div class="nav-item active" onclick="showPage('dashboard')">
-        <span class="nav-icon">⬡</span> Dashboard
-      </div>
-      <div class="nav-item" onclick="showPage('goals')">
-        <span class="nav-icon">◎</span> Daily Goals
-      </div>
-      <div class="nav-item" onclick="showPage('log')">
-        <span class="nav-icon">▤</span> Learning Log
-      </div>
-
-      <div class="nav-section-label" style="margin-top:8px">Progress</div>
-      <div class="nav-item" onclick="showPage('skills')">
-        <span class="nav-icon">◈</span> Skills
-      </div>
-      <div class="nav-item" onclick="showPage('heatmap')">
-        <span class="nav-icon">▦</span> Activity
-      </div>
-      <div class="nav-item" onclick="showPage('weekly')">
-        <span class="nav-icon">◷</span> Weekly Review
-      </div>
-
-      <div class="nav-section-label" style="margin-top:8px">Reference</div>
-      <div class="nav-item" onclick="showPage('roadmap')">
-        <span class="nav-icon">↗</span> Roadmap
-      </div>
-      <div class="nav-item" onclick="showPage('reference')">
-        <span class="nav-icon">⊡</span> SAP Tables
-      </div>
-    </nav>
-
-    <div class="sidebar-footer">
-      <div class="phase-badge">
-        <div class="phase-badge-label">Current Phase</div>
-        <div class="phase-badge-value" id="sidebar-phase">Phase 1 — Data Mastery</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Main Content -->
-  <div class="main">
+  <div class="scroll" id="scroll">
 
     <!-- DASHBOARD -->
-    <div class="page active" id="page-dashboard">
-      <div class="page-header">
-        <div class="page-title">Welcome!</div>
-        <div class="page-subtitle">Track your daily SAP MM growth. Small steps, consistent wins.</div>
-        <div class="date-strip" id="today-date"></div>
+    <div class="pg on" id="pg-dash">
+      <div class="ph">
+        <div><div class="ph-t">Good <span id="gtime">day</span> ✦</div><div class="ph-s" id="dlabel"></div></div>
+        <div style="text-align:right;flex-shrink:0"><div style="font-size:10px;color:var(--txt3);font-family:var(--mono)">PHASE</div><div style="font-size:13px;color:var(--teal);font-weight:600" id="phlabel">1 — Data</div></div>
       </div>
-
-      <div id="streak-area"></div>
-
-      <div class="grid-4" style="margin-bottom:16px">
-        <div class="stat-card stat-teal">
-          <div class="stat-label">Day Streak</div>
-          <div class="stat-value" id="dash-streak">0</div>
-          <div class="stat-sub">consecutive days</div>
-        </div>
-        <div class="stat-card stat-purple">
-          <div class="stat-label">Goals Today</div>
-          <div class="stat-value" id="dash-goals-done">0/0</div>
-          <div class="stat-sub">completed</div>
-        </div>
-        <div class="stat-card stat-amber">
-          <div class="stat-label">Log Entries</div>
-          <div class="stat-value" id="dash-logs">0</div>
-          <div class="stat-sub">total learnings</div>
-        </div>
-        <div class="stat-card stat-green">
-          <div class="stat-label">Avg Skill</div>
-          <div class="stat-value" id="dash-skill-avg">0%</div>
-          <div class="stat-sub">across all areas</div>
+      <div id="sarea"></div>
+      <div class="sec">
+        <div class="stats">
+          <div class="sbox"><div class="sl">Streak</div><div class="sv ct2" id="d-str">0</div><div class="ss">days</div></div>
+          <div class="sbox"><div class="sl">Today</div><div class="sv cp" id="d-gl">0/0</div><div class="ss">goals done</div></div>
+          <div class="sbox"><div class="sl">Logs</div><div class="sv ca" id="d-logs">0</div><div class="ss">entries</div></div>
+          <div class="sbox"><div class="sl">Skills</div><div class="sv cg" id="d-sk">0%</div><div class="ss">avg level</div></div>
         </div>
       </div>
-
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">Today's Goals</div>
-            <span style="font-size:12px;color:var(--text3)" id="dash-goals-pct">0%</span>
-          </div>
-          <div id="dash-goals-list" class="goal-list"></div>
-          <div style="margin-top:12px">
-            <div class="progress-bar">
-              <div class="progress-fill fill-teal" id="dash-goal-bar" style="width:0%"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">Skill Snapshot</div>
-          </div>
-          <div id="dash-skills-snap"></div>
-        </div>
-      </div>
-
-      <div class="section-gap"></div>
-
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Daily Insights</div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:10px" id="insights-list"></div>
+      <div class="sec" style="padding-top:0">
+        <div class="card"><div class="ct">Today's Goals</div><div id="d-glist"></div><div class="pb"><div class="pf ft" id="d-gbar" style="width:0%"></div></div></div>
+        <div class="card"><div class="ct">Skill Snapshot</div><div id="d-snap"></div></div>
+        <div class="card"><div class="ct">Daily Insights</div><div id="d-ins"></div></div>
       </div>
     </div>
 
-    <!-- DAILY GOALS -->
-    <div class="page" id="page-goals">
-      <div class="page-header">
-        <div class="page-title">Daily Goals</div>
-        <div class="page-subtitle">Your 45-minute daily habit — the core of your growth.</div>
-      </div>
+    <!-- STUDY -->
+    <div class="pg" id="pg-study">
+      <div class="ph"><div><div class="ph-t">Study</div><div class="ph-s">Daily learning bites</div></div><div id="sstatus" style="font-size:10px;color:var(--txt3);font-family:var(--mono)"></div></div>
+      <div class="tabs" id="stabs"></div>
+      <div id="sbody"><div class="loader">Loading…</div></div>
+    </div>
 
-      <div class="card" style="margin-bottom:16px">
-        <div class="card-title" style="margin-bottom:14px">ADD GOAL FOR TODAY</div>
-        <div class="add-goal-row">
-          <input type="text" class="input-field" id="goal-input" placeholder="e.g. Trace EKBE table for PO 4500012345..." />
-          <select class="select-field" id="goal-cat">
-            <option value="data">Data</option>
-            <option value="sql">SQL</option>
-            <option value="debug">Debug</option>
-            <option value="abap">ABAP</option>
-            <option value="write">Write</option>
-          </select>
-          <button class="btn btn-primary" onclick="addGoal()">Add</button>
+    <!-- GOALS -->
+    <div class="pg" id="pg-goals">
+      <div class="ph"><div><div class="ph-t">Goals</div><div class="ph-s">45 min daily habit</div></div><button class="btn btn-g btn-s" onclick="tp('addp')">+ Add</button></div>
+      <div id="addp" style="display:none;padding:12px 16px;border-bottom:1px solid var(--b1);background:var(--bg2)">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <input class="inp" id="gi" placeholder="e.g. Trace EKBE for PO 4500012345…">
+          <div class="row"><select class="inp" id="gcat"><option value="data">Data</option><option value="sql">SQL</option><option value="debug">Debug</option><option value="abap">ABAP</option><option value="write">Write</option></select><button class="btn btn-p" style="width:auto" onclick="addGoal()">Save</button></div>
         </div>
       </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">TODAY'S GOALS</div>
-          <div style="display:flex;gap:8px">
-            <button class="btn btn-ghost" style="font-size:11px;padding:5px 10px" onclick="clearCompleted()">Clear done</button>
-            <button class="btn btn-ghost" style="font-size:11px;padding:5px 10px" onclick="resetGoals()">Reset all</button>
-          </div>
-        </div>
-        <div id="goals-list" class="goal-list">
-          <div class="empty-state">
-            <div class="empty-state-icon">◎</div>
-            Add your first goal above
-          </div>
-        </div>
-      </div>
-
-      <div class="section-gap"></div>
-
-      <div class="card">
-        <div class="card-header"><div class="card-title">SUGGESTED DAILY GOALS (by phase)</div></div>
-        <div style="display:flex;flex-direction:column;gap:8px" id="suggested-goals"></div>
+      <div class="sec">
+        <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div class="ct" style="margin:0">Today</div><button class="btn btn-g btn-s" onclick="clearDone()">Clear done</button></div><div id="glist"></div></div>
+        <div class="card"><div class="ct">Suggested Goals</div><div id="suglist"></div></div>
       </div>
     </div>
 
-    <!-- LEARNING LOG -->
-    <div class="page" id="page-log">
-      <div class="page-header">
-        <div class="page-title">Learning Log</div>
-        <div class="page-subtitle">Document what you learn. Writing cements knowledge.</div>
-      </div>
-
-      <div class="card" style="margin-bottom:16px">
-        <div class="card-title" style="margin-bottom:14px">NEW ENTRY</div>
-        <div style="display:flex;flex-direction:column;gap:10px">
-          <input type="text" class="input-field" id="log-title" placeholder="Title — e.g. Why EKBE had duplicate entries..." />
-          <textarea class="input-field" id="log-body" placeholder="What did you learn? What was the issue? How did you solve it?"></textarea>
-          <div style="display:flex;gap:8px;align-items:center">
-            <select class="select-field" id="log-type">
-              <option value="teal">SAP Data</option>
-              <option value="purple">SQL / HANA</option>
-              <option value="amber">ABAP / Debug</option>
-              <option value="green">Process / Config</option>
-            </select>
-            <input type="text" class="input-field" id="log-tags" placeholder="Tags: EKBE, GR, movement type..." style="flex:1" />
-            <button class="btn btn-primary" onclick="addLog()">Save</button>
-          </div>
+    <!-- LOG -->
+    <div class="pg" id="pg-log">
+      <div class="ph"><div><div class="ph-t">Log</div><div class="ph-s">Document what you learn</div></div><button class="btn btn-g btn-s" onclick="tp('logp')">+ Entry</button></div>
+      <div id="logp" style="display:none;padding:12px 16px;border-bottom:1px solid var(--b1);background:var(--bg2)">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <input class="inp" id="ltitle" placeholder="Title — e.g. Why EKBE had duplicate entries…">
+          <textarea class="inp" id="lbody" placeholder="What happened? Which tables? How did you fix it?"></textarea>
+          <div class="row"><select class="inp" id="ltype"><option value="sap">SAP Data</option><option value="sql">SQL/HANA</option><option value="abap">ABAP/Debug</option><option value="proc">Process</option></select><button class="btn btn-p" style="width:auto" onclick="saveLog()">Save</button></div>
+          <input class="inp" id="ltags" placeholder="Tags: EKBE, GR/IR, mvt 101…">
         </div>
       </div>
-
-      <div id="log-list" class="log-list">
-        <div class="empty-state">
-          <div class="empty-state-icon">▤</div>
-          Your learnings will appear here
-        </div>
-      </div>
+      <div class="sec"><div id="llist"></div></div>
     </div>
 
-    <!-- SKILLS -->
-    <div class="page" id="page-skills">
-      <div class="page-header">
-        <div class="page-title">Skills Tracker</div>
-        <div class="page-subtitle">Rate yourself honestly every week. Watch the graph move.</div>
+    <!-- MORE -->
+    <div class="pg" id="pg-more">
+      <div class="ph"><div class="ph-t">More</div></div>
+      <div class="tabs" id="mtabs">
+        <div class="tab on" onclick="mtab('skills',this)">Skills</div>
+        <div class="tab" onclick="mtab('activity',this)">Activity</div>
+        <div class="tab" onclick="mtab('review',this)">Review</div>
+        <div class="tab" onclick="mtab('roadmap',this)">Roadmap</div>
       </div>
-
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-header"><div class="card-title">SAP MM CORE</div></div>
-          <div id="skills-sap"></div>
+      <div id="mt-skills"><div class="sec"><div class="card"><div class="ct">SAP MM Core</div><div id="sk-sap"></div></div><div class="card"><div class="ct">Technical</div><div id="sk-tech"></div></div><div class="card"><div class="ct">Overall</div><div id="sk-all"></div></div></div></div>
+      <div id="mt-activity" style="display:none"><div class="sec">
+        <div class="card"><div class="ct">This Week — Tap to toggle</div><div class="wrow" id="wrow"></div></div>
+        <div class="card"><div class="ct">90 Days — Tap to set level (0→4)</div><div class="hmg" id="hmg"></div><div style="display:flex;gap:6px;align-items:center;margin-top:10px;font-size:11px;color:var(--txt3)">None <div class="hmc hm0" style="cursor:default"></div><div class="hmc hm1" style="cursor:default"></div><div class="hmc hm2" style="cursor:default"></div><div class="hmc hm3" style="cursor:default"></div><div class="hmc hm4" style="cursor:default"></div> Deep work</div></div>
+        <div class="stats"><div class="sbox"><div class="sl">Active days</div><div class="sv ct2" id="hm-a">0</div></div><div class="sbox"><div class="sl">This week</div><div class="sv cp" id="hm-w">0/7</div></div><div class="sbox"><div class="sl">Effort pts</div><div class="sv ca" id="hm-p">0</div></div><div class="sbox"><div class="sl">Best streak</div><div class="sv cg" id="hm-b">0</div></div></div>
+      </div></div>
+      <div id="mt-review" style="display:none"><div class="sec">
+        <div class="card"><div class="ct">This Week's Review</div>
+          <div class="rvf"><div class="rvl">✦ What went well</div><textarea class="inp" id="rv1" placeholder="What moved you forward?"></textarea></div>
+          <div class="rvf"><div class="rvl">⚠ What slowed you</div><textarea class="inp" id="rv2" placeholder="Be honest. What blocked you?"></textarea></div>
+          <div class="rvf"><div class="rvl">→ Next week focus</div><textarea class="inp" id="rv3" placeholder="One thing to focus on."></textarea></div>
+          <div class="rvf"><div class="rvl">⊡ Real problem solved</div><textarea class="inp" id="rv4" placeholder="One SAP issue you cracked."></textarea></div>
+          <button class="btn btn-p" onclick="saveRv()">Save Review</button>
         </div>
-        <div class="card">
-          <div class="card-header"><div class="card-title">TECHNICAL</div></div>
-          <div id="skills-tech"></div>
+        <div id="past-rv"></div>
+      </div></div>
+      <div id="mt-roadmap" style="display:none"><div class="sec">
+        <div class="card"><div class="ct">6-Month Journey</div>
+          <div class="tli"><div class="tls"><div class="tld" style="background:var(--teal)"></div><div class="tll"></div></div><div class="tlc"><div class="tlp" style="color:var(--teal)">Phase 1 · Months 1–2</div><div class="tlt">Data Mastery</div><div class="tld2">Deep-dive SAP tables. Trace every PO end-to-end. Write SQL that detects real issues. Goal: no developer dependency for data investigation.</div></div></div>
+          <div class="tli"><div class="tls"><div class="tld" style="background:var(--pur)"></div><div class="tll"></div></div><div class="tlc"><div class="tlp" style="color:var(--pur)">Phase 2 · Months 3–4</div><div class="tlt">Techno-Functional Shift</div><div class="tld2">Read ABAP, set breakpoints, understand BADIs and Z-tables. Solve 2 real issues without calling a developer.</div></div></div>
+          <div class="tli"><div class="tls"><div class="tld" style="background:var(--amb)"></div></div><div class="tlc"><div class="tlp" style="color:var(--amb)">Phase 3 · Months 5–6</div><div class="tlt">Visible Expertise</div><div class="tld2">Own a problem area. Write one knowledge doc/month. Mentor a junior. Be the named go-to on your project.</div></div></div>
         </div>
-      </div>
-
-      <div class="section-gap"></div>
-
-      <div class="card">
-        <div class="card-header"><div class="card-title">OVERALL PROGRESS</div></div>
-        <div id="skills-overall"></div>
-      </div>
+        <div class="card"><div class="ct">Phase Progress</div><div id="phsl"></div></div>
+        <div class="card"><div class="ct">Procurement Flow</div><div class="flow"><div class="fstep"><div class="fbox">PR</div><div class="ftbl">EBAN</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">PO</div><div class="ftbl">EKKO/EKPO</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">GR</div><div class="ftbl">MKPF/MSEG</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">IR</div><div class="ftbl">RBKP/RSEG</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">Pay</div><div class="ftbl">BKPF/BSEG</div></div></div></div>
+        <div class="card"><div class="ct">STO Flow</div><div class="flow"><div class="fstep"><div class="fbox">STO PO</div><div class="ftbl">EKKO(UB)</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">Out Dlv</div><div class="ftbl">LIKP/LIPS</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">GI 641</div><div class="ftbl">MSEG</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">GR 101</div><div class="ftbl">MSEG</div></div></div></div>
+      </div></div>
     </div>
 
-    <!-- HEATMAP -->
-    <div class="page" id="page-heatmap">
-      <div class="page-header">
-        <div class="page-title">Activity Heatmap</div>
-        <div class="page-subtitle">Click a day to mark it. Green = you showed up.</div>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">LAST 90 DAYS</div>
-          <div style="display:flex;gap:6px;align-items:center;font-size:11px;color:var(--text3)">
-            Less
-            <div class="hm-cell hm-0" style="cursor:default"></div>
-            <div class="hm-cell hm-1" style="cursor:default"></div>
-            <div class="hm-cell hm-2" style="cursor:default"></div>
-            <div class="hm-cell hm-3" style="cursor:default"></div>
-            <div class="hm-cell hm-4" style="cursor:default"></div>
-            More
-          </div>
-        </div>
-        <div class="heatmap" id="heatmap-grid"></div>
-        <div style="margin-top:16px;font-size:12px;color:var(--text3)">
-          0 = no activity · 1 = read/study · 2 = practiced · 3 = solved a problem · 4 = deep work / documented
-        </div>
-      </div>
-
-      <div class="section-gap"></div>
-
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-header"><div class="card-title">THIS WEEK</div></div>
-          <div class="week-circle-row" id="week-circles"></div>
-          <div style="margin-top:12px;font-size:12px;color:var(--text2)" id="week-summary"></div>
-        </div>
-        <div class="card">
-          <div class="card-header"><div class="card-title">STATS</div></div>
-          <div id="heatmap-stats" style="display:flex;flex-direction:column;gap:10px"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- WEEKLY REVIEW -->
-    <div class="page" id="page-weekly">
-      <div class="page-header">
-        <div class="page-title">Weekly Review</div>
-        <div class="page-subtitle">One honest review per week. This is how you stay on track.</div>
-      </div>
-
-      <div class="card" style="margin-bottom:16px">
-        <div class="card-title" style="margin-bottom:14px">THIS WEEK'S REVIEW</div>
-        <div class="review-grid">
-          <div class="review-box">
-            <div class="review-box-label">✦ What went well</div>
-            <textarea class="input-field" id="review-good" placeholder="What did you do that moved you forward?" style="width:100%;min-height:90px;background:transparent;border:none;padding:0;font-size:13px;resize:none;outline:none;color:var(--text)"></textarea>
-          </div>
-          <div class="review-box">
-            <div class="review-box-label">⚠ What slowed you down</div>
-            <textarea class="input-field" id="review-bad" placeholder="What blocked you? Be honest." style="width:100%;min-height:90px;background:transparent;border:none;padding:0;font-size:13px;resize:none;outline:none;color:var(--text)"></textarea>
-          </div>
-          <div class="review-box">
-            <div class="review-box-label">→ Focus for next week</div>
-            <textarea class="input-field" id="review-next" placeholder="What ONE thing will you focus on next week?" style="width:100%;min-height:90px;background:transparent;border:none;padding:0;font-size:13px;resize:none;outline:none;color:var(--text)"></textarea>
-          </div>
-          <div class="review-box">
-            <div class="review-box-label">⊡ Real problem I solved</div>
-            <textarea class="input-field" id="review-win" placeholder="Describe one real SAP issue you cracked this week." style="width:100%;min-height:90px;background:transparent;border:none;padding:0;font-size:13px;resize:none;outline:none;color:var(--text)"></textarea>
-          </div>
-        </div>
-        <button class="btn btn-primary" style="margin-top:14px" onclick="saveReview()">Save Review</button>
-      </div>
-
-      <div id="past-reviews" style="display:flex;flex-direction:column;gap:12px"></div>
-    </div>
-
-    <!-- ROADMAP -->
-    <div class="page" id="page-roadmap">
-      <div class="page-header">
-        <div class="page-title">6-Month Roadmap</div>
-        <div class="page-subtitle">Your journey from intermediate → high-value techno-functional consultant.</div>
-      </div>
-
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-header"><div class="card-title">PHASES</div></div>
-          <div class="timeline">
-            <div class="timeline-item">
-              <div class="timeline-spine">
-                <div class="timeline-dot" style="background:var(--teal)"></div>
-                <div class="timeline-line"></div>
-              </div>
-              <div class="timeline-content">
-                <div class="timeline-phase" style="color:var(--teal)">Phase 1 · Months 1–2</div>
-                <div class="timeline-title">Data Mastery</div>
-                <div class="timeline-desc">Deep-dive into SAP tables. Trace every PO end-to-end. Write SQL that detects real issues in EKBE, MSEG, MKPF. Goal: no developer dependency for data investigation.</div>
-              </div>
-            </div>
-            <div class="timeline-item">
-              <div class="timeline-spine">
-                <div class="timeline-dot" style="background:var(--purple)"></div>
-                <div class="timeline-line"></div>
-              </div>
-              <div class="timeline-content">
-                <div class="timeline-phase" style="color:var(--purple)">Phase 2 · Months 3–4</div>
-                <div class="timeline-title">Techno-Functional Shift</div>
-                <div class="timeline-desc">Learn to read ABAP. Set breakpoints. Understand BADIs, user exits, Z-tables. Build one Z-report from a real use case. Goal: solve 2 real issues without calling a developer.</div>
-              </div>
-            </div>
-            <div class="timeline-item">
-              <div class="timeline-spine">
-                <div class="timeline-dot" style="background:var(--amber)"></div>
-              </div>
-              <div class="timeline-content">
-                <div class="timeline-phase" style="color:var(--amber)">Phase 3 · Months 5–6</div>
-                <div class="timeline-title">Visible Expertise</div>
-                <div class="timeline-desc">Own one problem area (GR/IR, pricing, STO). Write one knowledge doc per month. Mentor a junior. Become the named go-to person on your project.</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-header"><div class="card-title">WEEKLY TARGETS</div></div>
-          <div style="display:flex;flex-direction:column;gap:10px">
-            <div class="insight-card">
-              <div class="insight-icon">◷</div>
-              <div>
-                <div class="insight-title">Daily (45 min minimum)</div>
-                <div class="insight-body">15 min: one SAP concept or table · 15 min: write one SQL query · 15 min: document what you learned</div>
-              </div>
-            </div>
-            <div class="insight-card">
-              <div class="insight-icon">◈</div>
-              <div>
-                <div class="insight-title">Weekly (1 real problem)</div>
-                <div class="insight-body">Pick one issue from your live project. Trace it fully. Write a 3-line summary: issue, root cause, fix.</div>
-              </div>
-            </div>
-            <div class="insight-card">
-              <div class="insight-icon">▤</div>
-              <div>
-                <div class="insight-title">Monthly (1 knowledge doc)</div>
-                <div class="insight-body">Document a scenario you mastered. Include: symptom → tables checked → SQL used → resolution. This becomes your portfolio.</div>
-              </div>
-            </div>
-            <div class="insight-card">
-              <div class="insight-icon">↗</div>
-              <div>
-                <div class="insight-title">The brutal reality</div>
-                <div class="insight-body">6 months of this → strong consultant. 1 year → high-value. Ignore it → 2–3 years of slow growth and frustration.</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="section-gap"></div>
-
-      <div class="card">
-        <div class="card-header"><div class="card-title">PHASE PROGRESS TRACKING</div></div>
-        <div id="phase-progress"></div>
-      </div>
-    </div>
-
-    <!-- SAP REFERENCE -->
-    <div class="page" id="page-reference">
-      <div class="page-header">
-        <div class="page-title">SAP MM Quick Reference</div>
-        <div class="page-subtitle">Key tables, movement types, and flows — always available offline.</div>
-      </div>
-
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-header"><div class="card-title">KEY MM TABLES</div></div>
-          <table class="table-ref">
-            <thead><tr><th>Table</th><th>Description</th><th>When to use</th></tr></thead>
-            <tbody>
-              <tr><td class="table-name">EKKO</td><td class="table-desc">PO Header</td><td class="table-usecase">First stop for any PO issue</td></tr>
-              <tr><td class="table-name">EKPO</td><td class="table-desc">PO Line Item</td><td class="table-usecase">Item qty, price, material</td></tr>
-              <tr><td class="table-name">EKBE</td><td class="table-desc">PO History</td><td class="table-usecase">GR/IR entries per PO item</td></tr>
-              <tr><td class="table-name">MSEG</td><td class="table-desc">Material Doc Segment</td><td class="table-usecase">Every goods movement detail</td></tr>
-              <tr><td class="table-name">MKPF</td><td class="table-desc">Material Doc Header</td><td class="table-usecase">Header of goods movement</td></tr>
-              <tr><td class="table-name">EBAN</td><td class="table-desc">Purchase Requisition</td><td class="table-usecase">PR items, source of supply</td></tr>
-              <tr><td class="table-name">RBKP</td><td class="table-desc">Invoice Header (MIRO)</td><td class="table-usecase">Vendor invoice details</td></tr>
-              <tr><td class="table-name">RSEG</td><td class="table-desc">Invoice Line Items</td><td class="table-usecase">IR qty, amount per item</td></tr>
-              <tr><td class="table-name">MARA</td><td class="table-desc">Material Master General</td><td class="table-usecase">Material type, base unit</td></tr>
-              <tr><td class="table-name">MARC</td><td class="table-desc">Material Master Plant</td><td class="table-usecase">Plant-level material data</td></tr>
-              <tr><td class="table-name">MARD</td><td class="table-desc">Storage Location Stock</td><td class="table-usecase">Current stock by SLoc</td></tr>
-              <tr><td class="table-name">LFA1</td><td class="table-desc">Vendor Master</td><td class="table-usecase">Vendor details, payment terms</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="card">
-          <div class="card-header"><div class="card-title">MOVEMENT TYPES</div></div>
-          <table class="table-ref">
-            <thead><tr><th>Mvt</th><th>Description</th><th>Notes</th></tr></thead>
-            <tbody>
-              <tr><td class="table-name">101</td><td class="table-desc">GR against PO</td><td class="table-usecase">Most common. Creates accounting doc.</td></tr>
-              <tr><td class="table-name">102</td><td class="table-desc">GR reversal (101)</td><td class="table-usecase">Cancels 101 GR</td></tr>
-              <tr><td class="table-name">103</td><td class="table-desc">GR to blocked stock</td><td class="table-usecase">Quality hold; no value posting</td></tr>
-              <tr><td class="table-name">105</td><td class="table-desc">Blocked → unrestricted</td><td class="table-usecase">Release from quality hold</td></tr>
-              <tr><td class="table-name">122</td><td class="table-desc">Return to vendor</td><td class="table-usecase">Sends goods back after GR</td></tr>
-              <tr><td class="table-name">123</td><td class="table-desc">Reversal of 122</td><td class="table-usecase">Cancels return to vendor</td></tr>
-              <tr><td class="table-name">261</td><td class="table-desc">GI for production order</td><td class="table-usecase">PP-MM integration point</td></tr>
-              <tr><td class="table-name">301</td><td class="table-desc">Plant-to-plant transfer</td><td class="table-usecase">Stock transfer 1-step</td></tr>
-              <tr><td class="table-name">311</td><td class="table-desc">Transfer posting SLoc</td><td class="table-usecase">Within same plant</td></tr>
-              <tr><td class="table-name">543</td><td class="table-desc">GI for subcontracting</td><td class="table-usecase">Components to vendor</td></tr>
-              <tr><td class="table-name">551</td><td class="table-desc">Scrapping</td><td class="table-usecase">Goods issue to scrapping</td></tr>
-              <tr><td class="table-name">601</td><td class="table-desc">GI for delivery (SD)</td><td class="table-usecase">SD-MM integration</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="section-gap"></div>
-
-      <div class="card">
-        <div class="card-header"><div class="card-title">STANDARD PROCESS FLOWS</div></div>
-        <div class="grid-3">
-          <div class="review-box">
-            <div class="review-box-label" style="color:var(--teal)">Procurement Flow</div>
-            <div style="font-size:12px;color:var(--text2);line-height:2;margin-top:4px;font-family:var(--font-mono)">
-              PR (EBAN)<br>↓<br>RFQ / Quotation<br>↓<br>PO (EKKO/EKPO)<br>↓<br>GR (MKPF/MSEG)<br>↓<br>IR (RBKP/RSEG)<br>↓<br>Payment
-            </div>
-          </div>
-          <div class="review-box">
-            <div class="review-box-label" style="color:var(--purple)">GR/IR Reconciliation</div>
-            <div style="font-size:12px;color:var(--text2);line-height:1.8;margin-top:4px">
-              Check EKBE for all 101/122 entries.<br>
-              EKBE.BEWTP = 'E' → GR<br>
-              EKBE.BEWTP = 'Q' → IR<br>
-              Mismatch in qty → partial GR or missing IR.<br>
-              Check MSEG with EBELN+EBELP for movement detail.
-            </div>
-          </div>
-          <div class="review-box">
-            <div class="review-box-label" style="color:var(--amber)">Debug Checklist</div>
-            <div style="font-size:12px;color:var(--text2);line-height:1.8;margin-top:4px">
-              1. Confirm issue type (data / config / process)<br>
-              2. Check header table first (EKKO)<br>
-              3. Check item table (EKPO)<br>
-              4. Check history (EKBE)<br>
-              5. Check movement (MSEG with MBLNR)<br>
-              6. Check FI doc (BKPF/BSEG if accounting)
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /main -->
-</div><!-- /app -->
-
+  </div>
+  <nav class="nav">
+    <button class="nb on" id="nb-dash" onclick="go('dash')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span>Home</span></button>
+    <button class="nb" id="nb-study" onclick="go('study')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg><span>Study</span></button>
+    <button class="nb" id="nb-goals" onclick="go('goals')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span>Goals</span></button>
+    <button class="nb" id="nb-log" onclick="go('log')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg><span>Log</span></button>
+    <button class="nb" id="nb-more" onclick="go('more')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg><span>More</span></button>
+  </nav>
+</div>
 <script>
-// ── DATA LAYER ──────────────────────────────────────────────────
-const DB_KEY = 'sap_tracker_v2';
+const KEY='sap_v3';
+let db=(() => {try{return JSON.parse(localStorage.getItem(KEY))||def()}catch{return def()}})();
+function def(){return{goals:[],logs:[],heatmap:{},reviews:[],phaseProgress:{p1:0,p2:0,p3:0},streak:{last:null,count:0},skills:{sap:{'MM End-to-End':2,'PO/GR/IR Process':2,'Movement Types':2,'SE16N Navigation':2,'Pricing Procedures':1,'STO/Subcon':1,'Output Types':1},tech:{'SQL/HANA':1,'ABAP Reading':0,'Debugging':0,'Z-Table/Report':1,'BADI/Exits':0,'HANA Studio':0}}}}
+function sv(){localStorage.setItem(KEY,JSON.stringify(db))}
+const td=()=>new Date().toISOString().slice(0,10);
+function fmt(d){return new Date(d+'T00:00:00').toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function toast(m){document.querySelectorAll('.toast').forEach(t=>t.remove());const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2200)}
+function cp(txt){navigator.clipboard?.writeText(txt).then(()=>toast('Copied!')).catch(()=>toast('Long-press to copy'))}
+function tp(id){const p=document.getElementById(id);p.style.display=p.style.display==='none'?'block':'none'}
 
-function load() {
-  try { return JSON.parse(localStorage.getItem(DB_KEY)) || defaultData(); }
-  catch { return defaultData(); }
+let curPg='dash',curTab='flashcards',curCard=0,SD=null;
+function go(id){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('pg-'+id).classList.add('on');
+  document.getElementById('nb-'+id).classList.add('on');
+  document.getElementById('scroll').scrollTo(0,0);
+  curPg=id;
+  ({dash:rDash,study:rStudy,goals:rGoals,log:rLog,more:rMore}[id]||rDash)();
 }
 
-function save(data) {
-  localStorage.setItem(DB_KEY, JSON.stringify(data));
+function chkStreak(){
+  const t=td(),s=db.streak;if(s.last===t)return;
+  const y=new Date();y.setDate(y.getDate()-1);
+  s.count=(s.last===y.toISOString().slice(0,10))?s.count+1:1;s.last=t;sv();
 }
 
-function defaultData() {
-  return {
-    goals: [],
-    logs: [],
-    heatmap: {},
-    skills: {
-      sap: {
-        'MM End-to-End Flow': 2,
-        'PO / GR / IR Process': 2,
-        'Movement Types': 2,
-        'Table Navigation (SE16N)': 2,
-        'Pricing Procedures': 1,
-        'Output / Messages': 1,
-        'STO / Subcontracting': 1
-      },
-      tech: {
-        'SQL / HANA Queries': 1,
-        'ABAP Reading': 0,
-        'Debugging (Breakpoints)': 0,
-        'Z-Table / Z-Report': 1,
-        'BADI / User Exits': 0,
-        'HANA Studio': 0
-      }
-    },
-    reviews: [],
-    phaseProgress: { p1: 0, p2: 0, p3: 0 },
-    streak: { lastDate: null, count: 0 }
-  };
+function rDash(){
+  const h=new Date().getHours();
+  document.getElementById('gtime').textContent=h<12?'morning':h<17?'afternoon':'evening';
+  document.getElementById('dlabel').textContent=new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'});
+  chkStreak();
+  const s=db.streak.count;
+  document.getElementById('d-str').textContent=s;
+  document.getElementById('sarea').innerHTML=s>=3?`<div class="streak"><div class="snum">${s}</div><div class="stxt"><strong>${s>=7?'🔥 On fire!':'⚡ Building momentum'}</strong><span>${s>=7?'Consistency is your superpower.':'Don\'t break the chain.'}</span></div></div>`:'';
+  const t=td(),tg=db.goals.filter(g=>g.date===t),done=tg.filter(g=>g.done).length;
+  document.getElementById('d-gl').textContent=done+'/'+tg.length;
+  document.getElementById('d-gbar').style.width=(tg.length?Math.round(done/tg.length*100):0)+'%';
+  document.getElementById('d-glist').innerHTML=!tg.length
+    ?`<div style="font-size:13px;color:var(--txt3)">No goals today. <span style="color:var(--teal);cursor:pointer" onclick="go('goals')">Add some →</span></div>`
+    :tg.slice(0,4).map(g=>`<div class="gi ${g.done?'done':''}" onclick="tgGoal('${g.id}','dash')"><div class="gck">${g.done?'✓':''}</div><div class="gt">${esc(g.text)}</div><div class="pill ${CC[g.cat]||'pd'}">${g.cat}</div></div>`).join('')+(tg.length>4?`<div style="font-size:12px;color:var(--txt3);padding:4px 0">+${tg.length-4} more…</div>`:'');
+  const av=[...Object.values(db.skills.sap),...Object.values(db.skills.tech)];
+  document.getElementById('d-sk').textContent=(av.length?Math.round(av.reduce((a,b)=>a+b,0)/av.length/5*100):0)+'%';
+  document.getElementById('d-logs').textContent=db.logs.length;
+  const pp=db.phaseProgress;
+  document.getElementById('phlabel').textContent=pp.p3>0?'3 — Visible':pp.p2>0?'2 — Techno':'1 — Data';
+  const top=[...Object.entries(db.skills.sap).slice(0,3),...Object.entries(db.skills.tech).slice(0,2)];
+  document.getElementById('d-snap').innerHTML=top.map(([n,v])=>{const p=Math.round(v/5*100),c=v>=4?'ft':v>=3?'fp':v>=2?'fa':'fr';return`<div><div class="prow"><span>${n}</span><span>${p}%</span></div><div class="pb"><div class="pf ${c}" style="width:${p}%"></div></div></div>`}).join('');
+  rIns();
 }
 
-let db = load();
-
-// ── NAVIGATION ──────────────────────────────────────────────────
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n => {
-    if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + id + "'")) {
-      n.classList.add('active');
-    }
-  });
-  renderPage(id);
+function rIns(){
+  const t=td(),tg=db.goals.filter(g=>g.date===t),done=tg.filter(g=>g.done).length;
+  const ins=[];
+  if(!tg.length)ins.push({i:'◎',c:'var(--teal)',ti:'Set today\'s goals',b:'3 goals: one SAP table to explore, one SQL query to write, one thing to document.'});
+  else if(done===tg.length)ins.push({i:'✦',c:'var(--grn)',ti:'All goals done!',b:'Now log what you learned. Writing cements knowledge more than reading.'});
+  else ins.push({i:'→',c:'var(--amb)',ti:`${tg.length-done} goals remaining`,b:'Even 20 focused minutes beats 2 hours of distracted reading.'});
+  if(db.skills.tech['SQL/HANA']<3)ins.push({i:'⊡',c:'var(--pur)',ti:'SQL is your fastest technical win',b:'Practice: SELECT EBELN,MENGE,WEMNG FROM EKBE WHERE EBELN=\'4500012345\'. Run it, understand every column.'});
+  if(db.logs.length<3)ins.push({i:'▤',c:'var(--teal)',ti:'Start logging your learnings',b:'Every issue solved without documenting is a lost compounding opportunity.'});
+  if(db.skills.tech['ABAP Reading']===0)ins.push({i:'◈',c:'var(--amb)',ti:'ABAP reading is closer than you think',b:'Open SE38, find any MM program, follow the SELECT statements. Read — don\'t write yet.'});
+  document.getElementById('d-ins').innerHTML=ins.map(i=>`<div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:8px;padding:11px;background:var(--bg3);border:1px solid var(--b1);border-radius:var(--rs)"><div style="font-size:17px;color:${i.c};flex-shrink:0">${i.i}</div><div><div style="font-size:13px;font-weight:600;margin-bottom:2px">${i.ti}</div><div style="font-size:12px;color:var(--txt2);line-height:1.6">${i.b}</div></div></div>`).join('');
 }
 
-function renderPage(id) {
-  if (id === 'dashboard') renderDashboard();
-  if (id === 'goals') renderGoals();
-  if (id === 'log') renderLog();
-  if (id === 'skills') renderSkills();
-  if (id === 'heatmap') renderHeatmap();
-  if (id === 'weekly') renderWeekly();
-  if (id === 'roadmap') renderRoadmap();
-}
-
-// ── DATE UTILS ──────────────────────────────────────────────────
-function today() {
-  return new Date().toISOString().slice(0, 10);
-}
-
-function formatDate(d) {
-  return new Date(d + 'T00:00:00').toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-}
-
-function dayOfWeek(d) {
-  return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][new Date(d + 'T00:00:00').getDay()];
-}
-
-// ── STREAK ──────────────────────────────────────────────────────
-function updateStreak() {
-  const t = today();
-  const s = db.streak;
-  if (s.lastDate === t) return;
-  const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
-  const yStr = yesterday.toISOString().slice(0, 10);
-  if (s.lastDate === yStr) { s.count += 1; }
-  else if (s.lastDate !== t) { s.count = 1; }
-  s.lastDate = t;
-  save(db);
-}
-
-// ── DASHBOARD ───────────────────────────────────────────────────
-function renderDashboard() {
-  const t = today();
-  const opts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-  document.getElementById('today-date').textContent = new Date().toLocaleDateString('en-IN', opts);
-
-  updateStreak();
-  const streak = db.streak.count;
-  document.getElementById('dash-streak').textContent = streak;
-
-  // Streak banner
-  const sb = document.getElementById('streak-area');
-  if (streak >= 3) {
-    sb.innerHTML = `<div class="streak-banner">
-      <div class="streak-emoji">${streak >= 7 ? '🔥' : '⚡'}</div>
-      <div class="streak-text">
-        <div class="streak-main">${streak >= 7 ? 'On fire! ' : 'Building momentum — '}${streak} day streak</div>
-        <div class="streak-sub">${streak >= 7 ? 'Consistency is your superpower. Keep it alive.' : 'Every day counts. Don\'t break the chain.'}</div>
-      </div>
-      <div class="streak-count">${streak}</div>
-    </div>`;
-  } else { sb.innerHTML = ''; }
-
-  // Goals today
-  const todayGoals = db.goals.filter(g => g.date === t);
-  const done = todayGoals.filter(g => g.done).length;
-  document.getElementById('dash-goals-done').textContent = done + '/' + todayGoals.length;
-  const pct = todayGoals.length ? Math.round(done / todayGoals.length * 100) : 0;
-  document.getElementById('dash-goals-pct').textContent = pct + '%';
-  document.getElementById('dash-goal-bar').style.width = pct + '%';
-
-  const gl = document.getElementById('dash-goals-list');
-  if (!todayGoals.length) {
-    gl.innerHTML = '<div style="font-size:12px;color:var(--text3);padding:8px 0">No goals set today. <span style="color:var(--teal);cursor:pointer" onclick="showPage(\'goals\')">Add some →</span></div>';
-  } else {
-    gl.innerHTML = todayGoals.slice(0, 5).map(g => `
-      <div class="goal-item ${g.done ? 'completed' : ''}" onclick="toggleGoal('${g.id}')">
-        <div class="goal-check">${g.done ? '✓' : ''}</div>
-        <div class="goal-text">${g.text}</div>
-        <div class="goal-category cat-${g.cat}">${g.cat}</div>
-      </div>`).join('');
+async function rStudy(){
+  if(!SD){
+    try{
+      const [cards,tips,tables,mvt]=await Promise.all([
+        fetch('data/study-cards.json').then(r=>{if(!r.ok)throw 0;return r.json()}),
+        fetch('data/sql-tips.json').then(r=>{if(!r.ok)throw 0;return r.json()}),
+        fetch('data/sap-tables.json').then(r=>{if(!r.ok)throw 0;return r.json()}),
+        fetch('data/movement-types.json').then(r=>{if(!r.ok)throw 0;return r.json()})
+      ]);
+      SD={cards,tips,tables,mvt};
+      document.getElementById('sstatus').textContent=cards.length+' cards';
+    }catch{SD=FB;document.getElementById('sstatus').textContent='offline'}
   }
-
-  // Logs count
-  document.getElementById('dash-logs').textContent = db.logs.length;
-
-  // Skill average
-  const allSkills = [...Object.values(db.skills.sap), ...Object.values(db.skills.tech)];
-  const avg = allSkills.length ? Math.round(allSkills.reduce((a, b) => a + b, 0) / allSkills.length / 5 * 100) : 0;
-  document.getElementById('dash-skill-avg').textContent = avg + '%';
-
-  // Skill snapshot
-  const snap = document.getElementById('dash-skills-snap');
-  const topSkills = [
-    ...Object.entries(db.skills.sap).slice(0, 4),
-    ...Object.entries(db.skills.tech).slice(0, 3)
-  ];
-  snap.innerHTML = topSkills.map(([name, val]) => {
-    const pct = Math.round(val / 5 * 100);
-    const color = val >= 4 ? 'fill-teal' : val >= 3 ? 'fill-purple' : val >= 2 ? 'fill-amber' : 'fill-red';
-    return `<div class="skill-row">
-      <div class="skill-name">${name} <span class="skill-meta">${pct}%</span></div>
-      <div class="progress-bar"><div class="progress-fill ${color}" style="width:${pct}%"></div></div>
-    </div>`;
-  }).join('');
-
-  // Insights
-  renderInsights();
+  const tabs=[{id:'flashcards',l:'Flashcards'},{id:'sql',l:'SQL Tips'},{id:'tables',l:'SAP Tables'},{id:'mvt',l:'Mvt Types'},{id:'flows',l:'Flows'}];
+  document.getElementById('stabs').innerHTML=tabs.map(t=>`<div class="tab ${t.id===curTab?'on':''}" onclick="sTab('${t.id}',this)">${t.l}</div>`).join('');
+  rTab(curTab);
 }
 
-function renderInsights() {
-  const insights = [];
-  const t = today();
-  const todayGoals = db.goals.filter(g => g.date === t);
-  const done = todayGoals.filter(g => g.done).length;
-
-  if (!todayGoals.length) {
-    insights.push({ icon: '◎', title: 'Set today\'s goals', body: 'Start with your 45-minute habit: 15 min SAP concept · 15 min SQL · 15 min write it down.', color: 'var(--teal)' });
-  } else if (done === todayGoals.length && todayGoals.length > 0) {
-    insights.push({ icon: '✦', title: 'All goals done today!', body: 'Excellent discipline. Log what you learned so you can refer to it later.', color: 'var(--green)' });
-  } else {
-    insights.push({ icon: '→', title: todayGoals.length - done + ' goals remaining today', body: 'Even 20 minutes of focused SAP work beats 2 hours of scattered reading.', color: 'var(--amber)' });
-  }
-
-  const sqlSkill = db.skills.tech['SQL / HANA Queries'];
-  if (sqlSkill < 3) {
-    insights.push({ icon: '⊡', title: 'SQL is your fastest win', body: 'Practice: SELECT EBELN, EBELP, MENGE, WEMNG FROM EKBE WHERE EBELN = \'4500012345\'. Run it, understand each column.', color: 'var(--purple)' });
-  }
-
-  if (db.logs.length < 3) {
-    insights.push({ icon: '▤', title: 'Start your learning log', body: 'Every issue you solve without documenting is a missed compounding opportunity. Write it down — even 2 lines.', color: 'var(--teal)' });
-  }
-
-  const abapSkill = db.skills.tech['ABAP Reading'];
-  if (abapSkill === 0) {
-    insights.push({ icon: '◈', title: 'ABAP reading is closer than you think', body: 'You don\'t need to code ABAP. Just read it. Start with SE38, open any MM program, and try to follow the logic.', color: 'var(--amber)' });
-  }
-
-  document.getElementById('insights-list').innerHTML = insights.map(i => `
-    <div class="insight-card">
-      <div class="insight-icon" style="color:${i.color}">${i.icon}</div>
-      <div>
-        <div class="insight-title">${i.title}</div>
-        <div class="insight-body">${i.body}</div>
-      </div>
-    </div>`).join('');
+function sTab(id,el){curTab=id;document.querySelectorAll('#stabs .tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');rTab(id)}
+function rTab(tab){
+  const b=document.getElementById('sbody');
+  if(tab==='flashcards')rCards(SD.cards,b);
+  else if(tab==='sql')rSQL(SD.tips,b);
+  else if(tab==='tables')rTables(SD.tables,b);
+  else if(tab==='mvt')rMvt(SD.mvt,b);
+  else rFlows(b);
 }
 
-// ── GOALS ───────────────────────────────────────────────────────
-const SUGGESTED = [
-  { text: 'Open SE16N, explore EKBE table for any active PO', cat: 'data', phase: 1 },
-  { text: 'Write SQL: find GR qty vs IR qty mismatch in EKBE', cat: 'sql', phase: 1 },
-  { text: 'Understand movement type 101 vs 103 — when does each create an accounting doc?', cat: 'data', phase: 1 },
-  { text: 'Trace one full PR → PO → GR → IR flow by document number', cat: 'data', phase: 1 },
-  { text: 'Find a price discrepancy in EKPO vs RBKP for one invoice', cat: 'debug', phase: 1 },
-  { text: 'Write a 3-line summary of one issue you solved this week', cat: 'write', phase: 1 },
-  { text: 'Open SE38, read any MM standard program — try to follow the SELECT statements', cat: 'abap', phase: 2 },
-  { text: 'Set a breakpoint in debug mode for a GR posting', cat: 'abap', phase: 2 },
-  { text: 'Find a BADI relevant to PO creation — check where it exits', cat: 'abap', phase: 2 },
-  { text: 'Build a Z-table for tracking known GR/IR issues in your project', cat: 'abap', phase: 2 },
-  { text: 'Write a one-page document: "How to debug a GR posting issue"', cat: 'write', phase: 3 },
-  { text: 'Review a junior\'s work and give structured feedback', cat: 'write', phase: 3 }
+function rCards(cards,b){
+  if(!cards?.length){b.innerHTML='<div class="empty"><div class="eico">📚</div><div class="etxt">No flashcards yet.</div></div>';return}
+  if(curCard>=cards.length)curCard=0;
+  const c=cards[curCard];
+  b.innerHTML=`<div class="fc" id="fc" onclick="this.classList.toggle('flip')"><div class="fci">
+    <div class="ff"><div class="fcat">${c.category||'SAP MM'}</div><div class="fq">${esc(c.question)}</div><div class="fhint">Tap to reveal answer</div></div>
+    <div class="fb"><div class="fcat">Answer</div><div class="fans">${esc(c.answer)}</div>${c.table?'<div style="margin-top:10px">'+c.table.split(',').map(t=>`<span class="ftag">${t.trim()}</span>`).join('')+'</div>':''}</div>
+  </div></div>
+  <div class="cnav"><div class="cnum">${curCard+1}/${cards.length}</div><div style="display:flex;gap:8px"><button class="btn btn-g btn-s" onclick="curCard=(curCard-1+${cards.length})%${cards.length};rTab('flashcards')">←</button><button class="btn btn-g btn-s" onclick="curCard=(curCard+1)%${cards.length};rTab('flashcards')">→</button><button class="btn btn-g btn-s" onclick="SD.cards.sort(()=>Math.random()-.5);curCard=0;rTab('flashcards');toast('Shuffled!')">⇌</button></div></div>
+  <div style="text-align:center;font-size:11px;color:var(--txt3);padding:0 16px 16px">${cards.length} cards · tap to flip</div>`;
+}
+
+function rSQL(tips,b){
+  if(!tips?.length){b.innerHTML='<div class="loader">No SQL tips.</div>';return}
+  b.innerHTML='<div style="padding:12px 16px">'+tips.map(t=>`<div class="sqltip">
+    <div class="sth"><div class="sttl">${esc(t.title)}</div><div class="lv l${t.level[0]}">${t.level}</div></div>
+    <div class="stdesc">${esc(t.desc)}</div>
+    <div style="position:relative"><div class="code">${t.code}</div><button class="cpbtn" onclick="cp(\`${(t.raw||'').replace(/`/g,'\\`').replace(/\\/g,'\\\\')}\`)">copy</button></div>
+    <div class="why">💡 ${esc(t.why)}</div>
+  </div>`).join('')+'</div>';
+}
+
+function rTables(tables,b){
+  if(!tables?.length){b.innerHTML='<div class="loader">No table data.</div>';return}
+  b.innerHTML=`<div style="padding:12px 16px"><div class="card" style="overflow-x:auto;padding:0"><table class="rtable"><thead><tr><th>Table</th><th>Description &amp; When to Use</th></tr></thead><tbody>${tables.map(t=>`<tr><td class="tn2">${t.name}</td><td><div style="color:var(--txt)">${esc(t.description)}</div><div class="tu">${esc(t.useCase)}</div></td></tr>`).join('')}</tbody></table></div></div>`;
+}
+
+function rMvt(mvt,b){
+  if(!mvt?.length){b.innerHTML='<div class="loader">No movement type data.</div>';return}
+  b.innerHTML=`<div style="padding:12px 16px"><div class="card" style="overflow-x:auto;padding:0"><table class="rtable"><thead><tr><th>Mvt</th><th>Name &amp; Notes</th></tr></thead><tbody>${mvt.map(m=>`<tr><td class="tn2">${m.code}</td><td><div style="color:var(--txt)">${esc(m.name)}</div><div class="tu">${esc(m.notes)}</div></td></tr>`).join('')}</tbody></table></div></div>`;
+}
+
+function rFlows(b){
+  b.innerHTML=`<div style="padding:12px 16px;display:flex;flex-direction:column;gap:0">
+  <div class="card"><div class="ct">Standard Procurement</div><div class="flow"><div class="fstep"><div class="fbox">PR</div><div class="ftbl">EBAN</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">PO</div><div class="ftbl">EKKO/EKPO</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">GR</div><div class="ftbl">MKPF/MSEG</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">IR</div><div class="ftbl">RBKP/RSEG</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">Pay</div><div class="ftbl">BKPF/BSEG</div></div></div></div>
+  <div class="card"><div class="ct">GR/IR Debug Checklist</div><div style="font-size:13px;color:var(--txt2);line-height:2;font-family:var(--mono)">1. EKKO → PO exists? Status OK?<br>2. EKPO → item qty, price, plant<br>3. EKBE → SUM GR (BEWTP=E) vs IR (BEWTP=Q)<br>4. MSEG → movement detail via MBLNR+MJAHR<br>5. RBKP/RSEG → IR qty and amount<br>6. BKPF/BSEG → FI doc if accounting issue</div></div>
+  <div class="card"><div class="ct">STO Flow</div><div class="flow"><div class="fstep"><div class="fbox">STO PO</div><div class="ftbl">EKKO(UB)</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">Out Dlv</div><div class="ftbl">LIKP/LIPS</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">GI 641</div><div class="ftbl">MSEG</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">GR 101</div><div class="ftbl">MSEG</div></div></div></div>
+  <div class="card"><div class="ct">Subcontracting Flow</div><div class="flow"><div class="fstep"><div class="fbox">Sub PO</div><div class="ftbl">EKKO(30)</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">GI Comp</div><div class="ftbl">MSEG 541</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">GR FG</div><div class="ftbl">MSEG 101</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">IR</div><div class="ftbl">RBKP/RSEG</div></div></div></div>
+  </div>`;
+}
+
+const CC={data:'pd',sql:'ps',debug:'pb2',abap:'pa',write:'pw'};
+const SUG=[
+  {t:'Open SE16N → explore EKBE for any active PO in your project',c:'data'},
+  {t:'Write SQL: SUM GR qty vs IR qty in EKBE for one PO',c:'sql'},
+  {t:'Understand why mvt 101 creates FI doc but 103 does not',c:'data'},
+  {t:'Trace one full PR→PO→GR→IR by document number',c:'data'},
+  {t:'Find a price variance between EKPO.NETPR and RBKP for any invoice',c:'debug'},
+  {t:'Write 3-line root cause summary for one issue you solved this week',c:'write'},
+  {t:'Open SE38, read any MM program, follow the SELECT statements',c:'abap'},
+  {t:'Set a breakpoint in debug mode on a GR posting (MIGO)',c:'abap'},
+  {t:'Find BADI ME_PROCESS_PO_CUST in SE18 and read its description',c:'abap'},
+  {t:'Query MARD to check unrestricted stock for a material+plant',c:'sql'},
+  {t:'Write a 1-page doc: How to debug a GR/IR quantity mismatch',c:'write'},
+  {t:'Check EKKO.BSTYP to understand PO document categories in your project',c:'data'},
 ];
 
-function addGoal() {
-  const text = document.getElementById('goal-input').value.trim();
-  const cat = document.getElementById('goal-cat').value;
-  if (!text) return;
-  db.goals.push({ id: Date.now().toString(), text, cat, date: today(), done: false });
-  save(db);
-  document.getElementById('goal-input').value = '';
-  renderGoals();
-  showToast('Goal added ✓');
+function addGoal(){const t=document.getElementById('gi').value.trim();if(!t){toast('Enter a goal first');return}db.goals.push({id:Date.now().toString(),text:t,cat:document.getElementById('gcat').value,date:td(),done:false});sv();document.getElementById('gi').value='';document.getElementById('addp').style.display='none';rGoals();toast('Goal added ✓')}
+function tgGoal(id,src){const g=db.goals.find(g=>g.id===id);if(g){g.done=!g.done;sv()}if(src==='dash')rDash();else rGoals()}
+function dlGoal(id){db.goals=db.goals.filter(g=>g.id!==id);sv();rGoals()}
+function clearDone(){db.goals=db.goals.filter(g=>!(g.done&&g.date===td()));sv();rGoals();toast('Cleared')}
+function addSug(i){const s=SUG[i];db.goals.push({id:Date.now().toString(),text:s.t,cat:s.c,date:td(),done:false});sv();rGoals();toast('Added ✓')}
+function rGoals(){
+  const t=td(),tg=db.goals.filter(g=>g.date===t);
+  document.getElementById('glist').innerHTML=!tg.length?'<div class="empty"><div class="eico">◎</div><div class="etxt">No goals today yet.<br>Tap + Add above.</div></div>':tg.map(g=>`<div class="gi ${g.done?'done':''}" onclick="tgGoal('${g.id}','goals')"><div class="gck">${g.done?'✓':''}</div><div class="gt">${esc(g.text)}</div><div class="pill ${CC[g.cat]||'pd'}">${g.cat}</div><button class="del" onclick="event.stopPropagation();dlGoal('${g.id}')">×</button></div>`).join('');
+  document.getElementById('suglist').innerHTML=SUG.map((s,i)=>`<div class="gi" style="cursor:default"><div class="pill ${CC[s.c]||'pd'}" style="flex-shrink:0">${s.c}</div><div class="gt" style="font-size:13px">${esc(s.t)}</div><button class="btn btn-g btn-s" onclick="addSug(${i})">+</button></div>`).join('');
 }
 
-function toggleGoal(id) {
-  const g = db.goals.find(g => g.id === id);
-  if (g) { g.done = !g.done; save(db); }
-  renderGoals();
-  renderDashboard();
+function saveLog(){const title=document.getElementById('ltitle').value.trim(),body=document.getElementById('lbody').value.trim();if(!title||!body){toast('Add title and notes');return}db.logs.unshift({id:Date.now().toString(),title,body,type:document.getElementById('ltype').value,tags:document.getElementById('ltags').value.trim(),date:td()});sv();['ltitle','lbody','ltags'].forEach(id=>document.getElementById(id).value='');document.getElementById('logp').style.display='none';rLog();toast('Saved ✓')}
+function dlLog(id){db.logs=db.logs.filter(l=>l.id!==id);sv();rLog()}
+function rLog(){
+  const ll=document.getElementById('llist');
+  if(!db.logs.length){ll.innerHTML='<div class="empty"><div class="eico">▤</div><div class="etxt">Your learning journal is empty.<br>Every issue you solve is worth documenting.</div></div>';return}
+  ll.innerHTML=db.logs.map(l=>{const tags=l.tags?l.tags.split(',').map(t=>t.trim()).filter(Boolean):[];return`<div class="le ${l.type}"><div class="lh"><div class="lt">${esc(l.title)}</div><div style="display:flex;align-items:center;gap:6px"><div class="ld">${fmt(l.date)}</div><button class="del" onclick="dlLog('${l.id}')">×</button></div></div><div class="lb2">${esc(l.body)}</div>${tags.length?'<div class="ltags">'+tags.map(t=>`<span class="ltag">${t}</span>`).join('')+'</div>':''}</div>`}).join('');
 }
 
-function clearCompleted() {
-  db.goals = db.goals.filter(g => !(g.done && g.date === today()));
-  save(db); renderGoals();
+function rMore(){rSkills()}
+function mtab(id,el){['skills','activity','review','roadmap'].forEach(t=>document.getElementById('mt-'+t).style.display='none');document.querySelectorAll('#mtabs .tab').forEach(t=>t.classList.remove('on'));document.getElementById('mt-'+id).style.display='block';el.classList.add('on');({skills:rSkills,activity:rActivity,review:rReviews,roadmap:rRoadmap}[id]||rSkills)()}
+
+function rSkills(){
+  rSkGrp('sk-sap',db.skills.sap,'dT');rSkGrp('sk-tech',db.skills.tech,'dP');
+  const all=[...Object.entries(db.skills.sap),...Object.entries(db.skills.tech)];
+  document.getElementById('sk-all').innerHTML=all.map(([n,v])=>{const p=Math.round(v/5*100),c=v>=4?'ft':v>=3?'fp':v>=2?'fa':'fr';return`<div><div class="prow"><span>${n}</span><span>${p}%</span></div><div class="pb"><div class="pf ${c}" style="width:${p}%"></div></div></div>`}).join('');
+}
+function rSkGrp(el,grp,cls){document.getElementById(el).innerHTML=Object.entries(grp).map(([n,v])=>`<div class="ski"><div class="skn">${n}</div><div class="dots">${[1,2,3,4,5].map(i=>`<div class="dot ${v>=i?cls:''}" onclick="setSk('${el}','${n}',${i})">${i}</div>`).join('')}</div></div>`).join('')}
+function setSk(el,name,val){const gk=el==='sk-sap'?'sap':'tech';db.skills[gk][name]=val;sv();rSkills();toast('Updated ✓')}
+
+function rActivity(){
+  const days=['M','T','W','T','F','S','S'],wdates=[];
+  for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);wdates.push(d.toISOString().slice(0,10))}
+  document.getElementById('wrow').innerHTML=wdates.map((date,i)=>`<div class="wd ${(db.heatmap[date]||0)>0?'on':''} ${date===td()?'now':''}" onclick="togW('${date}')"><div class="wdot"></div>${days[i]}</div>`).join('');
+  const cells=[];for(let i=89;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const k=d.toISOString().slice(0,10),v=db.heatmap[k]||0;cells.push(`<div class="hmc hm${v}" onclick="cycH('${k}')"></div>`)}
+  document.getElementById('hmg').innerHTML=cells.join('');
+  const vals=Object.values(db.heatmap),act=vals.filter(v=>v>0).length,pts=vals.reduce((a,b)=>a+b,0),wa=wdates.filter(d=>(db.heatmap[d]||0)>0).length;
+  let best=0,cur=0;for(let i=89;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const k=d.toISOString().slice(0,10);if((db.heatmap[k]||0)>0){cur++;best=Math.max(best,cur)}else cur=0}
+  document.getElementById('hm-a').textContent=act;document.getElementById('hm-w').textContent=wa+'/7';document.getElementById('hm-p').textContent=pts;document.getElementById('hm-b').textContent=best;
+}
+function togW(d){db.heatmap[d]=(db.heatmap[d]||0)>0?0:2;sv();rActivity()}
+function cycH(d){db.heatmap[d]=((db.heatmap[d]||0)+1)%5;sv();rActivity()}
+
+function saveRv(){const v=[1,2,3,4].map(i=>document.getElementById('rv'+i).value.trim());if(!v.some(Boolean)){toast('Fill at least one field');return}db.reviews.unshift({id:Date.now().toString(),date:td(),good:v[0],bad:v[1],next:v[2],win:v[3]});sv();[1,2,3,4].forEach(i=>document.getElementById('rv'+i).value='');rReviews();toast('Saved ✓')}
+function dlRv(id){db.reviews=db.reviews.filter(r=>r.id!==id);sv();rReviews()}
+function rReviews(){
+  const pr=document.getElementById('past-rv');
+  if(!db.reviews.length){pr.innerHTML='<div class="empty"><div class="eico">◷</div><div class="etxt">No reviews yet.</div></div>';return}
+  const fields=[{k:'good',l:'WENT WELL'},{k:'bad',l:'SLOWED ME'},{k:'next',l:'NEXT WEEK'},{k:'win',l:'SOLVED'}];
+  pr.innerHTML=db.reviews.map(r=>`<div class="card"><div style="display:flex;justify-content:space-between;margin-bottom:10px"><div class="ct" style="margin:0">${fmt(r.date)}</div><button class="del" onclick="dlRv('${r.id}')">×</button></div>${fields.filter(f=>r[f.k]).map(f=>`<div style="margin-bottom:8px"><div style="font-size:10px;color:var(--txt3);font-family:var(--mono);margin-bottom:3px">${f.l}</div><div style="font-size:13px;color:var(--txt2)">${esc(r[f.k])}</div></div>`).join('')}</div>`).join('');
 }
 
-function resetGoals() {
-  db.goals.filter(g => g.date === today()).forEach(g => g.done = false);
-  save(db); renderGoals();
+function rRoadmap(){
+  const phases=[{k:'p1',l:'Phase 1 — Data Mastery',c:'var(--teal)'},{k:'p2',l:'Phase 2 — Techno-Functional',c:'var(--pur)'},{k:'p3',l:'Phase 3 — Visible Expertise',c:'var(--amb)'}];
+  document.getElementById('phsl').innerHTML=phases.map(p=>{const v=db.phaseProgress[p.k]||0;return`<div class="psl"><div class="psl-l" style="color:${p.c}">${p.l}</div><input type="range" min="0" max="100" value="${v}" oninput="setPh('${p.k}',this.value,this.nextElementSibling)"><div class="ppct">${v}%</div></div><div class="pb" style="margin-bottom:12px"><div class="pf" style="width:${v}%;background:${p.c}"></div></div>`}).join('');
 }
+function setPh(k,v,el){db.phaseProgress[k]=parseInt(v);el.textContent=v+'%';sv()}
 
-function renderGoals() {
-  const todayGoals = db.goals.filter(g => g.date === today());
-  const gl = document.getElementById('goals-list');
-  if (!todayGoals.length) {
-    gl.innerHTML = '<div class="empty-state"><div class="empty-state-icon">◎</div>No goals yet today</div>';
-  } else {
-    gl.innerHTML = todayGoals.map(g => `
-      <div class="goal-item ${g.done ? 'completed' : ''}" onclick="toggleGoal('${g.id}')">
-        <div class="goal-check">${g.done ? '✓' : ''}</div>
-        <div class="goal-text">${g.text}</div>
-        <div class="goal-category cat-${g.cat}">${g.cat}</div>
-        <button class="delete-btn" onclick="event.stopPropagation();deleteGoal('${g.id}')">✕</button>
-      </div>`).join('');
-  }
+// Fallback study data (used when JSON files not found)
+const FB={
+  cards:[
+    {category:'SAP MM Tables',question:'What does EKBE store and why is it critical for GR/IR reconciliation?',answer:'EKBE is the PO History table — it records every GR and IR against a PO item. BEWTP=\'E\' is a GR entry, BEWTP=\'Q\' is an IR. Always SUM quantities — never assume one entry per item. This is your first stop for any GR/IR mismatch.',table:'EKBE, EKKO, EKPO'},
+    {category:'SAP MM Tables',question:'What is the difference between MSEG and MKPF?',answer:'MKPF is the material document header (posting date, MBLNR, MJAHR). MSEG is the line item — qty, movement type, plant, storage location, PO reference. Always join both on MBLNR+MJAHR (not MBLNR alone — duplicates exist across years).',table:'MKPF, MSEG'},
+    {category:'Movement Types',question:'Why does movement type 101 create an FI document but 103 does not?',answer:'101 posts to unrestricted stock — this has monetary value, so FI creates an accounting doc (debit inventory, credit GR/IR clearing). 103 posts to blocked/quality stock — no value transfer yet, so no accounting document is generated.',table:'MSEG, EKBE'},
+    {category:'Movement Types',question:'What is movement type 122 and when do you use it?',answer:'122 is Return to Vendor. It reverses a GR, reduces inventory, and creates a reverse accounting document. Use when goods need to go back after receipt. Always check if an invoice already exists (EKBE BEWTP=Q) — you may need to cancel it first.',table:'MSEG, EKBE'},
+    {category:'Debugging',question:'A user says GR quantity is wrong in PO history. Walk through your investigation.',answer:'1. EKBE: filter on PO+item, SUM MENGE for all BEWTP=E entries. 2. Look for 102 reversal entries (negative MENGE). 3. Get MBLNR from EKBE, go to MSEG for movement detail. 4. Confirm in MIGO display. 5. Check partial GRs — are they summing correctly? 6. Check posting date vs invoice date for timing issues.',table:'EKBE, MSEG, MKPF'},
+    {category:'SQL/HANA',question:'How do you write SQL to detect GR/IR quantity mismatches across all open POs?',answer:'SELECT EBELN, EBELP, SUM(CASE WHEN BEWTP=\'E\' THEN MENGE ELSE 0 END) AS gr_qty, SUM(CASE WHEN BEWTP=\'Q\' THEN MENGE ELSE 0 END) AS ir_qty FROM EKBE WHERE MANDT=\'100\' GROUP BY EBELN, EBELP HAVING SUM(CASE WHEN BEWTP=\'E\' THEN MENGE ELSE 0 END) <> SUM(CASE WHEN BEWTP=\'Q\' THEN MENGE ELSE 0 END)',table:'EKBE'},
+    {category:'Techno-Functional',question:'What is a BADI and how does it differ from a User Exit?',answer:'BADIs (Business Add-Ins) are object-oriented SAP enhancement points — more flexible, support multiple active implementations, no core code modification needed. User Exits are older, function module-based, support only one implementation. Key MM BADI: ME_PROCESS_PO_CUST for PO changes. Use SE18 to explore, SE19 to implement.',table:''},
+    {category:'ABAP',question:'You need to find the function module called during MIGO GR posting. How?',answer:'1. Use ST05 (SQL/ABAP trace) during a test GR — shows all function module calls. 2. The core GR FM is MB_CREATE_GOODS_MOVEMENT. 3. Set external breakpoint in SE80 on this FM. 4. Main program is SAPMM07M. 5. Use SM50 during posting to see which programs are running.',table:''},
+    {category:'SAP MM Tables',question:'What is EBAN and when do you use it?',answer:'EBAN stores Purchase Requisition items. Use it to check PR source, requested quantity, requester, and whether it has been converted to a PO (field EBAKZ). Join EBAN.BANFN+EBAN.BNFPO to EKPO.BANFN+EKPO.BNFPO to see the PR→PO link.',table:'EBAN, EKPO'},
+    {category:'Process',question:'What happens in EKBE when you post a GR reversal (movement type 102)?',answer:'A new line is added to EKBE with negative MENGE and BEWTP=E. It does NOT delete the original 101 entry. This is why you must always SUM EKBE entries to get net GR quantity — never count rows, always sum quantities.',table:'EKBE, MSEG'},
+  ],
+  tips:[
+    {title:'Find GR/IR mismatch for a PO',level:'basic',desc:'Most common MM issue — GR and IR quantities don\'t reconcile.',
+     code:`<span class="k">SELECT</span> <span class="cn">EBELN</span>, <span class="cn">EBELP</span>,\n  <span class="fn">SUM</span>(<span class="k">CASE WHEN</span> <span class="cn">BEWTP</span>=<span class="str">'E'</span> <span class="k">THEN</span> <span class="cn">MENGE</span> <span class="k">ELSE</span> 0 <span class="k">END</span>) <span class="k">AS</span> gr_qty,\n  <span class="fn">SUM</span>(<span class="k">CASE WHEN</span> <span class="cn">BEWTP</span>=<span class="str">'Q'</span> <span class="k">THEN</span> <span class="cn">MENGE</span> <span class="k">ELSE</span> 0 <span class="k">END</span>) <span class="k">AS</span> ir_qty\n<span class="k">FROM</span> <span class="tn">EKBE</span>\n<span class="k">WHERE</span> <span class="cn">MANDT</span>=<span class="str">'100'</span> <span class="k">AND</span> <span class="cn">EBELN</span>=<span class="str">'4500012345'</span>\n<span class="k">GROUP BY</span> <span class="cn">EBELN</span>, <span class="cn">EBELP</span>\n<span class="k">HAVING</span> gr_qty <> ir_qty`,
+     raw:`SELECT EBELN, EBELP,\n  SUM(CASE WHEN BEWTP='E' THEN MENGE ELSE 0 END) AS gr_qty,\n  SUM(CASE WHEN BEWTP='Q' THEN MENGE ELSE 0 END) AS ir_qty\nFROM EKBE\nWHERE MANDT='100' AND EBELN='4500012345'\nGROUP BY EBELN, EBELP\nHAVING gr_qty <> ir_qty`,
+     why:'BEWTP E=GR, Q=IR. SUM handles partial GRs and reversals automatically. HAVING filters only mismatched lines.'},
+    {title:'Trace all movements for a material',level:'basic',desc:'Every stock movement for a material in a plant — essential for stock reconciliation.',
+     code:`<span class="k">SELECT</span> <span class="cn">H.MBLNR</span>, <span class="cn">H.BUDAT</span>, <span class="cn">I.BWART</span>, <span class="cn">I.MENGE</span>, <span class="cn">I.MEINS</span>, <span class="cn">I.LGORT</span>, <span class="cn">I.EBELN</span>\n<span class="k">FROM</span> <span class="tn">MKPF</span> <span class="k">AS</span> H\n<span class="k">INNER JOIN</span> <span class="tn">MSEG</span> <span class="k">AS</span> I <span class="k">ON</span> H.MBLNR=I.MBLNR <span class="k">AND</span> H.MJAHR=I.MJAHR\n<span class="k">WHERE</span> I.MATNR=<span class="str">'000000000010001234'</span>\n  <span class="k">AND</span> I.WERKS=<span class="str">'1000'</span>\n  <span class="k">AND</span> H.BUDAT >= <span class="str">'20240101'</span>\n<span class="k">ORDER BY</span> H.BUDAT <span class="k">DESC</span>`,
+     raw:`SELECT H.MBLNR, H.BUDAT, I.BWART, I.MENGE, I.MEINS, I.LGORT, I.EBELN\nFROM MKPF AS H\nINNER JOIN MSEG AS I ON H.MBLNR=I.MBLNR AND H.MJAHR=I.MJAHR\nWHERE I.MATNR='000000000010001234' AND I.WERKS='1000' AND H.BUDAT>='20240101'\nORDER BY H.BUDAT DESC`,
+     why:'Always join MKPF+MSEG on BOTH MBLNR and MJAHR — MBLNR alone is not unique across fiscal years.'},
+    {title:'Find all open POs for a vendor',level:'basic',desc:'All open PO line items for a vendor — useful for vendor reconciliation.',
+     code:`<span class="k">SELECT</span> <span class="cn">H.EBELN</span>, <span class="cn">H.LIFNR</span>, <span class="cn">H.BEDAT</span>, <span class="cn">I.EBELP</span>, <span class="cn">I.MATNR</span>, <span class="cn">I.MENGE</span>, <span class="cn">I.NETPR</span>\n<span class="k">FROM</span> <span class="tn">EKKO</span> <span class="k">AS</span> H\n<span class="k">INNER JOIN</span> <span class="tn">EKPO</span> <span class="k">AS</span> I <span class="k">ON</span> H.EBELN=I.EBELN\n<span class="k">WHERE</span> H.LIFNR=<span class="str">'0000100234'</span>\n  <span class="k">AND</span> I.ELIKZ=<span class="str">' '</span>  <span class="cm">-- delivery not complete</span>\n  <span class="k">AND</span> I.LOEKZ=<span class="str">' '</span>  <span class="cm">-- not deleted</span>\n  <span class="k">AND</span> H.MANDT=<span class="str">'100'</span>`,
+     raw:`SELECT H.EBELN, H.LIFNR, H.BEDAT, I.EBELP, I.MATNR, I.MENGE, I.NETPR\nFROM EKKO AS H\nINNER JOIN EKPO AS I ON H.EBELN=I.EBELN\nWHERE H.LIFNR='0000100234' AND I.ELIKZ=' ' AND I.LOEKZ=' ' AND H.MANDT='100'`,
+     why:'ELIKZ=space means delivery not complete. LOEKZ=space means item not deleted. Both together give true open items.'},
+    {title:'Invoice vs PO price variance',level:'mid',desc:'Find invoices where the price differs from the PO — common source of accounting variances.',
+     code:`<span class="k">SELECT</span> <span class="cn">R.EBELN</span>, <span class="cn">R.EBELP</span>, <span class="cn">P.NETPR</span> <span class="k">AS</span> po_price,\n  <span class="cn">I.DMBTR</span>/<span class="cn">I.MENGE</span> <span class="k">AS</span> inv_unit_price,\n  (<span class="cn">I.DMBTR</span>/<span class="cn">I.MENGE</span>)-<span class="cn">P.NETPR</span> <span class="k">AS</span> variance\n<span class="k">FROM</span> <span class="tn">RSEG</span> <span class="k">AS</span> R\n<span class="k">INNER JOIN</span> <span class="tn">RBKP</span> <span class="k">AS</span> I <span class="k">ON</span> R.BELNR=I.BELNR <span class="k">AND</span> R.GJAHR=I.GJAHR\n<span class="k">INNER JOIN</span> <span class="tn">EKPO</span> <span class="k">AS</span> P <span class="k">ON</span> R.EBELN=P.EBELN <span class="k">AND</span> R.EBELP=P.EBELP\n<span class="k">WHERE</span> R.MANDT=<span class="str">'100'</span>\n  <span class="k">AND</span> <span class="fn">ABS</span>((<span class="cn">I.DMBTR</span>/<span class="cn">I.MENGE</span>)-<span class="cn">P.NETPR</span>) > 0.01`,
+     raw:`SELECT R.EBELN, R.EBELP, P.NETPR AS po_price,\n  I.DMBTR/I.MENGE AS inv_unit_price,\n  (I.DMBTR/I.MENGE)-P.NETPR AS variance\nFROM RSEG AS R\nINNER JOIN RBKP AS I ON R.BELNR=I.BELNR AND R.GJAHR=I.GJAHR\nINNER JOIN EKPO AS P ON R.EBELN=P.EBELN AND R.EBELP=P.EBELP\nWHERE R.MANDT='100' AND ABS((I.DMBTR/I.MENGE)-P.NETPR) > 0.01`,
+     why:'DMBTR is invoice amount in local currency. Divide by MENGE for per-unit price. ABS filter removes floating point noise near zero.'},
+    {title:'Current stock by material and plant',level:'basic',desc:'Unrestricted stock snapshot — the fastest way to check current inventory.',
+     code:`<span class="k">SELECT</span> <span class="cn">MATNR</span>, <span class="cn">WERKS</span>, <span class="cn">LGORT</span>,\n  <span class="cn">LABST</span> <span class="k">AS</span> unrestricted,\n  <span class="cn">INSME</span> <span class="k">AS</span> quality_stock,\n  <span class="cn">EINME</span> <span class="k">AS</span> in_transit\n<span class="k">FROM</span> <span class="tn">MARD</span>\n<span class="k">WHERE</span> <span class="cn">WERKS</span>=<span class="str">'1000'</span>\n  <span class="k">AND</span> <span class="cn">MATNR</span>=<span class="str">'000000000010001234'</span>\n  <span class="k">AND</span> <span class="cn">MANDT</span>=<span class="str">'100'</span>`,
+     raw:`SELECT MATNR, WERKS, LGORT, LABST AS unrestricted, INSME AS quality_stock, EINME AS in_transit\nFROM MARD\nWHERE WERKS='1000' AND MATNR='000000000010001234' AND MANDT='100'`,
+     why:'LABST=unrestricted, INSME=quality inspection, EINME=in-transit. MARD is the definitive stock table at storage location level.'},
+  ],
+  tables:[
+    {name:'EKKO',description:'Purchase Order Header',useCase:'First stop for any PO issue. Contains vendor, doc type, company code, purchasing org, creation date.'},
+    {name:'EKPO',description:'Purchase Order Line Item',useCase:'Item-level: material, quantity ordered (MENGE), net price (NETPR), plant, delivery date, item category.'},
+    {name:'EKBE',description:'PO History — GR/IR Entries',useCase:'GR/IR mismatch investigation. BEWTP=E for GR, Q for IR. Always SUM — multiple entries per item are normal (partial GRs, reversals).'},
+    {name:'MSEG',description:'Material Document Line Item',useCase:'Movement detail: quantity (MENGE), movement type (BWART), plant, storage location, PO reference. Join with MKPF on MBLNR+MJAHR.'},
+    {name:'MKPF',description:'Material Document Header',useCase:'Posting date (BUDAT), doc number (MBLNR), fiscal year (MJAHR). Header to MSEG. Never join on MBLNR alone.'},
+    {name:'EBAN',description:'Purchase Requisition Items',useCase:'PR source, requested qty, requester. EBAKZ shows if converted to PO. Link to EKPO via BANFN+BNFPO.'},
+    {name:'RBKP',description:'Invoice Header (from MIRO)',useCase:'Vendor invoice header: posting date, total amount, vendor. Join with RSEG for line items.'},
+    {name:'RSEG',description:'Invoice Line Items',useCase:'IR line detail: PO reference, invoiced quantity, amount per item. Key for GR/IR reconciliation.'},
+    {name:'MARA',description:'Material Master — General Data',useCase:'Material type (MTART), base unit (MEINS), material group (MATKL). Client-level master data.'},
+    {name:'MARC',description:'Material Master — Plant Data',useCase:'Plant-specific: MRP type, procurement type, lead time, plant. One row per material+plant combination.'},
+    {name:'MARD',description:'Stock by Storage Location',useCase:'Current unrestricted (LABST), quality (INSME), in-transit (EINME) stock per material+plant+SLoc.'},
+    {name:'LFA1',description:'Vendor Master — General Data',useCase:'Vendor name, country, payment terms. Client-level. Join with LFB1 for company-code specific data.'},
+    {name:'BKPF',description:'Accounting Document Header',useCase:'FI document: posting date, amount, document type. Links to material doc via AWKEY field.'},
+    {name:'BSEG',description:'Accounting Document Line Items',useCase:'GL account, cost center, debit/credit. Needed when GR creates wrong accounting entry.'},
+  ],
+  mvt:[
+    {code:'101',name:'GR against PO → Unrestricted Stock',notes:'Most common. Creates accounting document. Inventory increases, GR/IR clearing account credited.'},
+    {code:'102',name:'Reversal of GR (101)',notes:'Cancels a 101 GR. Negative MENGE entry in EKBE. Does not delete original — both lines remain.'},
+    {code:'103',name:'GR to Blocked Stock',notes:'No FI document — no value transfer. Used when goods are under quality hold.'},
+    {code:'105',name:'Blocked → Unrestricted Stock Release',notes:'Releases quality-blocked goods to unrestricted stock. FI document created at this point.'},
+    {code:'122',name:'Return to Vendor',notes:'Returns goods post-GR. Reduces inventory, creates reverse accounting doc. Verify if IR exists first.'},
+    {code:'123',name:'Reversal of Return to Vendor (122)',notes:'Cancels a 122 return. Rare — use with caution.'},
+    {code:'261',name:'GI for Production Order',notes:'PP-MM integration. Consumes components from stock for production order.'},
+    {code:'301',name:'Plant-to-Plant Transfer (1-step)',notes:'Direct stock transfer between plants in one step. No delivery document required.'},
+    {code:'311',name:'Transfer Posting — Storage Location',notes:'Moves stock between storage locations within the same plant.'},
+    {code:'541',name:'GI to Subcontractor',notes:'Sends components to subcontractor. Stock moves to vendor\'s special stock.'},
+    {code:'543',name:'GI at Subcontractor (auto with GR)',notes:'Auto-posted when finished goods GR happens for sub PO. Consumes subcontractor components.'},
+    {code:'551',name:'Scrapping',notes:'Goods issue to scrap — permanently removes from stock. Creates FI write-off entry.'},
+    {code:'601',name:'GI for SD Delivery',notes:'Key SD-MM integration. Posted when outbound delivery is goods-issued in VL02N.'},
+    {code:'641',name:'GI for STO with Delivery',notes:'Goods issue from issuing plant for inter-company STO with outbound delivery.'},
+  ]
+};
 
-  // Suggested goals
-  const sg = document.getElementById('suggested-goals');
-  sg.innerHTML = SUGGESTED.map(s => `
-    <div class="goal-item" style="cursor:default">
-      <div class="goal-category cat-${s.cat}" style="flex-shrink:0">${s.cat}</div>
-      <div class="goal-text">${s.text}</div>
-      <button class="btn btn-ghost" style="font-size:11px;padding:4px 10px;flex-shrink:0"
-        onclick="addSuggested('${s.text}','${s.cat}')">+ Add</button>
-    </div>`).join('');
-}
-
-function addSuggested(text, cat) {
-  db.goals.push({ id: Date.now().toString(), text, cat, date: today(), done: false });
-  save(db); renderGoals(); showToast('Goal added ✓');
-}
-
-function deleteGoal(id) {
-  db.goals = db.goals.filter(g => g.id !== id);
-  save(db); renderGoals();
-}
-
-// ── LEARNING LOG ────────────────────────────────────────────────
-function addLog() {
-  const title = document.getElementById('log-title').value.trim();
-  const body = document.getElementById('log-body').value.trim();
-  const type = document.getElementById('log-type').value;
-  const tags = document.getElementById('log-tags').value.trim();
-  if (!title || !body) { showToast('Add a title and notes'); return; }
-  db.logs.unshift({
-    id: Date.now().toString(),
-    title, body, type, tags,
-    date: today()
-  });
-  save(db);
-  document.getElementById('log-title').value = '';
-  document.getElementById('log-body').value = '';
-  document.getElementById('log-tags').value = '';
-  renderLog();
-  showToast('Entry saved ✓');
-}
-
-function deleteLog(id) {
-  db.logs = db.logs.filter(l => l.id !== id);
-  save(db); renderLog();
-}
-
-function renderLog() {
-  const ll = document.getElementById('log-list');
-  if (!db.logs.length) {
-    ll.innerHTML = '<div class="empty-state"><div class="empty-state-icon">▤</div>Your learning journal is empty. Start writing.</div>';
-    return;
-  }
-  ll.innerHTML = db.logs.map(l => {
-    const tagList = l.tags ? l.tags.split(',').map(t => t.trim()).filter(Boolean) : [];
-    const colorMap = { teal: 'cat-data', purple: 'cat-sql', amber: 'cat-debug', green: 'cat-write' };
-    return `<div class="log-entry ${l.type}">
-      <div class="log-entry-header">
-        <div class="log-entry-title">${l.title}</div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <div class="log-entry-date">${formatDate(l.date)}</div>
-          <button class="delete-btn" onclick="deleteLog('${l.id}')">✕</button>
-        </div>
-      </div>
-      <div class="log-entry-body">${l.body}</div>
-      ${tagList.length ? `<div class="log-entry-tags">${tagList.map(t => `<span class="tag ${colorMap[l.type] || 'cat-data'}" style="opacity:0.7">${t}</span>`).join('')}</div>` : ''}
-    </div>`;
-  }).join('');
-}
-
-// ── SKILLS ──────────────────────────────────────────────────────
-const SKILL_LABELS = ['0', '1', '2', '3', '4', '5'];
-
-function renderSkillGroup(containerId, group, colorClass) {
-  const el = document.getElementById(containerId);
-  el.innerHTML = Object.entries(group).map(([name, val]) => `
-    <div class="skill-rating-row">
-      <div style="flex:1">
-        <div class="skill-rating-name">${name}</div>
-      </div>
-      <div class="rating-dots">
-        ${[1,2,3,4,5].map(n => `
-          <div class="rating-dot ${val >= n ? colorClass : ''}"
-            onclick="setSkill('${containerId}','${name}',${n})"
-            title="${n}/5">${n}</div>`).join('')}
-      </div>
-    </div>`).join('');
-}
-
-function setSkill(groupId, name, val) {
-  const groupKey = groupId === 'skills-sap' ? 'sap' : 'tech';
-  const colorClass = groupKey === 'sap' ? 'active' : 'active-purple';
-  db.skills[groupKey][name] = val;
-  save(db);
-  renderSkills();
-  showToast('Skill updated ✓');
-}
-
-function renderSkills() {
-  renderSkillGroup('skills-sap', db.skills.sap, 'active');
-  renderSkillGroup('skills-tech', db.skills.tech, 'active-purple');
-
-  const overall = document.getElementById('skills-overall');
-  const all = [
-    ...Object.entries(db.skills.sap).map(([k,v]) => ({ name: k, val: v, color: 'fill-teal' })),
-    ...Object.entries(db.skills.tech).map(([k,v]) => ({ name: k, val: v, color: 'fill-purple' }))
-  ];
-  overall.innerHTML = all.map(s => {
-    const pct = Math.round(s.val / 5 * 100);
-    return `<div class="skill-row">
-      <div class="skill-name">${s.name} <span class="skill-meta">${pct}%</span></div>
-      <div class="progress-bar"><div class="progress-fill ${s.color}" style="width:${pct}%"></div></div>
-    </div>`;
-  }).join('');
-}
-
-// ── HEATMAP ─────────────────────────────────────────────────────
-function renderHeatmap() {
-  const grid = document.getElementById('heatmap-grid');
-  const days = 90;
-  const cells = [];
-  for (let i = days - 1; i >= 0; i--) {
-    const d = new Date(); d.setDate(d.getDate() - i);
-    const key = d.toISOString().slice(0, 10);
-    const val = db.heatmap[key] || 0;
-    const label = formatDate(key) + ' · level ' + val;
-    cells.push(`<div class="hm-cell hm-${val}" data-date="${key}" data-tip="${label}"
-      onclick="cycleHeatmap('${key}')"></div>`);
-  }
-  grid.innerHTML = cells.join('');
-
-  // Week circles
-  const wc = document.getElementById('week-circles');
-  const days7 = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  const weekCells = [];
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date(); d.setDate(d.getDate() - i);
-    const key = d.toISOString().slice(0, 10);
-    const val = db.heatmap[key] || 0;
-    const isToday = key === today();
-    weekCells.push(`<div class="week-circle ${val > 0 ? 'done' : ''} ${isToday && val === 0 ? 'today' : ''}"
-      onclick="cycleHeatmap('${key}')" title="${key}">${days7[d.getDay() === 0 ? 6 : d.getDay() - 1]}</div>`);
-  }
-  wc.innerHTML = weekCells.join('');
-
-  const activeDays = Object.values(db.heatmap).filter(v => v > 0).length;
-  const weekActive = weekCells.filter(c => c.includes('done')).length;
-  document.getElementById('week-summary').textContent = weekActive + '/7 days active this week';
-
-  // Stats
-  const totalLvl = Object.values(db.heatmap).reduce((a, b) => a + b, 0);
-  document.getElementById('heatmap-stats').innerHTML = `
-    <div><div class="stat-label">Active days (total)</div><div style="font-size:20px;color:var(--teal);font-family:var(--font-serif);margin-top:2px">${activeDays}</div></div>
-    <div><div class="stat-label">This week</div><div style="font-size:20px;color:var(--purple);font-family:var(--font-serif);margin-top:2px">${weekActive} / 7</div></div>
-    <div><div class="stat-label">Total effort pts</div><div style="font-size:20px;color:var(--amber);font-family:var(--font-serif);margin-top:2px">${totalLvl}</div></div>`;
-}
-
-function cycleHeatmap(date) {
-  const cur = db.heatmap[date] || 0;
-  db.heatmap[date] = (cur + 1) % 5;
-  save(db);
-  renderHeatmap();
-}
-
-// ── WEEKLY REVIEW ───────────────────────────────────────────────
-function saveReview() {
-  const good = document.getElementById('review-good').value.trim();
-  const bad = document.getElementById('review-bad').value.trim();
-  const next = document.getElementById('review-next').value.trim();
-  const win = document.getElementById('review-win').value.trim();
-  if (!good && !bad && !next && !win) { showToast('Add at least one field'); return; }
-  db.reviews.unshift({ id: Date.now().toString(), date: today(), good, bad, next, win });
-  save(db);
-  document.getElementById('review-good').value = '';
-  document.getElementById('review-bad').value = '';
-  document.getElementById('review-next').value = '';
-  document.getElementById('review-win').value = '';
-  renderWeekly();
-  showToast('Review saved ✓');
-}
-
-function deleteReview(id) {
-  db.reviews = db.reviews.filter(r => r.id !== id);
-  save(db); renderWeekly();
-}
-
-function renderWeekly() {
-  const pr = document.getElementById('past-reviews');
-  if (!db.reviews.length) {
-    pr.innerHTML = '<div class="empty-state"><div class="empty-state-icon">◷</div>No reviews yet. Save your first one above.</div>';
-    return;
-  }
-  pr.innerHTML = db.reviews.map(r => `
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">Week of ${formatDate(r.date)}</div>
-        <button class="delete-btn" onclick="deleteReview('${r.id}')">✕</button>
-      </div>
-      <div class="review-grid">
-        ${r.good ? `<div class="review-box"><div class="review-box-label">✦ Went well</div><div style="font-size:13px;color:var(--text2)">${r.good}</div></div>` : ''}
-        ${r.bad ? `<div class="review-box"><div class="review-box-label">⚠ Slowed me down</div><div style="font-size:13px;color:var(--text2)">${r.bad}</div></div>` : ''}
-        ${r.next ? `<div class="review-box"><div class="review-box-label">→ Next week focus</div><div style="font-size:13px;color:var(--text2)">${r.next}</div></div>` : ''}
-        ${r.win ? `<div class="review-box"><div class="review-box-label">⊡ Problem solved</div><div style="font-size:13px;color:var(--text2)">${r.win}</div></div>` : ''}
-      </div>
-    </div>`).join('');
-}
-
-// ── ROADMAP ─────────────────────────────────────────────────────
-function renderRoadmap() {
-  const pp = document.getElementById('phase-progress');
-  const phases = [
-    { key: 'p1', label: 'Phase 1 — Data Mastery', color: 'fill-teal' },
-    { key: 'p2', label: 'Phase 2 — Techno-Functional', color: 'fill-purple' },
-    { key: 'p3', label: 'Phase 3 — Visible Expertise', color: 'fill-amber' }
-  ];
-  pp.innerHTML = phases.map(p => {
-    const val = db.phaseProgress[p.key] || 0;
-    return `<div class="skill-row">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-        <div class="skill-name" style="margin-bottom:0">${p.label}</div>
-        <input type="range" min="0" max="100" value="${val}" style="flex:1"
-          oninput="setPhaseProgress('${p.key}', this.value)">
-        <span style="font-size:12px;color:var(--text2);font-family:var(--font-mono);min-width:36px;text-align:right">${val}%</span>
-      </div>
-      <div class="progress-bar"><div class="progress-fill ${p.color}" style="width:${val}%"></div></div>
-    </div>`;
-  }).join('');
-}
-
-function setPhaseProgress(key, val) {
-  db.phaseProgress[key] = parseInt(val);
-  save(db);
-  renderRoadmap();
-}
-
-// ── TOAST ────────────────────────────────────────────────────────
-function showToast(msg) {
-  const t = document.createElement('div');
-  t.className = 'toast';
-  t.textContent = msg;
-  document.body.appendChild(t);
-  setTimeout(() => t.remove(), 2000);
-}
-
-// ── INIT ─────────────────────────────────────────────────────────
-renderDashboard();
+rDash();
 </script>
 </body>
 </html>

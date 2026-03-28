@@ -1,0 +1,112 @@
+[
+  {
+    "code": "101",
+    "name": "GR against PO → Unrestricted Stock",
+    "notes": "Most common movement. Creates FI accounting document: debit Inventory, credit GR/IR Clearing. Stock increases. Appears in EKBE with BEWTP='E'. Multiple partial 101s per PO item are normal."
+  },
+  {
+    "code": "102",
+    "name": "Reversal of GR (101)",
+    "notes": "Cancels a 101 GR. Adds a negative MENGE entry in EKBE — does NOT delete original. Creates reverse FI doc. Use when wrong quantity or material was received. Check if IR exists first (EKBE BEWTP='Q')."
+  },
+  {
+    "code": "103",
+    "name": "GR to Blocked Stock (Quality Hold)",
+    "notes": "No FI accounting document — no value transfer yet. Goods are received but still vendor-owned conceptually (not accepted). Use when goods need quality inspection before acceptance. INSME stock field in MARD."
+  },
+  {
+    "code": "104",
+    "name": "Reversal of Blocked Stock GR (103)",
+    "notes": "Cancels a 103 posting. No FI impact (since 103 had none). Removes goods from blocked stock. Use when blocked goods need to be returned or rejected before quality release."
+  },
+  {
+    "code": "105",
+    "name": "Release: Blocked → Unrestricted Stock",
+    "notes": "Releases quality-inspected goods to unrestricted stock. FI accounting document created AT THIS POINT (debit Inventory, credit GR/IR Clearing). This is when financial value is recognised, not at 103."
+  },
+  {
+    "code": "106",
+    "name": "Reversal of Stock Release (105)",
+    "notes": "Cancels a 105 release. Moves stock back to blocked. Reverse FI document created. Rare — typically used when quality approval was posted in error."
+  },
+  {
+    "code": "122",
+    "name": "Return to Vendor (post-GR)",
+    "notes": "Returns goods to vendor after a 101 GR. Reduces unrestricted stock. Creates reverse FI document (credit Inventory, debit GR/IR Clearing). Always check: does an IR already exist? If yes, cancel IR first (MR8M) to avoid open items."
+  },
+  {
+    "code": "123",
+    "name": "Reversal of Return to Vendor (122)",
+    "notes": "Cancels a 122 return posting. Brings goods back into unrestricted stock. Creates FI document to restore inventory. Rare — use only when 122 was posted in error and goods haven't physically left."
+  },
+  {
+    "code": "161",
+    "name": "GR for Returns PO (Reverse Shipment)",
+    "notes": "Used specifically with Return POs (document type RE in EKKO.BSART). Different from 122 — this is for a formal return purchase order created to send goods back. Creates FI document. Visible in EKBE."
+  },
+  {
+    "code": "201",
+    "name": "GI to Cost Centre",
+    "notes": "Goods issue to a cost centre (e.g. office supplies, maintenance materials). Reduces unrestricted stock. Creates FI document: debit Cost Centre expense account, credit Inventory. No PO reference — direct consumption posting."
+  },
+  {
+    "code": "261",
+    "name": "GI for Production Order (PP-MM)",
+    "notes": "Key PP-MM integration movement. Consumes raw materials/components from stock for a production order. FI document: debit WIP/Production account, credit Inventory. Triggers backflush if configured in MARC."
+  },
+  {
+    "code": "262",
+    "name": "Reversal of GI for Production Order",
+    "notes": "Cancels a 261 posting. Returns components back to stock. FI document reverses the production consumption. Use when wrong components were issued or excess was issued."
+  },
+  {
+    "code": "301",
+    "name": "Plant-to-Plant Transfer (1-Step)",
+    "notes": "Direct stock transfer between two plants in one step — no delivery document needed. FI posts to both plants simultaneously. Reduces stock at sending plant, increases at receiving plant. Use for simple inter-plant transfers."
+  },
+  {
+    "code": "303",
+    "name": "Transfer Posting: Plant (Step 1 of 2)",
+    "notes": "First step of a 2-step plant transfer. Stock moves out of issuing plant into 'in-transit' status (EINME field in MARD). No value change yet at receiving plant. Step 2 is movement type 305 at receiving plant."
+  },
+  {
+    "code": "305",
+    "name": "Transfer Posting: Receive from Plant (Step 2 of 2)",
+    "notes": "Second step of the 2-step plant transfer initiated by 303. Receives goods at the destination plant from in-transit stock. FI document created at this point. Together 303+305 = same result as 301 but with visibility of in-transit stock."
+  },
+  {
+    "code": "311",
+    "name": "Transfer Posting: Storage Location (Same Plant)",
+    "notes": "Moves stock between storage locations within the same plant. No FI document — no change in value, just physical location changes. Updates MARD (reduces one SLoc, increases another). Most common movement for warehouse reorganisation."
+  },
+  {
+    "code": "541",
+    "name": "GI to Subcontractor (Components)",
+    "notes": "Sends components to subcontractor's premises. Stock moves from unrestricted to vendor special stock (O). MARD.UMLME field tracks in-transfer. No FI document yet (goods still company-owned, just at vendor site). Visible in MB54."
+  },
+  {
+    "code": "543",
+    "name": "Auto-GI at Subcontractor (with GR)",
+    "notes": "Automatically triggered when you post a GR (101) for the finished goods from a subcontract PO. Consumes the subcontractor's component special stock. You post 101 — SAP auto-posts 543. Both visible in MSEG."
+  },
+  {
+    "code": "551",
+    "name": "Goods Issue to Scrapping",
+    "notes": "Permanently removes stock from inventory. FI document: debit Scrapping/Loss account, credit Inventory. This is a financial write-off — reduces asset value. Irreversible in standard flow. Requires management approval in most companies."
+  },
+  {
+    "code": "601",
+    "name": "GI for Outbound Delivery (SD-MM Integration)",
+    "notes": "Posted when goods leave for a customer via an SD outbound delivery (VL02N). FI document: debit COGS, credit Inventory. Key SD-MM integration point. Linked to LIKP/LIPS delivery tables. Updates MKPF/MSEG."
+  },
+  {
+    "code": "641",
+    "name": "GI for STO with Outbound Delivery",
+    "notes": "Goods issue from issuing plant for an inter-company or inter-plant Stock Transfer Order (STO) that uses an outbound delivery. FI posts at issuing plant. Receiving plant posts 101 when goods arrive. Linked to LIKP/LIPS."
+  },
+  {
+    "code": "647",
+    "name": "GI for STO without Delivery (1-Step)",
+    "notes": "One-step STO goods issue — no delivery document. Stock immediately moves to receiving plant. Similar to 641 but without outbound delivery process. Simpler but provides less visibility of in-transit stock."
+  }
+]

@@ -1,0 +1,218 @@
+[
+  {
+    "category": "SAP MM Tables",
+    "question": "What does EKBE store and why is it critical for GR/IR reconciliation?",
+    "answer": "EKBE is the PO History table — it records every GR and IR against a PO item. BEWTP='E' is a GR entry, BEWTP='Q' is an IR. Always SUM quantities — never assume one entry per item. This is your first stop for any GR/IR mismatch.",
+    "table": "EKBE, EKKO, EKPO"
+  },
+  {
+    "category": "SAP MM Tables",
+    "question": "What is the difference between MSEG and MKPF, and how do you join them correctly?",
+    "answer": "MKPF is the material document header (posting date BUDAT, document number MBLNR, fiscal year MJAHR). MSEG is the line item with quantity, movement type, plant, storage location, and PO reference. Always join on BOTH MBLNR and MJAHR — MBLNR alone is not unique across fiscal years.",
+    "table": "MKPF, MSEG"
+  },
+  {
+    "category": "SAP MM Tables",
+    "question": "What is EBAN and how do you trace a PR to its resulting PO?",
+    "answer": "EBAN stores Purchase Requisition items. Key fields: BANFN (PR number), BNFPO (PR item), EBAKZ (converted to PO flag). To trace PR→PO: join EBAN.BANFN+EBAN.BNFPO to EKPO.BANFN+EKPO.BNFPO. If EKPO has entries, the PR was converted.",
+    "table": "EBAN, EKPO"
+  },
+  {
+    "category": "SAP MM Tables",
+    "question": "What are RBKP and RSEG used for, and how do they relate to each other?",
+    "answer": "RBKP is the invoice (MIRO) header — vendor, posting date, total amount, tax. RSEG is the invoice line item — PO reference (EBELN, EBELP), invoiced quantity (MENGE), amount (DMBTR). Join on BELNR+GJAHR. Together they are your source for all invoice verification data.",
+    "table": "RBKP, RSEG"
+  },
+  {
+    "category": "SAP MM Tables",
+    "question": "What is the difference between MARA, MARC, and MARD? When do you use each?",
+    "answer": "MARA: General/client-level material master (material type, base unit, material group). MARC: Plant-level data (MRP type, procurement type, lead time) — one row per material+plant. MARD: Storage location stock (LABST=unrestricted, INSME=quality, EINME=in-transit) — one row per material+plant+SLoc.",
+    "table": "MARA, MARC, MARD"
+  },
+  {
+    "category": "SAP MM Tables",
+    "question": "What does BKPF store and how does it link to a material document?",
+    "answer": "BKPF is the FI accounting document header (posting date, document type, company code). It links to material documents via the AWKEY field — which stores the material document number + year (MBLNR+MJAHR concatenated). Use this when a GR posts wrong values to FI.",
+    "table": "BKPF, BSEG, MSEG"
+  },
+  {
+    "category": "SAP MM Tables",
+    "question": "Where is vendor master data stored and what is the difference between LFA1 and LFB1?",
+    "answer": "LFA1 is the general/client-level vendor master (name, country, address, payment terms). LFB1 is company-code level (payment method, reconciliation account, dunning). For purchasing data (purchasing group, incoterms), check LFM1 (purchasing organisation level).",
+    "table": "LFA1, LFB1, LFM1"
+  },
+  {
+    "category": "SAP MM Tables",
+    "question": "What is the EKKO field BSTYP and why does it matter?",
+    "answer": "BSTYP is the purchasing document category. Key values: F=Purchase Order, A=Request for Quotation, K=Contract, L=Scheduling Agreement, B=Purchase Requisition. When debugging, always check BSTYP first — a 'PO' that is actually a contract (K) behaves very differently in GR/IR.",
+    "table": "EKKO"
+  },
+  {
+    "category": "SAP MM Tables",
+    "question": "What is table T156 used for?",
+    "answer": "T156 is the Movement Type configuration table — it stores the definition, control parameters, and text for every movement type. Use it in SE11 or SE16N to look up what a movement type does, whether it creates an FI doc, and what stock type it affects. Essential for understanding any new movement type you encounter.",
+    "table": "T156"
+  },
+  {
+    "category": "Movement Types",
+    "question": "Why does movement type 101 create an accounting document but 103 does not?",
+    "answer": "101 posts goods to unrestricted stock — inventory has monetary value, so FI creates a document: debit Inventory account, credit GR/IR Clearing account. 103 posts to blocked/quality stock — no value transfer happens yet (goods are received but not accepted), so no accounting document is generated.",
+    "table": "MSEG, EKBE"
+  },
+  {
+    "category": "Movement Types",
+    "question": "What is movement type 122 and what must you check before posting it?",
+    "answer": "122 is Return to Vendor — reverses a GR, reduces inventory, creates a reverse accounting document (credit Inventory, debit GR/IR Clearing). Before posting: check EKBE for BEWTP='Q' entries — if an invoice already exists, you must cancel it first (MR8M), otherwise you get an accounting mismatch.",
+    "table": "MSEG, EKBE, RBKP"
+  },
+  {
+    "category": "Movement Types",
+    "question": "What is the difference between movement types 301 and 311?",
+    "answer": "301 is a plant-to-plant stock transfer in one step (no delivery document). The transfer is immediate and FI posts to both plants. 311 is a storage location transfer within the same plant — no FI document is generated because the value stays in the same plant. 311 only affects MARD (stock by SLoc).",
+    "table": "MSEG, MKPF"
+  },
+  {
+    "category": "Movement Types",
+    "question": "In subcontracting, what is the relationship between movement types 541 and 543?",
+    "answer": "541 is a manual GI to send components to the subcontractor (moves to vendor special stock O). 543 is automatically triggered when you post the GR (mvt 101) for the finished goods from the subcontract PO — it auto-consumes the components from vendor special stock. You post 101, SAP auto-posts 543.",
+    "table": "MSEG, EKBE"
+  },
+  {
+    "category": "Movement Types",
+    "question": "What is movement type 551 and when is it used?",
+    "answer": "551 is Scrapping — it permanently removes stock from inventory and creates an FI write-off entry (debit Scrapping expense account, credit Inventory). It is irreversible in the standard flow. Always confirm with the plant manager before posting — it directly reduces asset value on the balance sheet.",
+    "table": "MSEG, MKPF"
+  },
+  {
+    "category": "Movement Types",
+    "question": "What is the difference between movement type 601 and 641?",
+    "answer": "601 is a GI for an SD outbound delivery (sales order) — stock leaves for the customer. 641 is a GI for a Stock Transfer Order (STO) with delivery — stock leaves the issuing plant for the receiving plant. Both reduce inventory at the issuing location but the downstream documents and receivers are different.",
+    "table": "MSEG, LIKP"
+  },
+  {
+    "category": "Debugging",
+    "question": "A user reports GR quantity is wrong in the PO history. Walk through your investigation step by step.",
+    "answer": "1. SE16N on EKBE: filter EBELN+EBELP, SUM MENGE for BEWTP='E'. 2. Look for 102 reversals (negative MENGE). 3. Get MBLNR from EKBE → go to MSEG for movement detail. 4. Open MIGO in display mode with the material document. 5. Check if partial GRs sum correctly. 6. Check BUDAT — is the issue a timing/period problem?",
+    "table": "EKBE, MSEG, MKPF"
+  },
+  {
+    "category": "Debugging",
+    "question": "An invoice is parked and not posting. What are the three most common reasons and where do you check?",
+    "answer": "1. Price variance > tolerance: check EKPO.NETPR vs RBKP/RSEG price — use OMR6 to see tolerance limits. 2. Quantity variance: GR qty in EKBE (BEWTP=E) doesn't match IR qty — check if GR was even posted. 3. Blocked by user: check RBKP.ZLSPR (payment block) and RBKP.BSTAT (document status — 'A'=parked, 'B'=posted).",
+    "table": "RBKP, RSEG, EKBE, EKPO"
+  },
+  {
+    "category": "Debugging",
+    "question": "Stock shows in MARD but the PO cannot do GR — 'no adequate goods receipt is possible'. Why?",
+    "answer": "This is usually a delivery complete indicator. Check EKPO.ELIKZ = 'X' (delivery complete manually set). Other causes: EKPO.LOEKZ = 'L' (line deleted), EKKO.EINDT (delivery date not reached), or GR-based IV flag causing a block after partial GR. Clear ELIKZ in ME22N to re-open for GR.",
+    "table": "EKPO, EKKO"
+  },
+  {
+    "category": "Debugging",
+    "question": "A GR was posted but no accounting document was created. What are the possible reasons?",
+    "answer": "1. Movement type 103 (blocked stock) — intentionally no FI doc. 2. Material has no price/valuation class set in MARC or accounting view. 3. Material type is non-valuated (MARA.MTART). 4. Company code not assigned to a chart of accounts. 5. Plant not assigned to a company code. Use OMJJ to check movement type configuration for 'Value Update' flag.",
+    "table": "MSEG, MARA, MARC, T156"
+  },
+  {
+    "category": "Debugging",
+    "question": "How do you find which user posted a specific material document?",
+    "answer": "Go to MKPF table in SE16N and filter by MBLNR (material document number) and MJAHR (year). The field USNAM stores the user ID who posted the document. You can also use MB03 (display material document) directly — it shows the user in the document header.",
+    "table": "MKPF"
+  },
+  {
+    "category": "SQL / HANA",
+    "question": "Why must you always include the MANDT field in SAP HANA queries?",
+    "answer": "SAP is a multi-client system — the same database table stores data for multiple clients (like dev/QA/prod or multiple company environments). Without MANDT filter, your query returns data from ALL clients mixed together, giving wrong totals and counts. Always add WHERE MANDT='100' (or your client number) as the first filter.",
+    "table": "EKKO, EKBE, MSEG"
+  },
+  {
+    "category": "SQL / HANA",
+    "question": "What is the difference between HANA Column Store and Row Store, and why does it matter for MM queries?",
+    "answer": "Column store reads only the columns you SELECT — far faster for analytics (e.g., SUM of MENGE across EKBE). Row store reads entire rows — better for OLTP (individual record lookups). Most SAP tables in HANA are column-store by default. For MM analytics, always SELECT only the columns you need — avoids loading unnecessary data from storage.",
+    "table": "EKBE, MSEG"
+  },
+  {
+    "category": "SQL / HANA",
+    "question": "What is the danger of running SELECT * on MSEG in a production HANA system?",
+    "answer": "MSEG can have tens of millions of rows in a live system. SELECT * without a WHERE clause will try to return all rows and all 200+ columns — this can cause memory overflow, lock tables, and degrade system performance for all users. Always add WHERE conditions (MATNR, WERKS, BWART, date range) and LIMIT results. Never run unfiltered queries on MSEG in production.",
+    "table": "MSEG"
+  },
+  {
+    "category": "SQL / HANA",
+    "question": "What is a self-join and when would you use one in an SAP MM context?",
+    "answer": "A self-join joins a table to itself. MM use case: finding PO items where quantity changed after creation. Join EKPO to itself (EKPO as T1 and EKPO as T2) on EBELN+EBELP, then compare T1.MENGE (original) with T2.MENGE (current) — though in practice you'd use CDHDR/CDPOS (change documents) for this. Self-joins are also useful in hierarchical data like PRPS (WBS elements).",
+    "table": "EKPO, CDHDR, CDPOS"
+  },
+  {
+    "category": "Techno-Functional",
+    "question": "What is a BADI and how is it different from a User Exit?",
+    "answer": "BADIs (Business Add-Ins) are object-oriented SAP enhancement points — multiple implementations can be active simultaneously, no core code modification needed, managed via SE18/SE19. User Exits are older, function-module based, only one implementation allowed, require modification flag in object directory. For new enhancements, always prefer BADIs. Key MM BADI: ME_PROCESS_PO_CUST for PO field changes.",
+    "table": ""
+  },
+  {
+    "category": "Techno-Functional",
+    "question": "What is a Z-table and how would you create one for tracking known GR/IR issues?",
+    "answer": "A Z-table is a custom database table. Create via SE11: table name starts with Z (e.g. ZGRIR_ISSUES), define fields (MANDT, PO number, item, issue type, description, status, resolved date), set delivery class A (application table), set data class APPL0 (master data). Activate. Then create a maintenance view via SM30 for easy data entry. Your tracker is a real Z-table use case.",
+    "table": ""
+  },
+  {
+    "category": "Techno-Functional",
+    "question": "What is transaction SE80 and how is it useful for a techno-functional consultant?",
+    "answer": "SE80 is the Object Navigator — your central ABAP workbench. From here you can browse programs, function modules, classes, BADIs, tables, and enhancement spots. As a techno-functional consultant, use it to: read standard MM programs to understand logic, find where a BADI is implemented, trace which function module handles a specific transaction, and set breakpoints without writing code.",
+    "table": ""
+  },
+  {
+    "category": "Techno-Functional",
+    "question": "What are CDHDR and CDPOS tables and when do you use them?",
+    "answer": "CDHDR is the change document header and CDPOS is the change document item. SAP writes a change record every time a key field is changed (PO quantity, price, vendor). Use them to answer: 'Who changed this PO price, when, and from what value?' Filter CDHDR by OBJECTCLAS='EINKBELEG' (purchasing document) and OBJECTID=PO number, then join to CDPOS for field-level detail.",
+    "table": "CDHDR, CDPOS"
+  },
+  {
+    "category": "Process",
+    "question": "What happens in EKBE when you post a GR reversal (movement type 102)?",
+    "answer": "A new line is added to EKBE with negative MENGE and BEWTP='E'. It does NOT delete the original 101 entry — both remain. The net GR quantity = SUM of all BEWTP='E' entries including negative reversals. This is why you must always SUM EKBE, never count rows. The same applies to IR reversals (BEWTP='Q').",
+    "table": "EKBE, MSEG"
+  },
+  {
+    "category": "Process",
+    "question": "What is GR-Based Invoice Verification (GR-IV) and what problem does it solve?",
+    "answer": "GR-IV (EKPO.WEBRE='X') means the system only allows invoice posting up to the GR quantity — you cannot invoice more than what was received. This prevents over-invoicing. Without GR-IV, a vendor could invoice for 100 units before you receive anything. The flag is set at item level in the PO and is the standard setting for most direct material procurement.",
+    "table": "EKPO, EKBE, RBKP"
+  },
+  {
+    "category": "Process",
+    "question": "What is the 2-way, 3-way, and 4-way match in procurement?",
+    "answer": "2-way match: PO vs Invoice (price and quantity match). 3-way match: PO + GR + Invoice — the standard SAP MM approach where invoice is matched against both PO and goods receipt. 4-way match: PO + GR + Invoice + Inspection (quality confirmation required before payment). In SAP, 3-way match is controlled by GR-IV flag in EKPO.",
+    "table": "EKKO, EKPO, EKBE, RBKP"
+  },
+  {
+    "category": "Process",
+    "question": "What is a scheduling agreement and how is it different from a standard PO?",
+    "answer": "A scheduling agreement (EKKO.BSTYP='L') is a long-term purchasing arrangement with a vendor for materials to be delivered on specific scheduled dates (delivery schedule lines in EKET). Unlike a PO which is one-time, a scheduling agreement covers multiple delivery dates. GR is posted against the schedule lines. Table EKET stores the delivery schedule.",
+    "table": "EKKO, EKPO, EKET"
+  },
+  {
+    "category": "Process",
+    "question": "What is a consignment process in SAP MM and which movement types are involved?",
+    "answer": "Consignment means vendor-owned stock kept at your premises — you only pay when you consume it. Key movements: 101 K (GR to consignment stock, no FI doc — vendor still owns it), 411 K (transfer from consignment to own stock — FI doc created, payment liability starts), 414 (return to vendor from consignment). Stock is visible in MCHB/MARD with special stock indicator K.",
+    "table": "MSEG, MARD, EKPO"
+  },
+  {
+    "category": "ABAP",
+    "question": "What is the ABAP statement SELECT SINGLE and when should you avoid it?",
+    "answer": "SELECT SINGLE fetches only the first matching row. It's fast for unique key lookups (e.g., one PO header by EBELN). Avoid it when: multiple rows might match (like EKBE where multiple GRs exist per PO item — SELECT SINGLE will silently miss them). For multi-row scenarios always use SELECT ... INTO TABLE itab and loop the result. A common consultant mistake is SELECT SINGLE on EKBE.",
+    "table": "EKBE, EKPO"
+  },
+  {
+    "category": "ABAP",
+    "question": "What is an internal table in ABAP and how is it different from a database table?",
+    "answer": "An internal table is an in-memory data structure (like an array of rows) — it exists only during program runtime and is not persisted to the database. Database tables (like EKKO, MSEG) are stored on disk in HANA. Typical flow: SELECT from database into internal table → loop and process the internal table → optionally modify and UPDATE back to database. Internal tables are fast because all operations are in memory.",
+    "table": ""
+  },
+  {
+    "category": "ABAP",
+    "question": "What is transaction SM30 and how is it useful for a functional consultant?",
+    "answer": "SM30 is the Table View Maintenance transaction — it provides a simple UI (add/change/delete rows) for custom Z-tables and SAP configuration tables without writing ABAP. As a functional consultant, use SM30 to: maintain Z-table entries directly, view configuration tables, and set up basic data maintenance for custom tables. You need a maintenance view (SE54) to be created first.",
+    "table": ""
+  }
+]
