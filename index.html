@@ -1,14 +1,30 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0d0f12">
 <title>SAP Tracker</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap');
-:root{--bg:#0d0f12;--bg2:#141618;--bg3:#1b1e23;--bg4:#22262d;--b1:#272c34;--b2:#343b46;--txt:#e4e6e8;--txt2:#8a9099;--txt3:#52596a;--teal:#00c9a7;--tdim:rgba(0,201,167,.10);--tmid:rgba(0,201,167,.22);--pur:#9b72f5;--pdim:rgba(155,114,245,.12);--amb:#f5a623;--adim:rgba(245,166,35,.12);--red:#f05252;--rdim:rgba(240,82,82,.12);--grn:#34d399;--gdim:rgba(52,211,153,.12);--nav:60px;--safe:env(safe-area-inset-bottom,0px);--serif:'DM Serif Display',serif;--body:'Outfit',sans-serif;--mono:'DM Mono',monospace;--r:12px;--rs:8px}
+:root{
+  --bg:#0d0f12;--bg2:#141618;--bg3:#1b1e23;--bg4:#22262d;
+  --b1:#272c34;--b2:#343b46;
+  --txt:#e4e6e8;--txt2:#8a9099;--txt3:#52596a;
+  --teal:#00c9a7;--tdim:rgba(0,201,167,.10);--tmid:rgba(0,201,167,.22);
+  --pur:#9b72f5;--pdim:rgba(155,114,245,.12);
+  --amb:#f5a623;--adim:rgba(245,166,35,.12);
+  --red:#f05252;--rdim:rgba(240,82,82,.12);
+  --grn:#34d399;--gdim:rgba(52,211,153,.12);
+  --nav:60px;--safe:env(safe-area-inset-bottom,0px);
+  --serif:'DM Serif Display',serif;
+  --body:'Outfit',sans-serif;
+  --mono:'DM Mono',monospace;
+  --r:12px;--rs:8px;
+}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden;background:var(--bg)}
 body{font-family:var(--body);font-size:15px;color:var(--txt);-webkit-font-smoothing:antialiased}
@@ -29,7 +45,8 @@ body{font-family:var(--body);font-size:15px;color:var(--txt);-webkit-font-smooth
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .sbox{background:var(--bg3);border:1px solid var(--b1);border-radius:var(--rs);padding:14px}
 .sl{font-size:10px;color:var(--txt3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.1em}
-.sv{font-size:24px;font-family:var(--serif);margin-top:3px;line-height:1}.ss{font-size:11px;color:var(--txt2);margin-top:3px}
+.sv{font-size:24px;font-family:var(--serif);margin-top:3px;line-height:1}
+.ss{font-size:11px;color:var(--txt2);margin-top:3px}
 .ct2{color:var(--teal)}.cp{color:var(--pur)}.ca{color:var(--amb)}.cg{color:var(--grn)}
 .pb{height:4px;background:var(--b1);border-radius:2px;overflow:hidden;margin:5px 0}
 .pf{height:100%;border-radius:2px;transition:width .5s ease}
@@ -37,14 +54,16 @@ body{font-family:var(--body);font-size:15px;color:var(--txt);-webkit-font-smooth
 .prow{display:flex;justify-content:space-between;font-size:12px;color:var(--txt2);margin-bottom:4px}
 .streak{margin:10px 16px;background:linear-gradient(135deg,var(--tdim),var(--pdim));border:1px solid var(--tmid);border-radius:var(--r);padding:14px 16px;display:flex;align-items:center;gap:14px}
 .snum{font-family:var(--serif);font-size:44px;color:var(--teal);line-height:1;flex-shrink:0}
-.stxt strong{font-size:14px;font-weight:600;display:block}.stxt span{font-size:12px;color:var(--txt2)}
+.stxt strong{font-size:14px;font-weight:600;display:block}
+.stxt span{font-size:12px;color:var(--txt2)}
 .gi{display:flex;align-items:center;gap:11px;background:var(--bg3);border:1px solid var(--b1);border-radius:var(--rs);padding:12px 14px;margin-bottom:8px;cursor:pointer;-webkit-user-select:none;user-select:none;transition:border-color .15s}
 .gi.done{opacity:.42}.gi.done .gt{text-decoration:line-through;color:var(--txt3)}
 .gck{width:22px;height:22px;border:1.5px solid var(--b2);border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .15s}
 .gi.done .gck{background:var(--teal);border-color:var(--teal);color:#000}
 .gt{font-size:13px;flex:1;line-height:1.4}
 .pill{font-size:10px;font-family:var(--mono);padding:3px 8px;border-radius:5px;text-transform:uppercase;letter-spacing:.06em;flex-shrink:0}
-.pd{background:var(--tdim);color:var(--teal)}.ps{background:var(--pdim);color:var(--pur)}.pb2{background:var(--adim);color:var(--amb)}.pa{background:var(--rdim);color:var(--red)}.pw{background:var(--gdim);color:var(--grn)}
+.pd{background:var(--tdim);color:var(--teal)}.ps{background:var(--pdim);color:var(--pur)}
+.pb2{background:var(--adim);color:var(--amb)}.pa{background:var(--rdim);color:var(--red)}.pw{background:var(--gdim);color:var(--grn)}
 .inp{width:100%;background:var(--bg3);border:1px solid var(--b1);border-radius:var(--rs);padding:11px 14px;color:var(--txt);font-family:var(--body);font-size:14px;outline:none;transition:border-color .15s;-webkit-appearance:none;appearance:none}
 .inp:focus{border-color:var(--teal)}.inp::placeholder{color:var(--txt3)}
 textarea.inp{resize:none;line-height:1.6;min-height:90px}select.inp{cursor:pointer}
@@ -58,6 +77,12 @@ textarea.inp{resize:none;line-height:1.6;min-height:90px}select.inp{cursor:point
 .tabs::-webkit-scrollbar{display:none}
 .tab{padding:7px 14px;border-radius:20px;font-size:12px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;border:1px solid var(--b1);color:var(--txt2);cursor:pointer;white-space:nowrap;background:var(--bg3);flex-shrink:0;transition:all .15s}
 .tab.on{background:var(--teal);border-color:var(--teal);color:#000;font-weight:600}
+.cat-wrap{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 8px}
+.cat-btn{background:var(--bg3);border:1px solid var(--b1);color:var(--txt2);border-radius:20px;padding:6px 11px;font-size:11px;font-family:var(--mono);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.cat-btn:active{opacity:.7}
+.cat-on{background:var(--teal)!important;border-color:var(--teal)!important;color:#000!important;font-weight:600}
+.cat-cnt{background:rgba(255,255,255,.15);border-radius:10px;padding:1px 5px;font-size:10px}
+.cat-on .cat-cnt{background:rgba(0,0,0,.2)}
 .fc{background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r);min-height:210px;cursor:pointer;perspective:1000px;margin:10px 16px}
 .fci{position:relative;min-height:210px;transform-style:preserve-3d;transition:transform .42s cubic-bezier(.4,0,.2,1)}
 .fc.flip .fci{transform:rotateY(180deg)}
@@ -85,7 +110,8 @@ textarea.inp{resize:none;line-height:1.6;min-height:90px}select.inp{cursor:point
 .rtable th{text-align:left;padding:8px 12px;background:var(--bg4);color:var(--txt3);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid var(--b1);white-space:nowrap}
 .rtable td{padding:11px 12px;border-bottom:1px solid var(--b1);vertical-align:top;line-height:1.4}
 .rtable tr:last-child td{border-bottom:none}.rtable tr:active td{background:var(--bg3)}
-.tn2{font-family:var(--mono);color:var(--teal);font-size:13px}.tu{font-size:11px;color:var(--txt3);margin-top:2px}
+.tn2{font-family:var(--mono);color:var(--teal);font-size:13px}
+.tu{font-size:11px;color:var(--txt3);margin-top:2px}
 .le{background:var(--bg2);border:1px solid var(--b1);border-radius:var(--r);padding:14px 16px;margin-bottom:10px;border-left:3px solid var(--teal)}
 .le.sql{border-left-color:var(--pur)}.le.abap{border-left-color:var(--amb)}.le.proc{border-left-color:var(--grn)}
 .lh{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px}
@@ -98,7 +124,9 @@ textarea.inp{resize:none;line-height:1.6;min-height:90px}select.inp{cursor:point
 .skn{font-size:13px;font-weight:500;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dots{display:flex;gap:4px;flex-shrink:0}
 .dot{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:11px;font-family:var(--mono);cursor:pointer;transition:all .12s;color:var(--txt3)}
-.dot:active{transform:scale(.88)}.dT{background:var(--teal);border-color:var(--teal);color:#000;font-weight:700}.dP{background:var(--pur);border-color:var(--pur);color:#fff;font-weight:700}
+.dot:active{transform:scale(.88)}
+.dT{background:var(--teal);border-color:var(--teal);color:#000;font-weight:700}
+.dP{background:var(--pur);border-color:var(--pur);color:#fff;font-weight:700}
 .hmg{display:flex;flex-wrap:wrap;gap:3px}
 .hmc{width:15px;height:15px;border-radius:3px;cursor:pointer}
 .hm0{background:var(--b1)}.hm1{background:rgba(0,201,167,.25)}.hm2{background:rgba(0,201,167,.50)}.hm3{background:rgba(0,201,167,.75)}.hm4{background:var(--teal)}
@@ -108,131 +136,193 @@ textarea.inp{resize:none;line-height:1.6;min-height:90px}select.inp{cursor:point
 .wdot{width:7px;height:7px;border-radius:50%;background:var(--b1)}.wd.on .wdot{background:var(--teal)}
 .tli{display:flex;gap:14px;padding-bottom:20px}
 .tls{display:flex;flex-direction:column;align-items:center}
-.tld{width:12px;height:12px;border-radius:50%;flex-shrink:0;margin-top:3px}.tll{width:1px;background:var(--b1);flex:1;min-height:28px;margin:4px 0}
-.tlc{flex:1}.tlp{font-size:10px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px}.tlt{font-size:15px;font-weight:600;margin-bottom:4px}.tld2{font-size:13px;color:var(--txt2);line-height:1.6}
-.flow{display:flex;align-items:center;overflow-x:auto;gap:0;padding:4px 0 8px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.tld{width:12px;height:12px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.tll{width:1px;background:var(--b1);flex:1;min-height:28px;margin:4px 0}
+.tlc{flex:1}
+.tlp{font-size:10px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px}
+.tlt{font-size:15px;font-weight:600;margin-bottom:4px}
+.tld2{font-size:13px;color:var(--txt2);line-height:1.6}
+.flow{display:flex;align-items:center;overflow-x:auto;padding:4px 0 8px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .flow::-webkit-scrollbar{display:none}
 .fstep{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
 .fbox{background:var(--bg3);border:1px solid var(--b1);border-radius:var(--rs);padding:8px 12px;font-size:11px;font-family:var(--mono);text-align:center;white-space:nowrap}
 .farr{font-size:18px;color:var(--txt3);padding:0 3px;align-self:center;flex-shrink:0}
 .ftbl{font-size:10px;color:var(--teal);margin-top:3px;font-family:var(--mono);text-align:center}
-.rvf{margin-bottom:12px}.rvl{font-size:10px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--txt3);margin-bottom:5px}
-.empty{text-align:center;padding:40px 20px;color:var(--txt3)}.eico{font-size:36px;margin-bottom:10px}.etxt{font-size:13px;line-height:1.6}
-.loader{text-align:center;padding:40px;color:var(--txt3);font-family:var(--mono);font-size:12px}
-.toast{position:fixed;bottom:calc(var(--nav) + var(--safe) + 12px);left:50%;transform:translateX(-50%) translateY(16px);background:var(--bg4);border:1px solid var(--b2);color:var(--txt);padding:9px 18px;border-radius:20px;font-size:13px;z-index:999;white-space:nowrap;animation:tin .22s ease forwards;box-shadow:0 8px 24px rgba(0,0,0,.5)}
-@keyframes tin{to{transform:translateX(-50%) translateY(0)}}
-input[type=range]{width:80px;-webkit-appearance:none;appearance:none;height:4px;background:var(--b1);border-radius:2px;outline:none;flex-shrink:0}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--teal);cursor:pointer}
+.rvf{margin-bottom:12px}
+.rvl{font-size:10px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--txt3);margin-bottom:5px}
 .psl{display:flex;align-items:center;gap:12px;margin-bottom:10px}
 .psl-l{font-size:13px;font-weight:500;flex:1;min-width:0}
 .ppct{font-size:12px;font-family:var(--mono);color:var(--txt2);width:34px;text-align:right}
-.cat-wrap{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 8px;}
-.cat-btn{background:var(--bg3);border:1px solid var(--b1);color:var(--txt2);border-radius:20px;padding:6px 11px;font-size:11px;font-family:var(--mono);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:5px;white-space:nowrap;}
-.cat-btn:active{opacity:.7}.cat-on{background:var(--teal)!important;border-color:var(--teal)!important;color:#000!important;font-weight:600;}
-.cat-cnt{background:rgba(255,255,255,.15);border-radius:10px;padding:1px 5px;font-size:10px;}
-.cat-on .cat-cnt{background:rgba(0,0,0,.2);}
+input[type=range]{width:80px;-webkit-appearance:none;appearance:none;height:4px;background:var(--b1);border-radius:2px;outline:none;flex-shrink:0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--teal);cursor:pointer}
+.empty{text-align:center;padding:40px 20px;color:var(--txt3)}
+.eico{font-size:36px;margin-bottom:10px}
+.etxt{font-size:13px;line-height:1.6}
+.loader{text-align:center;padding:40px;color:var(--txt3);font-family:var(--mono);font-size:12px}
+.toast{position:fixed;bottom:calc(var(--nav) + var(--safe) + 12px);left:50%;transform:translateX(-50%) translateY(16px);background:var(--bg4);border:1px solid var(--b2);color:var(--txt);padding:9px 18px;border-radius:20px;font-size:13px;z-index:999;white-space:nowrap;animation:tin .22s ease forwards;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+@keyframes tin{to{transform:translateX(-50%) translateY(0)}}
+.rbtn{background:var(--bg3);border:1px solid var(--b1);color:var(--txt2);border-radius:6px;padding:3px 8px;font-size:11px;font-family:var(--mono);cursor:pointer}
+.rbtn:active{border-color:var(--teal);color:var(--teal)}
 </style>
 </head>
 <body>
 <div class="app">
   <div class="scroll" id="scroll">
 
-    <!-- DASHBOARD -->
-    <div class="pg on" id="pg-dash">
-      <div class="ph">
-        <div><div class="ph-t">Good <span id="gtime">day</span> ✦</div><div class="ph-s" id="dlabel"></div></div>
-        <div style="text-align:right;flex-shrink:0"><div style="font-size:10px;color:var(--txt3);font-family:var(--mono)">PHASE</div><div style="font-size:13px;color:var(--teal);font-weight:600" id="phlabel">1 — Data</div></div>
-      </div>
-      <div id="sarea"></div>
-      <div class="sec">
-        <div class="stats">
-          <div class="sbox"><div class="sl">Streak</div><div class="sv ct2" id="d-str">0</div><div class="ss">days</div></div>
-          <div class="sbox"><div class="sl">Today</div><div class="sv cp" id="d-gl">0/0</div><div class="ss">goals done</div></div>
-          <div class="sbox"><div class="sl">Logs</div><div class="sv ca" id="d-logs">0</div><div class="ss">entries</div></div>
-          <div class="sbox"><div class="sl">Skills</div><div class="sv cg" id="d-sk">0%</div><div class="ss">avg level</div></div>
-        </div>
-      </div>
-      <div class="sec" style="padding-top:0">
-        <div class="card"><div class="ct">Today's Goals</div><div id="d-glist"></div><div class="pb"><div class="pf ft" id="d-gbar" style="width:0%"></div></div></div>
-        <div class="card"><div class="ct">Skill Snapshot</div><div id="d-snap"></div></div>
-        <div class="card"><div class="ct">Daily Insights</div><div id="d-ins"></div></div>
-      </div>
+```
+<!-- DASHBOARD -->
+<div class="pg on" id="pg-dash">
+  <div class="ph">
+    <div><div class="ph-t">Good <span id="gtime">day</span> ✦</div><div class="ph-s" id="dlabel"></div></div>
+    <div style="text-align:right;flex-shrink:0">
+      <div style="font-size:10px;color:var(--txt3);font-family:var(--mono)">PHASE</div>
+      <div style="font-size:13px;color:var(--teal);font-weight:600" id="phlabel">1 — Data</div>
     </div>
-
-    <!-- STUDY -->
-    <div class="pg" id="pg-study">
-      <div class="ph"><div><div class="ph-t">Study</div><div class="ph-s">Daily learning bites</div></div><div id="sstatus" style="font-size:10px;color:var(--txt3);font-family:var(--mono)"></div></div>
-      <div class="tabs" id="stabs"></div>
-      <div id="sbody"><div class="loader">Loading…</div></div>
-    </div>
-
-    <!-- GOALS -->
-    <div class="pg" id="pg-goals">
-      <div class="ph"><div><div class="ph-t">Goals</div><div class="ph-s">45 min daily habit</div></div><button class="btn btn-g btn-s" onclick="tp('addp')">+ Add</button></div>
-      <div id="addp" style="display:none;padding:12px 16px;border-bottom:1px solid var(--b1);background:var(--bg2)">
-        <div style="display:flex;flex-direction:column;gap:8px">
-          <input class="inp" id="gi" placeholder="e.g. Trace EKBE for PO 4500012345…">
-          <div class="row"><select class="inp" id="gcat"><option value="data">Data</option><option value="sql">SQL</option><option value="debug">Debug</option><option value="abap">ABAP</option><option value="write">Write</option></select><button class="btn btn-p" style="width:auto" onclick="addGoal()">Save</button></div>
-        </div>
-      </div>
-      <div class="sec">
-        <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><div class="ct" style="margin:0">Today</div><button class="btn btn-g btn-s" onclick="clearDone()">Clear done</button></div><div id="glist"></div></div>
-        <div class="card"><div class="ct">Suggested Goals</div><div id="suglist"></div></div>
-      </div>
-    </div>
-
-    <!-- LOG -->
-    <div class="pg" id="pg-log">
-      <div class="ph"><div><div class="ph-t">Log</div><div class="ph-s">Document what you learn</div></div><button class="btn btn-g btn-s" onclick="tp('logp')">+ Entry</button></div>
-      <div id="logp" style="display:none;padding:12px 16px;border-bottom:1px solid var(--b1);background:var(--bg2)">
-        <div style="display:flex;flex-direction:column;gap:8px">
-          <input class="inp" id="ltitle" placeholder="Title — e.g. Why EKBE had duplicate entries…">
-          <textarea class="inp" id="lbody" placeholder="What happened? Which tables? How did you fix it?"></textarea>
-          <div class="row"><select class="inp" id="ltype"><option value="sap">SAP Data</option><option value="sql">SQL/HANA</option><option value="abap">ABAP/Debug</option><option value="proc">Process</option></select><button class="btn btn-p" style="width:auto" onclick="saveLog()">Save</button></div>
-          <input class="inp" id="ltags" placeholder="Tags: EKBE, GR/IR, mvt 101…">
-        </div>
-      </div>
-      <div class="sec"><div id="llist"></div></div>
-    </div>
-
-    <!-- MORE -->
-    <div class="pg" id="pg-more">
-      <div class="ph"><div class="ph-t">More</div></div>
-      <div class="tabs" id="mtabs">
-        <div class="tab on" onclick="mtab('skills',this)">Skills</div>
-        <div class="tab" onclick="mtab('activity',this)">Activity</div>
-        <div class="tab" onclick="mtab('review',this)">Review</div>
-        <div class="tab" onclick="mtab('roadmap',this)">Roadmap</div>
-      </div>
-      <div id="mt-skills"><div class="sec"><div class="card"><div class="ct">SAP MM Core</div><div id="sk-sap"></div></div><div class="card"><div class="ct">Technical</div><div id="sk-tech"></div></div><div class="card"><div class="ct">Overall</div><div id="sk-all"></div></div></div></div>
-      <div id="mt-activity" style="display:none"><div class="sec">
-        <div class="card"><div class="ct">This Week — Tap to toggle</div><div class="wrow" id="wrow"></div></div>
-        <div class="card"><div class="ct">90 Days — Tap to set level (0→4)</div><div class="hmg" id="hmg"></div><div style="display:flex;gap:6px;align-items:center;margin-top:10px;font-size:11px;color:var(--txt3)">None <div class="hmc hm0" style="cursor:default"></div><div class="hmc hm1" style="cursor:default"></div><div class="hmc hm2" style="cursor:default"></div><div class="hmc hm3" style="cursor:default"></div><div class="hmc hm4" style="cursor:default"></div> Deep work</div></div>
-        <div class="stats"><div class="sbox"><div class="sl">Active days</div><div class="sv ct2" id="hm-a">0</div></div><div class="sbox"><div class="sl">This week</div><div class="sv cp" id="hm-w">0/7</div></div><div class="sbox"><div class="sl">Effort pts</div><div class="sv ca" id="hm-p">0</div></div><div class="sbox"><div class="sl">Best streak</div><div class="sv cg" id="hm-b">0</div></div></div>
-      </div></div>
-      <div id="mt-review" style="display:none"><div class="sec">
-        <div class="card"><div class="ct">This Week's Review</div>
-          <div class="rvf"><div class="rvl">✦ What went well</div><textarea class="inp" id="rv1" placeholder="What moved you forward?"></textarea></div>
-          <div class="rvf"><div class="rvl">⚠ What slowed you</div><textarea class="inp" id="rv2" placeholder="Be honest. What blocked you?"></textarea></div>
-          <div class="rvf"><div class="rvl">→ Next week focus</div><textarea class="inp" id="rv3" placeholder="One thing to focus on."></textarea></div>
-          <div class="rvf"><div class="rvl">⊡ Real problem solved</div><textarea class="inp" id="rv4" placeholder="One SAP issue you cracked."></textarea></div>
-          <button class="btn btn-p" onclick="saveRv()">Save Review</button>
-        </div>
-        <div id="past-rv"></div>
-      </div></div>
-      <div id="mt-roadmap" style="display:none"><div class="sec">
-        <div class="card"><div class="ct">6-Month Journey</div>
-          <div class="tli"><div class="tls"><div class="tld" style="background:var(--teal)"></div><div class="tll"></div></div><div class="tlc"><div class="tlp" style="color:var(--teal)">Phase 1 · Months 1–2</div><div class="tlt">Data Mastery</div><div class="tld2">Deep-dive SAP tables. Trace every PO end-to-end. Write SQL that detects real issues. Goal: no developer dependency for data investigation.</div></div></div>
-          <div class="tli"><div class="tls"><div class="tld" style="background:var(--pur)"></div><div class="tll"></div></div><div class="tlc"><div class="tlp" style="color:var(--pur)">Phase 2 · Months 3–4</div><div class="tlt">Techno-Functional Shift</div><div class="tld2">Read ABAP, set breakpoints, understand BADIs and Z-tables. Solve 2 real issues without calling a developer.</div></div></div>
-          <div class="tli"><div class="tls"><div class="tld" style="background:var(--amb)"></div></div><div class="tlc"><div class="tlp" style="color:var(--amb)">Phase 3 · Months 5–6</div><div class="tlt">Visible Expertise</div><div class="tld2">Own a problem area. Write one knowledge doc/month. Mentor a junior. Be the named go-to on your project.</div></div></div>
-        </div>
-        <div class="card"><div class="ct">Phase Progress</div><div id="phsl"></div></div>
-        <div class="card"><div class="ct">Procurement Flow</div><div class="flow"><div class="fstep"><div class="fbox">PR</div><div class="ftbl">EBAN</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">PO</div><div class="ftbl">EKKO/EKPO</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">GR</div><div class="ftbl">MKPF/MSEG</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">IR</div><div class="ftbl">RBKP/RSEG</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">Pay</div><div class="ftbl">BKPF/BSEG</div></div></div></div>
-        <div class="card"><div class="ct">STO Flow</div><div class="flow"><div class="fstep"><div class="fbox">STO PO</div><div class="ftbl">EKKO(UB)</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">Out Dlv</div><div class="ftbl">LIKP/LIPS</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">GI 641</div><div class="ftbl">MSEG</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">GR 101</div><div class="ftbl">MSEG</div></div></div></div>
-      </div></div>
-    </div>
-
   </div>
+  <div id="sarea"></div>
+  <div class="sec">
+    <div class="stats">
+      <div class="sbox"><div class="sl">Streak</div><div class="sv ct2" id="d-str">0</div><div class="ss">days</div></div>
+      <div class="sbox"><div class="sl">Today</div><div class="sv cp" id="d-gl">0/0</div><div class="ss">goals done</div></div>
+      <div class="sbox"><div class="sl">Logs</div><div class="sv ca" id="d-logs">0</div><div class="ss">entries</div></div>
+      <div class="sbox"><div class="sl">Skills</div><div class="sv cg" id="d-sk">0%</div><div class="ss">avg level</div></div>
+    </div>
+  </div>
+  <div class="sec" style="padding-top:0">
+    <div class="card"><div class="ct">Today's Goals</div><div id="d-glist"></div><div class="pb"><div class="pf ft" id="d-gbar" style="width:0%"></div></div></div>
+    <div class="card"><div class="ct">Skill Snapshot</div><div id="d-snap"></div></div>
+    <div class="card"><div class="ct">Daily Insights</div><div id="d-ins"></div></div>
+  </div>
+</div>
+
+<!-- STUDY -->
+<div class="pg" id="pg-study">
+  <div class="ph">
+    <div><div class="ph-t">Study</div><div class="ph-s">Daily learning bites</div></div>
+    <div style="display:flex;align-items:center;gap:6px">
+      <div id="sstatus" style="font-size:10px;color:var(--txt3);font-family:var(--mono)"></div>
+      <button class="rbtn" onclick="reloadStudy()" title="Reload from sheet">↺</button>
+    </div>
+  </div>
+  <div class="tabs" id="stabs"></div>
+  <div id="sbody"><div class="loader">Loading…</div></div>
+</div>
+
+<!-- GOALS -->
+<div class="pg" id="pg-goals">
+  <div class="ph"><div><div class="ph-t">Goals</div><div class="ph-s">45 min daily habit</div></div><button class="btn btn-g btn-s" onclick="tp('addp')">+ Add</button></div>
+  <div id="addp" style="display:none;padding:12px 16px;border-bottom:1px solid var(--b1);background:var(--bg2)">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <input class="inp" id="gi" placeholder="e.g. Trace EKBE for PO 4500012345…">
+      <div class="row">
+        <select class="inp" id="gcat">
+          <option value="data">Data</option><option value="sql">SQL</option>
+          <option value="debug">Debug</option><option value="abap">ABAP</option><option value="write">Write</option>
+        </select>
+        <button class="btn btn-p" style="width:auto" onclick="addGoal()">Save</button>
+      </div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div class="ct" style="margin:0">Today</div>
+        <button class="btn btn-g btn-s" onclick="clearDone()">Clear done</button>
+      </div>
+      <div id="glist"></div>
+    </div>
+    <div class="card"><div class="ct">Suggested Goals</div><div id="suglist"></div></div>
+  </div>
+</div>
+
+<!-- LOG -->
+<div class="pg" id="pg-log">
+  <div class="ph"><div><div class="ph-t">Log</div><div class="ph-s">Document what you learn</div></div><button class="btn btn-g btn-s" onclick="tp('logp')">+ Entry</button></div>
+  <div id="logp" style="display:none;padding:12px 16px;border-bottom:1px solid var(--b1);background:var(--bg2)">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <input class="inp" id="ltitle" placeholder="Title — e.g. Why EKBE had duplicate entries…">
+      <textarea class="inp" id="lbody" placeholder="What happened? Which tables? How did you fix it?"></textarea>
+      <div class="row">
+        <select class="inp" id="ltype">
+          <option value="sap">SAP Data</option><option value="sql">SQL/HANA</option>
+          <option value="abap">ABAP/Debug</option><option value="proc">Process</option>
+        </select>
+        <button class="btn btn-p" style="width:auto" onclick="saveLog()">Save</button>
+      </div>
+      <input class="inp" id="ltags" placeholder="Tags: EKBE, GR/IR, mvt 101…">
+    </div>
+  </div>
+  <div class="sec"><div id="llist"></div></div>
+</div>
+
+<!-- MORE -->
+<div class="pg" id="pg-more">
+  <div class="ph"><div class="ph-t">More</div></div>
+  <div class="tabs" id="mtabs">
+    <div class="tab on" onclick="mtab('skills',this)">Skills</div>
+    <div class="tab" onclick="mtab('activity',this)">Activity</div>
+    <div class="tab" onclick="mtab('review',this)">Review</div>
+    <div class="tab" onclick="mtab('roadmap',this)">Roadmap</div>
+  </div>
+  <div id="mt-skills"><div class="sec">
+    <div class="card"><div class="ct">SAP MM Core</div><div id="sk-sap"></div></div>
+    <div class="card"><div class="ct">Technical</div><div id="sk-tech"></div></div>
+    <div class="card"><div class="ct">Overall</div><div id="sk-all"></div></div>
+  </div></div>
+  <div id="mt-activity" style="display:none"><div class="sec">
+    <div class="card"><div class="ct">This Week — Tap to toggle</div><div class="wrow" id="wrow"></div></div>
+    <div class="card">
+      <div class="ct">90 Days — Tap to set level (0→4)</div>
+      <div class="hmg" id="hmg"></div>
+      <div style="display:flex;gap:6px;align-items:center;margin-top:10px;font-size:11px;color:var(--txt3)">
+        None <div class="hmc hm0" style="cursor:default"></div><div class="hmc hm1" style="cursor:default"></div><div class="hmc hm2" style="cursor:default"></div><div class="hmc hm3" style="cursor:default"></div><div class="hmc hm4" style="cursor:default"></div> Deep work
+      </div>
+    </div>
+    <div class="stats">
+      <div class="sbox"><div class="sl">Active days</div><div class="sv ct2" id="hm-a">0</div></div>
+      <div class="sbox"><div class="sl">This week</div><div class="sv cp" id="hm-w">0/7</div></div>
+      <div class="sbox"><div class="sl">Effort pts</div><div class="sv ca" id="hm-p">0</div></div>
+      <div class="sbox"><div class="sl">Best streak</div><div class="sv cg" id="hm-b">0</div></div>
+    </div>
+  </div></div>
+  <div id="mt-review" style="display:none"><div class="sec">
+    <div class="card">
+      <div class="ct">This Week's Review</div>
+      <div class="rvf"><div class="rvl">✦ What went well</div><textarea class="inp" id="rv1" placeholder="What moved you forward?"></textarea></div>
+      <div class="rvf"><div class="rvl">⚠ What slowed you</div><textarea class="inp" id="rv2" placeholder="Be honest. What blocked you?"></textarea></div>
+      <div class="rvf"><div class="rvl">→ Next week focus</div><textarea class="inp" id="rv3" placeholder="One thing to focus on."></textarea></div>
+      <div class="rvf"><div class="rvl">⊡ Real problem solved</div><textarea class="inp" id="rv4" placeholder="One SAP issue you cracked."></textarea></div>
+      <button class="btn btn-p" onclick="saveRv()">Save Review</button>
+    </div>
+    <div id="past-rv"></div>
+  </div></div>
+  <div id="mt-roadmap" style="display:none"><div class="sec">
+    <div class="card">
+      <div class="ct">6-Month Journey</div>
+      <div class="tli"><div class="tls"><div class="tld" style="background:var(--teal)"></div><div class="tll"></div></div><div class="tlc"><div class="tlp" style="color:var(--teal)">Phase 1 · Months 1–2</div><div class="tlt">Data Mastery</div><div class="tld2">Deep-dive SAP tables. Trace every PO end-to-end. Write SQL that detects real issues. No developer dependency for data investigation.</div></div></div>
+      <div class="tli"><div class="tls"><div class="tld" style="background:var(--pur)"></div><div class="tll"></div></div><div class="tlc"><div class="tlp" style="color:var(--pur)">Phase 2 · Months 3–4</div><div class="tlt">Techno-Functional Shift</div><div class="tld2">Read ABAP, set breakpoints, understand BADIs and Z-tables. Solve 2 real issues without calling a developer.</div></div></div>
+      <div class="tli"><div class="tls"><div class="tld" style="background:var(--amb)"></div></div><div class="tlc"><div class="tlp" style="color:var(--amb)">Phase 3 · Months 5–6</div><div class="tlt">Visible Expertise</div><div class="tld2">Own a problem area. Write one knowledge doc/month. Mentor a junior. Be the named go-to on your project.</div></div></div>
+    </div>
+    <div class="card"><div class="ct">Phase Progress</div><div id="phsl"></div></div>
+    <div class="card"><div class="ct">Procurement Flow</div><div class="flow">
+      <div class="fstep"><div class="fbox">PR</div><div class="ftbl">EBAN</div></div><div class="farr">›</div>
+      <div class="fstep"><div class="fbox">PO</div><div class="ftbl">EKKO/EKPO</div></div><div class="farr">›</div>
+      <div class="fstep"><div class="fbox">GR</div><div class="ftbl">MKPF/MSEG</div></div><div class="farr">›</div>
+      <div class="fstep"><div class="fbox">IR</div><div class="ftbl">RBKP/RSEG</div></div><div class="farr">›</div>
+      <div class="fstep"><div class="fbox">Pay</div><div class="ftbl">BKPF/BSEG</div></div>
+    </div></div>
+    <div class="card"><div class="ct">STO Flow</div><div class="flow">
+      <div class="fstep"><div class="fbox">STO PO</div><div class="ftbl">EKKO(UB)</div></div><div class="farr">›</div>
+      <div class="fstep"><div class="fbox">Out Dlv</div><div class="ftbl">LIKP/LIPS</div></div><div class="farr">›</div>
+      <div class="fstep"><div class="fbox">GI 641</div><div class="ftbl">MSEG</div></div><div class="farr">›</div>
+      <div class="fstep"><div class="fbox">GR 101</div><div class="ftbl">MSEG</div></div>
+    </div></div>
+  </div></div>
+</div>
+```
+
+  </div><!-- /scroll -->
+
   <nav class="nav">
     <button class="nb on" id="nb-dash" onclick="go('dash')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span>Home</span></button>
     <button class="nb" id="nb-study" onclick="go('study')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg><span>Study</span></button>
@@ -241,336 +331,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     <button class="nb" id="nb-more" onclick="go('more')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg><span>More</span></button>
   </nav>
 </div>
-<script>
-const KEY='sap_v3';
-let db=(() => {try{return JSON.parse(localStorage.getItem(KEY))||def()}catch{return def()}})();
-function def(){return{goals:[],logs:[],heatmap:{},reviews:[],phaseProgress:{p1:0,p2:0,p3:0},streak:{last:null,count:0},skills:{sap:{'MM End-to-End':2,'PO/GR/IR Process':2,'Movement Types':2,'SE16N Navigation':2,'Pricing Procedures':1,'STO/Subcon':1,'Output Types':1},tech:{'SQL/HANA':1,'ABAP Reading':0,'Debugging':0,'Z-Table/Report':1,'BADI/Exits':0,'HANA Studio':0}}}}
-function sv(){localStorage.setItem(KEY,JSON.stringify(db))}
-const td=()=>new Date().toISOString().slice(0,10);
-function fmt(d){return new Date(d+'T00:00:00').toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-function toast(m){document.querySelectorAll('.toast').forEach(t=>t.remove());const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2200)}
-function cp(txt){navigator.clipboard?.writeText(txt).then(()=>toast('Copied!')).catch(()=>toast('Long-press to copy'))}
-function tp(id){const p=document.getElementById(id);p.style.display=p.style.display==='none'?'block':'none'}
-
-const SHEET_CSV='https://docs.google.com/spreadsheets/d/e/2PACX-1vRAvDhXN7q0xaRS4ScRQNrpTktkB6neyDzAI5cWaVeMLmwXW94N_AyUmd0fzoLUgKf0iT-21suPjJsd/pub?gid=0&single=true&output=csv';
-let curPg='dash',curTab='flashcards',curCard=0,SD=null,activeCat='All';
-
-function parseCSV(text){
-  const lines=text.trim().split('\n');
-  const headers=lines[0].split(',').map(h=>h.trim().replace(/"/g,'').toLowerCase());
-  return lines.slice(1).map(line=>{
-    const cols=[];let cur='',inQ=false;
-    for(let ch of line){if(ch==='"')inQ=!inQ;else if(ch===','&&!inQ){cols.push(cur.trim());cur='';}else cur+=ch;}
-    cols.push(cur.trim());
-    const obj={};headers.forEach((h,i)=>obj[h]=(cols[i]||'').replace(/^"|"$/g,''));
-    return obj;
-  }).filter(r=>(r.status||'active').toLowerCase()==='active'&&r.question);
-}
-function go(id){
-  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
-  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
-  document.getElementById('pg-'+id).classList.add('on');
-  document.getElementById('nb-'+id).classList.add('on');
-  document.getElementById('scroll').scrollTo(0,0);
-  curPg=id;
-  ({dash:rDash,study:rStudy,goals:rGoals,log:rLog,more:rMore}[id]||rDash)();
-}
-
-function chkStreak(){
-  const t=td(),s=db.streak;if(s.last===t)return;
-  const y=new Date();y.setDate(y.getDate()-1);
-  s.count=(s.last===y.toISOString().slice(0,10))?s.count+1:1;s.last=t;sv();
-}
-
-function rDash(){
-  const h=new Date().getHours();
-  document.getElementById('gtime').textContent=h<12?'morning':h<17?'afternoon':'evening';
-  document.getElementById('dlabel').textContent=new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'});
-  chkStreak();
-  const s=db.streak.count;
-  document.getElementById('d-str').textContent=s;
-  document.getElementById('sarea').innerHTML=s>=3?`<div class="streak"><div class="snum">${s}</div><div class="stxt"><strong>${s>=7?'🔥 On fire!':'⚡ Building momentum'}</strong><span>${s>=7?'Consistency is your superpower.':'Don\'t break the chain.'}</span></div></div>`:'';
-  const t=td(),tg=db.goals.filter(g=>g.date===t),done=tg.filter(g=>g.done).length;
-  document.getElementById('d-gl').textContent=done+'/'+tg.length;
-  document.getElementById('d-gbar').style.width=(tg.length?Math.round(done/tg.length*100):0)+'%';
-  document.getElementById('d-glist').innerHTML=!tg.length
-    ?`<div style="font-size:13px;color:var(--txt3)">No goals today. <span style="color:var(--teal);cursor:pointer" onclick="go('goals')">Add some →</span></div>`
-    :tg.slice(0,4).map(g=>`<div class="gi ${g.done?'done':''}" onclick="tgGoal('${g.id}','dash')"><div class="gck">${g.done?'✓':''}</div><div class="gt">${esc(g.text)}</div><div class="pill ${CC[g.cat]||'pd'}">${g.cat}</div></div>`).join('')+(tg.length>4?`<div style="font-size:12px;color:var(--txt3);padding:4px 0">+${tg.length-4} more…</div>`:'');
-  const av=[...Object.values(db.skills.sap),...Object.values(db.skills.tech)];
-  document.getElementById('d-sk').textContent=(av.length?Math.round(av.reduce((a,b)=>a+b,0)/av.length/5*100):0)+'%';
-  document.getElementById('d-logs').textContent=db.logs.length;
-  const pp=db.phaseProgress;
-  document.getElementById('phlabel').textContent=pp.p3>0?'3 — Visible':pp.p2>0?'2 — Techno':'1 — Data';
-  const top=[...Object.entries(db.skills.sap).slice(0,3),...Object.entries(db.skills.tech).slice(0,2)];
-  document.getElementById('d-snap').innerHTML=top.map(([n,v])=>{const p=Math.round(v/5*100),c=v>=4?'ft':v>=3?'fp':v>=2?'fa':'fr';return`<div><div class="prow"><span>${n}</span><span>${p}%</span></div><div class="pb"><div class="pf ${c}" style="width:${p}%"></div></div></div>`}).join('');
-  rIns();
-}
-
-function rIns(){
-  const t=td(),tg=db.goals.filter(g=>g.date===t),done=tg.filter(g=>g.done).length;
-  const ins=[];
-  if(!tg.length)ins.push({i:'◎',c:'var(--teal)',ti:'Set today\'s goals',b:'3 goals: one SAP table to explore, one SQL query to write, one thing to document.'});
-  else if(done===tg.length)ins.push({i:'✦',c:'var(--grn)',ti:'All goals done!',b:'Now log what you learned. Writing cements knowledge more than reading.'});
-  else ins.push({i:'→',c:'var(--amb)',ti:`${tg.length-done} goals remaining`,b:'Even 20 focused minutes beats 2 hours of distracted reading.'});
-  if(db.skills.tech['SQL/HANA']<3)ins.push({i:'⊡',c:'var(--pur)',ti:'SQL is your fastest technical win',b:'Practice: SELECT EBELN,MENGE,WEMNG FROM EKBE WHERE EBELN=\'4500012345\'. Run it, understand every column.'});
-  if(db.logs.length<3)ins.push({i:'▤',c:'var(--teal)',ti:'Start logging your learnings',b:'Every issue solved without documenting is a lost compounding opportunity.'});
-  if(db.skills.tech['ABAP Reading']===0)ins.push({i:'◈',c:'var(--amb)',ti:'ABAP reading is closer than you think',b:'Open SE38, find any MM program, follow the SELECT statements. Read — don\'t write yet.'});
-  document.getElementById('d-ins').innerHTML=ins.map(i=>`<div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:8px;padding:11px;background:var(--bg3);border:1px solid var(--b1);border-radius:var(--rs)"><div style="font-size:17px;color:${i.c};flex-shrink:0">${i.i}</div><div><div style="font-size:13px;font-weight:600;margin-bottom:2px">${i.ti}</div><div style="font-size:12px;color:var(--txt2);line-height:1.6">${i.b}</div></div></div>`).join('');
-}
-
-async function rStudy(){
-  if(!SD){
-    try{
-      const res=await fetch(SHEET_CSV,{mode:'cors',cache:'no-cache'});
-      if(!res.ok)throw 0;
-      const text=await res.text();
-      const sheetCards=parseCSV(text);
-      const [tips,tables,mvt]=await Promise.all([
-        fetch('data/sql-tips.json').then(r=>{if(!r.ok)throw 0;return r.json()}),
-        fetch('data/sap-tables.json').then(r=>{if(!r.ok)throw 0;return r.json()}),
-        fetch('data/movement-types.json').then(r=>{if(!r.ok)throw 0;return r.json()})
-      ]);
-      SD={cards:sheetCards,tips,tables,mvt};
-      document.getElementById('sstatus').textContent=sheetCards.length+' cards · live';
-toast('Sheet loaded: '+sheetCards.length+' cards ✓');
-    }catch{
-      try{
-        const [cards,tips,tables,mvt]=await Promise.all([
-          fetch('data/study-cards.json').then(r=>{if(!r.ok)throw 0;return r.json()}),
-          fetch('data/sql-tips.json').then(r=>{if(!r.ok)throw 0;return r.json()}),
-          fetch('data/sap-tables.json').then(r=>{if(!r.ok)throw 0;return r.json()}),
-          fetch('data/movement-types.json').then(r=>{if(!r.ok)throw 0;return r.json()})
-        ]);
-        SD={cards,tips,tables,mvt};
-        document.getElementById('sstatus').textContent=cards.length+' cards';
-      }catch{SD=FB;document.getElementById('sstatus').textContent='offline'}
-    }
-  }
-  const tabs=[{id:'flashcards',l:'Flashcards'},{id:'sql',l:'SQL Tips'},{id:'tables',l:'SAP Tables'},{id:'mvt',l:'Mvt Types'},{id:'flows',l:'Flows'}];
-  document.getElementById('stabs').innerHTML=tabs.map(t=>`<div class="tab ${t.id===curTab?'on':''}" onclick="sTab('${t.id}',this)">${t.l}</div>`).join('');
-  rTab(curTab);
-}
-
-function sTab(id,el){curTab=id;document.querySelectorAll('#stabs .tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');rTab(id)}
-function rTab(tab){
-  const b=document.getElementById('sbody');
-  if(tab==='flashcards')rCards(SD.cards,b);
-  else if(tab==='sql')rSQL(SD.tips,b);
-  else if(tab==='tables')rTables(SD.tables,b);
-  else if(tab==='mvt')rMvt(SD.mvt,b);
-  else rFlows(b);
-}
-
-function getCatCards(){
-  const all=SD?.cards||[];
-  return activeCat==='All'?all:all.filter(c=>c.category===activeCat);
-}
-function rCatPicker(b){
-  const all=SD?.cards||[];
-  const cats=['All',...new Set(all.map(c=>c.category).filter(Boolean))];
-  const picker=`<div class="cat-wrap">${cats.map(c=>{
-    const cnt=c==='All'?all.length:all.filter(x=>x.category===c).length;
-    return`<button class="cat-btn${c===activeCat?' cat-on':''}" onclick="selCat('${c.replace(/'/g,"\'")}')">${esc(c)}<span class="cat-cnt">${cnt}</span></button>`;
-  }).join('')}</div>`;
-  return picker;
-}
-function selCat(cat){activeCat=cat;curCard=0;rTab('flashcards')}
-function rCards(cards,b){
-  const picker=rCatPicker(b);
-  const filtered=getCatCards();
-  if(!filtered.length){b.innerHTML=picker+'<div class="empty"><div class="eico">📚</div><div class="etxt">No cards in this category.</div></div>';return}
-  if(curCard>=filtered.length)curCard=0;
-  const c=filtered[curCard];
-  b.innerHTML=picker+`<div class="fc" id="fc" onclick="this.classList.toggle('flip')"><div class="fci">
-    <div class="ff"><div class="fcat">${esc(c.category||'SAP MM')}</div><div class="fq">${esc(c.question)}</div><div class="fhint">Tap to reveal answer</div></div>
-    <div class="fb"><div class="fcat">Answer</div><div class="fans">${esc(c.answer)}</div>${c.table?'<div style="margin-top:10px">'+c.table.split(',').map(t=>`<span class="ftag">${t.trim()}</span>`).join('')+'</div>':''}</div>
-  </div></div>
-  <div class="cnav"><div class="cnum">${curCard+1}/${filtered.length}</div><div style="display:flex;gap:8px"><button class="btn btn-g btn-s" onclick="curCard=(curCard-1+${filtered.length})%${filtered.length};rTab('flashcards')">←</button><button class="btn btn-g btn-s" onclick="curCard=(curCard+1)%${filtered.length};rTab('flashcards')">→</button><button class="btn btn-g btn-s" onclick="shuffleCards()">⇌</button></div></div>
-  <div style="text-align:center;font-size:11px;color:var(--txt3);padding:0 16px 16px">${filtered.length} cards · tap to flip</div>`;
-}
-function shuffleCards(){
-  const filtered=getCatCards();
-  filtered.sort(()=>Math.random()-.5);
-  if(activeCat==='All')SD.cards=filtered;
-  else{const others=SD.cards.filter(c=>c.category!==activeCat);SD.cards=[...others,...filtered];}
-  curCard=0;rTab('flashcards');toast('Shuffled!');
-}
-
-function rSQL(tips,b){
-  if(!tips?.length){b.innerHTML='<div class="loader">No SQL tips.</div>';return}
-  b.innerHTML='<div style="padding:12px 16px">'+tips.map(t=>`<div class="sqltip">
-    <div class="sth"><div class="sttl">${esc(t.title)}</div><div class="lv l${t.level[0]}">${t.level}</div></div>
-    <div class="stdesc">${esc(t.desc)}</div>
-    <div style="position:relative"><div class="code">${t.code}</div><button class="cpbtn" onclick="cp(\`${(t.raw||'').replace(/`/g,'\\`').replace(/\\/g,'\\\\')}\`)">copy</button></div>
-    <div class="why">💡 ${esc(t.why)}</div>
-  </div>`).join('')+'</div>';
-}
-
-function rTables(tables,b){
-  if(!tables?.length){b.innerHTML='<div class="loader">No table data.</div>';return}
-  b.innerHTML=`<div style="padding:12px 16px"><div class="card" style="overflow-x:auto;padding:0"><table class="rtable"><thead><tr><th>Table</th><th>Description &amp; When to Use</th></tr></thead><tbody>${tables.map(t=>`<tr><td class="tn2">${t.name}</td><td><div style="color:var(--txt)">${esc(t.description)}</div><div class="tu">${esc(t.useCase)}</div></td></tr>`).join('')}</tbody></table></div></div>`;
-}
-
-function rMvt(mvt,b){
-  if(!mvt?.length){b.innerHTML='<div class="loader">No movement type data.</div>';return}
-  b.innerHTML=`<div style="padding:12px 16px"><div class="card" style="overflow-x:auto;padding:0"><table class="rtable"><thead><tr><th>Mvt</th><th>Name &amp; Notes</th></tr></thead><tbody>${mvt.map(m=>`<tr><td class="tn2">${m.code}</td><td><div style="color:var(--txt)">${esc(m.name)}</div><div class="tu">${esc(m.notes)}</div></td></tr>`).join('')}</tbody></table></div></div>`;
-}
-
-function rFlows(b){
-  b.innerHTML=`<div style="padding:12px 16px;display:flex;flex-direction:column;gap:0">
-  <div class="card"><div class="ct">Standard Procurement</div><div class="flow"><div class="fstep"><div class="fbox">PR</div><div class="ftbl">EBAN</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">PO</div><div class="ftbl">EKKO/EKPO</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">GR</div><div class="ftbl">MKPF/MSEG</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">IR</div><div class="ftbl">RBKP/RSEG</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">Pay</div><div class="ftbl">BKPF/BSEG</div></div></div></div>
-  <div class="card"><div class="ct">GR/IR Debug Checklist</div><div style="font-size:13px;color:var(--txt2);line-height:2;font-family:var(--mono)">1. EKKO → PO exists? Status OK?<br>2. EKPO → item qty, price, plant<br>3. EKBE → SUM GR (BEWTP=E) vs IR (BEWTP=Q)<br>4. MSEG → movement detail via MBLNR+MJAHR<br>5. RBKP/RSEG → IR qty and amount<br>6. BKPF/BSEG → FI doc if accounting issue</div></div>
-  <div class="card"><div class="ct">STO Flow</div><div class="flow"><div class="fstep"><div class="fbox">STO PO</div><div class="ftbl">EKKO(UB)</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">Out Dlv</div><div class="ftbl">LIKP/LIPS</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">GI 641</div><div class="ftbl">MSEG</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">GR 101</div><div class="ftbl">MSEG</div></div></div></div>
-  <div class="card"><div class="ct">Subcontracting Flow</div><div class="flow"><div class="fstep"><div class="fbox">Sub PO</div><div class="ftbl">EKKO(30)</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">GI Comp</div><div class="ftbl">MSEG 541</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">GR FG</div><div class="ftbl">MSEG 101</div></div><div class="farr">›</div><div class="fstep"><div class="fbox">IR</div><div class="ftbl">RBKP/RSEG</div></div></div></div>
-  </div>`;
-}
-
-const CC={data:'pd',sql:'ps',debug:'pb2',abap:'pa',write:'pw'};
-const SUG=[
-  {t:'Open SE16N → explore EKBE for any active PO in your project',c:'data'},
-  {t:'Write SQL: SUM GR qty vs IR qty in EKBE for one PO',c:'sql'},
-  {t:'Understand why mvt 101 creates FI doc but 103 does not',c:'data'},
-  {t:'Trace one full PR→PO→GR→IR by document number',c:'data'},
-  {t:'Find a price variance between EKPO.NETPR and RBKP for any invoice',c:'debug'},
-  {t:'Write 3-line root cause summary for one issue you solved this week',c:'write'},
-  {t:'Open SE38, read any MM program, follow the SELECT statements',c:'abap'},
-  {t:'Set a breakpoint in debug mode on a GR posting (MIGO)',c:'abap'},
-  {t:'Find BADI ME_PROCESS_PO_CUST in SE18 and read its description',c:'abap'},
-  {t:'Query MARD to check unrestricted stock for a material+plant',c:'sql'},
-  {t:'Write a 1-page doc: How to debug a GR/IR quantity mismatch',c:'write'},
-  {t:'Check EKKO.BSTYP to understand PO document categories in your project',c:'data'},
-];
-
-function addGoal(){const t=document.getElementById('gi').value.trim();if(!t){toast('Enter a goal first');return}db.goals.push({id:Date.now().toString(),text:t,cat:document.getElementById('gcat').value,date:td(),done:false});sv();document.getElementById('gi').value='';document.getElementById('addp').style.display='none';rGoals();toast('Goal added ✓')}
-function tgGoal(id,src){const g=db.goals.find(g=>g.id===id);if(g){g.done=!g.done;sv()}if(src==='dash')rDash();else rGoals()}
-function dlGoal(id){db.goals=db.goals.filter(g=>g.id!==id);sv();rGoals()}
-function clearDone(){db.goals=db.goals.filter(g=>!(g.done&&g.date===td()));sv();rGoals();toast('Cleared')}
-function addSug(i){const s=SUG[i];db.goals.push({id:Date.now().toString(),text:s.t,cat:s.c,date:td(),done:false});sv();rGoals();toast('Added ✓')}
-function rGoals(){
-  const t=td(),tg=db.goals.filter(g=>g.date===t);
-  document.getElementById('glist').innerHTML=!tg.length?'<div class="empty"><div class="eico">◎</div><div class="etxt">No goals today yet.<br>Tap + Add above.</div></div>':tg.map(g=>`<div class="gi ${g.done?'done':''}" onclick="tgGoal('${g.id}','goals')"><div class="gck">${g.done?'✓':''}</div><div class="gt">${esc(g.text)}</div><div class="pill ${CC[g.cat]||'pd'}">${g.cat}</div><button class="del" onclick="event.stopPropagation();dlGoal('${g.id}')">×</button></div>`).join('');
-  document.getElementById('suglist').innerHTML=SUG.map((s,i)=>`<div class="gi" style="cursor:default"><div class="pill ${CC[s.c]||'pd'}" style="flex-shrink:0">${s.c}</div><div class="gt" style="font-size:13px">${esc(s.t)}</div><button class="btn btn-g btn-s" onclick="addSug(${i})">+</button></div>`).join('');
-}
-
-function saveLog(){const title=document.getElementById('ltitle').value.trim(),body=document.getElementById('lbody').value.trim();if(!title||!body){toast('Add title and notes');return}db.logs.unshift({id:Date.now().toString(),title,body,type:document.getElementById('ltype').value,tags:document.getElementById('ltags').value.trim(),date:td()});sv();['ltitle','lbody','ltags'].forEach(id=>document.getElementById(id).value='');document.getElementById('logp').style.display='none';rLog();toast('Saved ✓')}
-function dlLog(id){db.logs=db.logs.filter(l=>l.id!==id);sv();rLog()}
-function rLog(){
-  const ll=document.getElementById('llist');
-  if(!db.logs.length){ll.innerHTML='<div class="empty"><div class="eico">▤</div><div class="etxt">Your learning journal is empty.<br>Every issue you solve is worth documenting.</div></div>';return}
-  ll.innerHTML=db.logs.map(l=>{const tags=l.tags?l.tags.split(',').map(t=>t.trim()).filter(Boolean):[];return`<div class="le ${l.type}"><div class="lh"><div class="lt">${esc(l.title)}</div><div style="display:flex;align-items:center;gap:6px"><div class="ld">${fmt(l.date)}</div><button class="del" onclick="dlLog('${l.id}')">×</button></div></div><div class="lb2">${esc(l.body)}</div>${tags.length?'<div class="ltags">'+tags.map(t=>`<span class="ltag">${t}</span>`).join('')+'</div>':''}</div>`}).join('');
-}
-
-function rMore(){rSkills()}
-function mtab(id,el){['skills','activity','review','roadmap'].forEach(t=>document.getElementById('mt-'+t).style.display='none');document.querySelectorAll('#mtabs .tab').forEach(t=>t.classList.remove('on'));document.getElementById('mt-'+id).style.display='block';el.classList.add('on');({skills:rSkills,activity:rActivity,review:rReviews,roadmap:rRoadmap}[id]||rSkills)()}
-
-function rSkills(){
-  rSkGrp('sk-sap',db.skills.sap,'dT');rSkGrp('sk-tech',db.skills.tech,'dP');
-  const all=[...Object.entries(db.skills.sap),...Object.entries(db.skills.tech)];
-  document.getElementById('sk-all').innerHTML=all.map(([n,v])=>{const p=Math.round(v/5*100),c=v>=4?'ft':v>=3?'fp':v>=2?'fa':'fr';return`<div><div class="prow"><span>${n}</span><span>${p}%</span></div><div class="pb"><div class="pf ${c}" style="width:${p}%"></div></div></div>`}).join('');
-}
-function rSkGrp(el,grp,cls){document.getElementById(el).innerHTML=Object.entries(grp).map(([n,v])=>`<div class="ski"><div class="skn">${n}</div><div class="dots">${[1,2,3,4,5].map(i=>`<div class="dot ${v>=i?cls:''}" onclick="setSk('${el}','${n}',${i})">${i}</div>`).join('')}</div></div>`).join('')}
-function setSk(el,name,val){const gk=el==='sk-sap'?'sap':'tech';db.skills[gk][name]=val;sv();rSkills();toast('Updated ✓')}
-
-function rActivity(){
-  const days=['M','T','W','T','F','S','S'],wdates=[];
-  for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);wdates.push(d.toISOString().slice(0,10))}
-  document.getElementById('wrow').innerHTML=wdates.map((date,i)=>`<div class="wd ${(db.heatmap[date]||0)>0?'on':''} ${date===td()?'now':''}" onclick="togW('${date}')"><div class="wdot"></div>${days[i]}</div>`).join('');
-  const cells=[];for(let i=89;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const k=d.toISOString().slice(0,10),v=db.heatmap[k]||0;cells.push(`<div class="hmc hm${v}" onclick="cycH('${k}')"></div>`)}
-  document.getElementById('hmg').innerHTML=cells.join('');
-  const vals=Object.values(db.heatmap),act=vals.filter(v=>v>0).length,pts=vals.reduce((a,b)=>a+b,0),wa=wdates.filter(d=>(db.heatmap[d]||0)>0).length;
-  let best=0,cur=0;for(let i=89;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const k=d.toISOString().slice(0,10);if((db.heatmap[k]||0)>0){cur++;best=Math.max(best,cur)}else cur=0}
-  document.getElementById('hm-a').textContent=act;document.getElementById('hm-w').textContent=wa+'/7';document.getElementById('hm-p').textContent=pts;document.getElementById('hm-b').textContent=best;
-}
-function togW(d){db.heatmap[d]=(db.heatmap[d]||0)>0?0:2;sv();rActivity()}
-function cycH(d){db.heatmap[d]=((db.heatmap[d]||0)+1)%5;sv();rActivity()}
-
-function saveRv(){const v=[1,2,3,4].map(i=>document.getElementById('rv'+i).value.trim());if(!v.some(Boolean)){toast('Fill at least one field');return}db.reviews.unshift({id:Date.now().toString(),date:td(),good:v[0],bad:v[1],next:v[2],win:v[3]});sv();[1,2,3,4].forEach(i=>document.getElementById('rv'+i).value='');rReviews();toast('Saved ✓')}
-function dlRv(id){db.reviews=db.reviews.filter(r=>r.id!==id);sv();rReviews()}
-function rReviews(){
-  const pr=document.getElementById('past-rv');
-  if(!db.reviews.length){pr.innerHTML='<div class="empty"><div class="eico">◷</div><div class="etxt">No reviews yet.</div></div>';return}
-  const fields=[{k:'good',l:'WENT WELL'},{k:'bad',l:'SLOWED ME'},{k:'next',l:'NEXT WEEK'},{k:'win',l:'SOLVED'}];
-  pr.innerHTML=db.reviews.map(r=>`<div class="card"><div style="display:flex;justify-content:space-between;margin-bottom:10px"><div class="ct" style="margin:0">${fmt(r.date)}</div><button class="del" onclick="dlRv('${r.id}')">×</button></div>${fields.filter(f=>r[f.k]).map(f=>`<div style="margin-bottom:8px"><div style="font-size:10px;color:var(--txt3);font-family:var(--mono);margin-bottom:3px">${f.l}</div><div style="font-size:13px;color:var(--txt2)">${esc(r[f.k])}</div></div>`).join('')}</div>`).join('');
-}
-
-function rRoadmap(){
-  const phases=[{k:'p1',l:'Phase 1 — Data Mastery',c:'var(--teal)'},{k:'p2',l:'Phase 2 — Techno-Functional',c:'var(--pur)'},{k:'p3',l:'Phase 3 — Visible Expertise',c:'var(--amb)'}];
-  document.getElementById('phsl').innerHTML=phases.map(p=>{const v=db.phaseProgress[p.k]||0;return`<div class="psl"><div class="psl-l" style="color:${p.c}">${p.l}</div><input type="range" min="0" max="100" value="${v}" oninput="setPh('${p.k}',this.value,this.nextElementSibling)"><div class="ppct">${v}%</div></div><div class="pb" style="margin-bottom:12px"><div class="pf" style="width:${v}%;background:${p.c}"></div></div>`}).join('');
-}
-function setPh(k,v,el){db.phaseProgress[k]=parseInt(v);el.textContent=v+'%';sv()}
-
-// Fallback study data (used when JSON files not found)
-const FB={
-  cards:[
-    {category:'SAP MM Tables',question:'What does EKBE store and why is it critical for GR/IR reconciliation?',answer:'EKBE is the PO History table — it records every GR and IR against a PO item. BEWTP=\'E\' is a GR entry, BEWTP=\'Q\' is an IR. Always SUM quantities — never assume one entry per item. This is your first stop for any GR/IR mismatch.',table:'EKBE, EKKO, EKPO'},
-    {category:'SAP MM Tables',question:'What is the difference between MSEG and MKPF?',answer:'MKPF is the material document header (posting date, MBLNR, MJAHR). MSEG is the line item — qty, movement type, plant, storage location, PO reference. Always join both on MBLNR+MJAHR (not MBLNR alone — duplicates exist across years).',table:'MKPF, MSEG'},
-    {category:'Movement Types',question:'Why does movement type 101 create an FI document but 103 does not?',answer:'101 posts to unrestricted stock — this has monetary value, so FI creates an accounting doc (debit inventory, credit GR/IR clearing). 103 posts to blocked/quality stock — no value transfer yet, so no accounting document is generated.',table:'MSEG, EKBE'},
-    {category:'Movement Types',question:'What is movement type 122 and when do you use it?',answer:'122 is Return to Vendor. It reverses a GR, reduces inventory, and creates a reverse accounting document. Use when goods need to go back after receipt. Always check if an invoice already exists (EKBE BEWTP=Q) — you may need to cancel it first.',table:'MSEG, EKBE'},
-    {category:'Debugging',question:'A user says GR quantity is wrong in PO history. Walk through your investigation.',answer:'1. EKBE: filter on PO+item, SUM MENGE for all BEWTP=E entries. 2. Look for 102 reversal entries (negative MENGE). 3. Get MBLNR from EKBE, go to MSEG for movement detail. 4. Confirm in MIGO display. 5. Check partial GRs — are they summing correctly? 6. Check posting date vs invoice date for timing issues.',table:'EKBE, MSEG, MKPF'},
-    {category:'SQL/HANA',question:'How do you write SQL to detect GR/IR quantity mismatches across all open POs?',answer:'SELECT EBELN, EBELP, SUM(CASE WHEN BEWTP=\'E\' THEN MENGE ELSE 0 END) AS gr_qty, SUM(CASE WHEN BEWTP=\'Q\' THEN MENGE ELSE 0 END) AS ir_qty FROM EKBE WHERE MANDT=\'100\' GROUP BY EBELN, EBELP HAVING SUM(CASE WHEN BEWTP=\'E\' THEN MENGE ELSE 0 END) <> SUM(CASE WHEN BEWTP=\'Q\' THEN MENGE ELSE 0 END)',table:'EKBE'},
-    {category:'Techno-Functional',question:'What is a BADI and how does it differ from a User Exit?',answer:'BADIs (Business Add-Ins) are object-oriented SAP enhancement points — more flexible, support multiple active implementations, no core code modification needed. User Exits are older, function module-based, support only one implementation. Key MM BADI: ME_PROCESS_PO_CUST for PO changes. Use SE18 to explore, SE19 to implement.',table:''},
-    {category:'ABAP',question:'You need to find the function module called during MIGO GR posting. How?',answer:'1. Use ST05 (SQL/ABAP trace) during a test GR — shows all function module calls. 2. The core GR FM is MB_CREATE_GOODS_MOVEMENT. 3. Set external breakpoint in SE80 on this FM. 4. Main program is SAPMM07M. 5. Use SM50 during posting to see which programs are running.',table:''},
-    {category:'SAP MM Tables',question:'What is EBAN and when do you use it?',answer:'EBAN stores Purchase Requisition items. Use it to check PR source, requested quantity, requester, and whether it has been converted to a PO (field EBAKZ). Join EBAN.BANFN+EBAN.BNFPO to EKPO.BANFN+EKPO.BNFPO to see the PR→PO link.',table:'EBAN, EKPO'},
-    {category:'Process',question:'What happens in EKBE when you post a GR reversal (movement type 102)?',answer:'A new line is added to EKBE with negative MENGE and BEWTP=E. It does NOT delete the original 101 entry. This is why you must always SUM EKBE entries to get net GR quantity — never count rows, always sum quantities.',table:'EKBE, MSEG'},
-  ],
-  tips:[
-    {title:'Find GR/IR mismatch for a PO',level:'basic',desc:'Most common MM issue — GR and IR quantities don\'t reconcile.',
-     code:`<span class="k">SELECT</span> <span class="cn">EBELN</span>, <span class="cn">EBELP</span>,\n  <span class="fn">SUM</span>(<span class="k">CASE WHEN</span> <span class="cn">BEWTP</span>=<span class="str">'E'</span> <span class="k">THEN</span> <span class="cn">MENGE</span> <span class="k">ELSE</span> 0 <span class="k">END</span>) <span class="k">AS</span> gr_qty,\n  <span class="fn">SUM</span>(<span class="k">CASE WHEN</span> <span class="cn">BEWTP</span>=<span class="str">'Q'</span> <span class="k">THEN</span> <span class="cn">MENGE</span> <span class="k">ELSE</span> 0 <span class="k">END</span>) <span class="k">AS</span> ir_qty\n<span class="k">FROM</span> <span class="tn">EKBE</span>\n<span class="k">WHERE</span> <span class="cn">MANDT</span>=<span class="str">'100'</span> <span class="k">AND</span> <span class="cn">EBELN</span>=<span class="str">'4500012345'</span>\n<span class="k">GROUP BY</span> <span class="cn">EBELN</span>, <span class="cn">EBELP</span>\n<span class="k">HAVING</span> gr_qty <> ir_qty`,
-     raw:`SELECT EBELN, EBELP,\n  SUM(CASE WHEN BEWTP='E' THEN MENGE ELSE 0 END) AS gr_qty,\n  SUM(CASE WHEN BEWTP='Q' THEN MENGE ELSE 0 END) AS ir_qty\nFROM EKBE\nWHERE MANDT='100' AND EBELN='4500012345'\nGROUP BY EBELN, EBELP\nHAVING gr_qty <> ir_qty`,
-     why:'BEWTP E=GR, Q=IR. SUM handles partial GRs and reversals automatically. HAVING filters only mismatched lines.'},
-    {title:'Trace all movements for a material',level:'basic',desc:'Every stock movement for a material in a plant — essential for stock reconciliation.',
-     code:`<span class="k">SELECT</span> <span class="cn">H.MBLNR</span>, <span class="cn">H.BUDAT</span>, <span class="cn">I.BWART</span>, <span class="cn">I.MENGE</span>, <span class="cn">I.MEINS</span>, <span class="cn">I.LGORT</span>, <span class="cn">I.EBELN</span>\n<span class="k">FROM</span> <span class="tn">MKPF</span> <span class="k">AS</span> H\n<span class="k">INNER JOIN</span> <span class="tn">MSEG</span> <span class="k">AS</span> I <span class="k">ON</span> H.MBLNR=I.MBLNR <span class="k">AND</span> H.MJAHR=I.MJAHR\n<span class="k">WHERE</span> I.MATNR=<span class="str">'000000000010001234'</span>\n  <span class="k">AND</span> I.WERKS=<span class="str">'1000'</span>\n  <span class="k">AND</span> H.BUDAT >= <span class="str">'20240101'</span>\n<span class="k">ORDER BY</span> H.BUDAT <span class="k">DESC</span>`,
-     raw:`SELECT H.MBLNR, H.BUDAT, I.BWART, I.MENGE, I.MEINS, I.LGORT, I.EBELN\nFROM MKPF AS H\nINNER JOIN MSEG AS I ON H.MBLNR=I.MBLNR AND H.MJAHR=I.MJAHR\nWHERE I.MATNR='000000000010001234' AND I.WERKS='1000' AND H.BUDAT>='20240101'\nORDER BY H.BUDAT DESC`,
-     why:'Always join MKPF+MSEG on BOTH MBLNR and MJAHR — MBLNR alone is not unique across fiscal years.'},
-    {title:'Find all open POs for a vendor',level:'basic',desc:'All open PO line items for a vendor — useful for vendor reconciliation.',
-     code:`<span class="k">SELECT</span> <span class="cn">H.EBELN</span>, <span class="cn">H.LIFNR</span>, <span class="cn">H.BEDAT</span>, <span class="cn">I.EBELP</span>, <span class="cn">I.MATNR</span>, <span class="cn">I.MENGE</span>, <span class="cn">I.NETPR</span>\n<span class="k">FROM</span> <span class="tn">EKKO</span> <span class="k">AS</span> H\n<span class="k">INNER JOIN</span> <span class="tn">EKPO</span> <span class="k">AS</span> I <span class="k">ON</span> H.EBELN=I.EBELN\n<span class="k">WHERE</span> H.LIFNR=<span class="str">'0000100234'</span>\n  <span class="k">AND</span> I.ELIKZ=<span class="str">' '</span>  <span class="cm">-- delivery not complete</span>\n  <span class="k">AND</span> I.LOEKZ=<span class="str">' '</span>  <span class="cm">-- not deleted</span>\n  <span class="k">AND</span> H.MANDT=<span class="str">'100'</span>`,
-     raw:`SELECT H.EBELN, H.LIFNR, H.BEDAT, I.EBELP, I.MATNR, I.MENGE, I.NETPR\nFROM EKKO AS H\nINNER JOIN EKPO AS I ON H.EBELN=I.EBELN\nWHERE H.LIFNR='0000100234' AND I.ELIKZ=' ' AND I.LOEKZ=' ' AND H.MANDT='100'`,
-     why:'ELIKZ=space means delivery not complete. LOEKZ=space means item not deleted. Both together give true open items.'},
-    {title:'Invoice vs PO price variance',level:'mid',desc:'Find invoices where the price differs from the PO — common source of accounting variances.',
-     code:`<span class="k">SELECT</span> <span class="cn">R.EBELN</span>, <span class="cn">R.EBELP</span>, <span class="cn">P.NETPR</span> <span class="k">AS</span> po_price,\n  <span class="cn">I.DMBTR</span>/<span class="cn">I.MENGE</span> <span class="k">AS</span> inv_unit_price,\n  (<span class="cn">I.DMBTR</span>/<span class="cn">I.MENGE</span>)-<span class="cn">P.NETPR</span> <span class="k">AS</span> variance\n<span class="k">FROM</span> <span class="tn">RSEG</span> <span class="k">AS</span> R\n<span class="k">INNER JOIN</span> <span class="tn">RBKP</span> <span class="k">AS</span> I <span class="k">ON</span> R.BELNR=I.BELNR <span class="k">AND</span> R.GJAHR=I.GJAHR\n<span class="k">INNER JOIN</span> <span class="tn">EKPO</span> <span class="k">AS</span> P <span class="k">ON</span> R.EBELN=P.EBELN <span class="k">AND</span> R.EBELP=P.EBELP\n<span class="k">WHERE</span> R.MANDT=<span class="str">'100'</span>\n  <span class="k">AND</span> <span class="fn">ABS</span>((<span class="cn">I.DMBTR</span>/<span class="cn">I.MENGE</span>)-<span class="cn">P.NETPR</span>) > 0.01`,
-     raw:`SELECT R.EBELN, R.EBELP, P.NETPR AS po_price,\n  I.DMBTR/I.MENGE AS inv_unit_price,\n  (I.DMBTR/I.MENGE)-P.NETPR AS variance\nFROM RSEG AS R\nINNER JOIN RBKP AS I ON R.BELNR=I.BELNR AND R.GJAHR=I.GJAHR\nINNER JOIN EKPO AS P ON R.EBELN=P.EBELN AND R.EBELP=P.EBELP\nWHERE R.MANDT='100' AND ABS((I.DMBTR/I.MENGE)-P.NETPR) > 0.01`,
-     why:'DMBTR is invoice amount in local currency. Divide by MENGE for per-unit price. ABS filter removes floating point noise near zero.'},
-    {title:'Current stock by material and plant',level:'basic',desc:'Unrestricted stock snapshot — the fastest way to check current inventory.',
-     code:`<span class="k">SELECT</span> <span class="cn">MATNR</span>, <span class="cn">WERKS</span>, <span class="cn">LGORT</span>,\n  <span class="cn">LABST</span> <span class="k">AS</span> unrestricted,\n  <span class="cn">INSME</span> <span class="k">AS</span> quality_stock,\n  <span class="cn">EINME</span> <span class="k">AS</span> in_transit\n<span class="k">FROM</span> <span class="tn">MARD</span>\n<span class="k">WHERE</span> <span class="cn">WERKS</span>=<span class="str">'1000'</span>\n  <span class="k">AND</span> <span class="cn">MATNR</span>=<span class="str">'000000000010001234'</span>\n  <span class="k">AND</span> <span class="cn">MANDT</span>=<span class="str">'100'</span>`,
-     raw:`SELECT MATNR, WERKS, LGORT, LABST AS unrestricted, INSME AS quality_stock, EINME AS in_transit\nFROM MARD\nWHERE WERKS='1000' AND MATNR='000000000010001234' AND MANDT='100'`,
-     why:'LABST=unrestricted, INSME=quality inspection, EINME=in-transit. MARD is the definitive stock table at storage location level.'},
-  ],
-  tables:[
-    {name:'EKKO',description:'Purchase Order Header',useCase:'First stop for any PO issue. Contains vendor, doc type, company code, purchasing org, creation date.'},
-    {name:'EKPO',description:'Purchase Order Line Item',useCase:'Item-level: material, quantity ordered (MENGE), net price (NETPR), plant, delivery date, item category.'},
-    {name:'EKBE',description:'PO History — GR/IR Entries',useCase:'GR/IR mismatch investigation. BEWTP=E for GR, Q for IR. Always SUM — multiple entries per item are normal (partial GRs, reversals).'},
-    {name:'MSEG',description:'Material Document Line Item',useCase:'Movement detail: quantity (MENGE), movement type (BWART), plant, storage location, PO reference. Join with MKPF on MBLNR+MJAHR.'},
-    {name:'MKPF',description:'Material Document Header',useCase:'Posting date (BUDAT), doc number (MBLNR), fiscal year (MJAHR). Header to MSEG. Never join on MBLNR alone.'},
-    {name:'EBAN',description:'Purchase Requisition Items',useCase:'PR source, requested qty, requester. EBAKZ shows if converted to PO. Link to EKPO via BANFN+BNFPO.'},
-    {name:'RBKP',description:'Invoice Header (from MIRO)',useCase:'Vendor invoice header: posting date, total amount, vendor. Join with RSEG for line items.'},
-    {name:'RSEG',description:'Invoice Line Items',useCase:'IR line detail: PO reference, invoiced quantity, amount per item. Key for GR/IR reconciliation.'},
-    {name:'MARA',description:'Material Master — General Data',useCase:'Material type (MTART), base unit (MEINS), material group (MATKL). Client-level master data.'},
-    {name:'MARC',description:'Material Master — Plant Data',useCase:'Plant-specific: MRP type, procurement type, lead time, plant. One row per material+plant combination.'},
-    {name:'MARD',description:'Stock by Storage Location',useCase:'Current unrestricted (LABST), quality (INSME), in-transit (EINME) stock per material+plant+SLoc.'},
-    {name:'LFA1',description:'Vendor Master — General Data',useCase:'Vendor name, country, payment terms. Client-level. Join with LFB1 for company-code specific data.'},
-    {name:'BKPF',description:'Accounting Document Header',useCase:'FI document: posting date, amount, document type. Links to material doc via AWKEY field.'},
-    {name:'BSEG',description:'Accounting Document Line Items',useCase:'GL account, cost center, debit/credit. Needed when GR creates wrong accounting entry.'},
-  ],
-  mvt:[
-    {code:'101',name:'GR against PO → Unrestricted Stock',notes:'Most common. Creates accounting document. Inventory increases, GR/IR clearing account credited.'},
-    {code:'102',name:'Reversal of GR (101)',notes:'Cancels a 101 GR. Negative MENGE entry in EKBE. Does not delete original — both lines remain.'},
-    {code:'103',name:'GR to Blocked Stock',notes:'No FI document — no value transfer. Used when goods are under quality hold.'},
-    {code:'105',name:'Blocked → Unrestricted Stock Release',notes:'Releases quality-blocked goods to unrestricted stock. FI document created at this point.'},
-    {code:'122',name:'Return to Vendor',notes:'Returns goods post-GR. Reduces inventory, creates reverse accounting doc. Verify if IR exists first.'},
-    {code:'123',name:'Reversal of Return to Vendor (122)',notes:'Cancels a 122 return. Rare — use with caution.'},
-    {code:'261',name:'GI for Production Order',notes:'PP-MM integration. Consumes components from stock for production order.'},
-    {code:'301',name:'Plant-to-Plant Transfer (1-step)',notes:'Direct stock transfer between plants in one step. No delivery document required.'},
-    {code:'311',name:'Transfer Posting — Storage Location',notes:'Moves stock between storage locations within the same plant.'},
-    {code:'541',name:'GI to Subcontractor',notes:'Sends components to subcontractor. Stock moves to vendor\'s special stock.'},
-    {code:'543',name:'GI at Subcontractor (auto with GR)',notes:'Auto-posted when finished goods GR happens for sub PO. Consumes subcontractor components.'},
-    {code:'551',name:'Scrapping',notes:'Goods issue to scrap — permanently removes from stock. Creates FI write-off entry.'},
-    {code:'601',name:'GI for SD Delivery',notes:'Key SD-MM integration. Posted when outbound delivery is goods-issued in VL02N.'},
-    {code:'641',name:'GI for STO with Delivery',notes:'Goods issue from issuing plant for inter-company STO with outbound delivery.'},
-  ]
-};
-
-rDash();
-</script>
+<script src="app.js"></script>
 </body>
 </html>
